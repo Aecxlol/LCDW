@@ -1,0 +1,8 @@
+## Interface: 80300
+## Title: Wow Guides
+## Author: Aecx & Willios
+## Version: 0.1 - Alpha
+## Notes: Version(0.1 - Alpha) A simple addon which allows you to check every dungeons' guides
+## DefaultState: enabled
+
+WowGuides.lua
