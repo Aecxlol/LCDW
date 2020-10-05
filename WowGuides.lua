@@ -2,23 +2,28 @@ local MainFrameWidth = 500
 local MainFrameHeight = 500
 local dungeonSelected = nil
 local dungeons = {
-    "The Necrotic Wake",
-    "Plaguefall",
-    "Mists of Tirna Scithe",
-    "Halls of Atonement",
-    "De Other Side",
-    "Sanguine Depths",
-    "Spires of Ascension",
-    "Theater of Pain",
+    "Sillage nécrotique",
+    "Malepeste",
+    "Brumes de Tirna Scrithe",
+    "Salles de l'Expiation",
+    "Flèches de l'Ascension",
+    "Théâtre de la Souffrance",
+    "L'Autre côté",
+    "Profondeurs Sanguines",
 }
 
 print("WowGuides loaded! Type /wg to access to the guides.")
 
 -- MainFrame
 local WGFrame = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
---WGFrame:Hide()
+WGFrame:Hide()
 WGFrame:SetSize(MainFrameWidth, MainFrameHeight)
 WGFrame:SetPoint("CENTER", 0, 0)
+WGFrame:SetMovable(true)
+WGFrame:EnableMouse(true)
+WGFrame:RegisterForDrag("LeftButton")
+WGFrame:SetScript("OnDragStart", WGFrame.StartMoving)
+WGFrame:SetScript("OnDragStop", WGFrame.StopMovingOrSizing)
 -- end MainFrame
 
 -- Title's MainFrame
@@ -30,7 +35,7 @@ WGFrame.title:SetText("Wow Guides - 0.1")
 
 -- Onlick Dropdown Items
 local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(WGFrame.dropDown, "Selected : " .. arg2)
+    UIDropDownMenu_SetText(WGFrame.dropDown, "Donjon : " .. arg2)
     dungeonSelected = arg1
 end
 -- end
@@ -50,13 +55,13 @@ function DungeonsListDropDown(frame, level, menuList)
 end
 -- end
 
--- Dropdown List
-WGFrame.dropDown = CreateFrame("Frame", "WPDemoDropDown", UIParent, "UIDropDownMenuTemplate")
+-- Dropdown List Frame
+WGFrame.dropDown = CreateFrame("Frame", "WPDemoDropDown", WGFrame, "UIDropDownMenuTemplate")
 WGFrame.dropDown:SetPoint("RIGHT", WGFrame, "TOP", 10, -50)
 UIDropDownMenu_SetWidth(WGFrame.dropDown, 200)
 UIDropDownMenu_Initialize(WGFrame.dropDown, DungeonsListDropDown)
-UIDropDownMenu_SetText(WGFrame.dropDown, "-- Select a dungeon --")
--- End Dropdown List
+UIDropDownMenu_SetText(WGFrame.dropDown, "-- Sélectionner un donjon --")
+-- End Dropdown List Frame
 
 -- slash commands
 SLASH_WOWGUIDES1 = '/wg'
