@@ -29,19 +29,32 @@ WGFrame:SetScript("OnDragStop", WGFrame.StopMovingOrSizing)
 -- Title's MainFrame
 WGFrame.title = WGFrame:CreateFontString(nil, "OVERLAY")
 WGFrame.title:SetFontObject("GameFontHighLight")
-WGFrame.title:SetPoint("CENTER", WGFrame.TitleBg, "CENTER", 10, 0)
+WGFrame.title:SetPoint("CENTER", WGFrame.TitleBg, "CENTER", 0, 0)
 WGFrame.title:SetText("Wow Guides - 0.1")
 -- end Title's MainFrame
+
+-- load the guide according to the id
+local function loadGuide(id)
+    -- TODO
+    print(id)
+end
+-- end
 
 -- Onlick Dropdown Items
 local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
     UIDropDownMenu_SetText(WGFrame.dropDown, "Donjon : " .. arg2)
     dungeonSelected = arg1
+
+    for dungeonId, dungeon in ipairs(dungeons) do
+        if arg1 == dungeonId then
+            loadGuide(dungeonId)
+        end
+    end
 end
 -- end
 
 -- Display the dungeons' list
-function DungeonsListDropDown(frame, level, menuList)
+local function DungeonsListDropDown(frame, level, menuList)
     local info = UIDropDownMenu_CreateInfo()
     info.func = DungeonsListDropDown_OnClick
 
