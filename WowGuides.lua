@@ -1,5 +1,7 @@
+local name, _ = ...
 local MainFrameWidth = 500
 local MainFrameHeight = 500
+local isTheFrameOpen = false
 local dungeonSelected = nil
 local dungeons = {
     "Sillage nécrotique",
@@ -12,7 +14,15 @@ local dungeons = {
     "Profondeurs Sanguines",
 }
 
-print("WowGuides loaded! Type /wg to access to the guides.")
+local function onEvent(self, event, arg1, ...)
+    if(event == "ADDON_LOADED" and name == arg1) then
+        print("|cff00cc66".. name .."|r loaded! Type /wg to access to the guides.")
+    end
+end
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("ADDON_LOADED")
+f:SetScript("OnEvent", onEvent)
 
 -- MainFrame
 local WGFrame = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
@@ -79,7 +89,13 @@ UIDropDownMenu_SetText(WGFrame.dropDown, "-- Sélectionner un donjon --")
 -- slash commands
 SLASH_WOWGUIDES1 = '/wg'
 SlashCmdList["WOWGUIDES"] = function()
-    WGFrame:Show()
+    if isTheFrameOpen == false then
+        WGFrame:Show()
+        isTheFrameOpen = true
+    else
+        WGFrame:Hide()
+        isTheFrameOpen = false
+    end
 end
 
 SLASH_RELOADUI1 = "/rl"
