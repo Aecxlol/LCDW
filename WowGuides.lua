@@ -2,8 +2,19 @@ local name, _ = ...
 
 local MainFrameWidth = 500
 local MainFrameHeight = 500
-local isTheFrameOpen = false
 local folderGuidesPath = "Interface\\AddOns\\WowGuides\\guides\\pve\\"
+local guideIds = {}
+local penultimateGuideIdLoaded = nil
+local penultimateBlpTextureNameLoaded = nil
+
+local blpTextureName1 = "blpTextureName1:Hide"
+local blpTextureName2 = "blpTextureName2"
+local blpTextureName3 = "blpTextureName3"
+local blpTextureName4 = "blpTextureName4"
+local blpTextureName5 = "blpTextureName5"
+local blpTextureName6 = "blpTextureName6"
+local blpTextureName7 = "blpTextureName7"
+local blpTextureName8 = "blpTextureName8"
 
 local dungeonSelected = nil
 local dungeons = {
@@ -63,33 +74,65 @@ WGFrame.title:SetText("Wow Guides - 0.1")
 -- end title's mainFrame
 
 -- @todo pve and pvp categories
--- @todo issue caused when closing the window via the cross (isTheFrameOpen var)
+
+local function removePreviousGuide(previousGuide)
+    previousGuide:Hide()
+end
 
 -- load the guide according to the id --
-local function loadGuide(id)
-    -- @todo create a 2 dimensions array for the dungeons list
-    -- Texture object --
-    local texture = WGFrame:CreateTexture(nil, "ARTWORK")
-    texture:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-    texture:SetSize(64, 64)
-    texture:SetTexture(folderGuidesPath .. id)
-    WGFrame.texture = texture
-    -- end --
-end
+--local function loadGuide(blpTextureName, guideName, previousGuide)
+--    blpTextureName = WGFrame:CreateTexture(nil, "ARTWORK")
+--    blpTextureName:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+--    blpTextureName:SetSize(450, 450)
+--    blpTextureName:SetTexture(folderGuidesPath .. guideName)
+--    removePreviousGuide(previousGuide)
+--    WGFrame.blpTextureName = blpTextureName
+--end
 -- end loading --
 
--- Onlick Dropdown Items --
+-- Onlick Dungeons dropdown items --
 local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
     UIDropDownMenu_SetText(WGFrame.dropDown, "Donjon : " .. arg2)
     dungeonSelected = arg1
 
     for dungeonId, dungeon in ipairs(dungeons) do
         if arg1 == dungeonId then
-            loadGuide(dungeonId)
+            -- save every dungeon's id checked into an array
+            table.insert(guideIds, dungeonId)
+
+            -- once atleast one guide got checked
+            if #guideIds > 1 then
+                -- get the id of the previous one
+                penultimateGuideIdLoaded = guideIds[#guideIds - 1]
+                -- get his name
+                penultimateBlpTextureNameLoaded = "blpTextureName" .. penultimateGuideIdLoaded .. ":Hide"
+                print(penultimateBlpTextureNameLoaded)
+                -- and then hide the previous guide checked
+                --penultimateBlpTextureNameLoaded:Hide()
+            end
+
+            local textureName = "blpTextureName" .. dungeonId
+
+            textureName = WGFrame:CreateTexture(nil, "ARTWORK")
+            textureName:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+            textureName:SetSize(450, 450)
+            textureName:SetTexture(folderGuidesPath .. dungeonId)
+            WGFrame.textureName = textureName
+            _G[penultimateBlpTextureNameLoaded]()
+            --loadGuide(textureName, dungeonId, penultimateBlpTextureNameLoaded)
+            --removePreviousGuide(penultimateBlpTextureNameLoaded)
         end
     end
 end
 -- end onclick event --
+
+local aze = WGFrame:CreateTexture(nil, "ARTWORK")
+aze:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+aze:SetSize(450, 450)
+aze:SetTexture(folderGuidesPath .. 1)
+
+print("mdrAZE" .. type(aze))
+
 
 -- display the dungeons' list --
 local function DungeonsListDropDown(frame, level, menuList)
@@ -106,20 +149,21 @@ local function DungeonsListDropDown(frame, level, menuList)
 end
 -- end --
 
--- Onlick Dropdown Items --
+-- Onlick classes dropdown items --
 local function ClassesListDropDown_OnClick(self, arg1, arg2, checked)
     UIDropDownMenu_SetText(WGFrame.classDropDown, "Classe : " .. arg2)
     classSelected = arg1
 
     for classId, dungeon in ipairs(classes) do
         if arg1 == classId then
+            -- display the dropdown WGFrame.dropDown which is greyed out
             UIDropDownMenu_EnableDropDown(WGFrame.dropDown)
         end
     end
 end
 -- end onclick event --
 
--- display the dungeons' list --
+-- display the classes' list --
 local function ClassesListDropDown(frame, level, menuList)
     local info = UIDropDownMenu_CreateInfo()
     info.func = ClassesListDropDown_OnClick
@@ -166,13 +210,12 @@ UIDropDownMenu_DisableDropDown(WGFrame.dropDown)
 -- slash commands --
 SLASH_WOWGUIDES1 = '/wg'
 SlashCmdList["WOWGUIDES"] = function()
-    if isTheFrameOpen == false then
-        WGFrame:Show()
-        isTheFrameOpen = true
-    else
-        WGFrame:Hide()
-        isTheFrameOpen = false
-    end
+    WGFrame:Show()
+end
+
+SLASH_TEST1 = "/test"
+SlashCmdList["TEST"] = function()
+    _G[blpTextureName1]()
 end
 
 SLASH_RELOADUI1 = "/rl"
