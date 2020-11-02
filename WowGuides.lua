@@ -77,7 +77,7 @@ local icon = LibStub("LibDBIcon-1.0")
 
 local function onEvent(self, event, arg1, ...)
     if(event == "ADDON_LOADED" and name == arg1) then
-        print("|cff00cc66".. name .."|r loaded! Type /wg to access to the guides.")
+        print(BLUE.. name .."|r loaded! Type /wg to access to the guides.")
     end
 end
 
@@ -105,12 +105,12 @@ WGFrame.title:SetText("Wow Guides - 0.1")
 -- end title's mainFrame
 
 -- LIBSTUB --
-local bunnyLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Bunnies!", {
+local guidesLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
     type = "data source",
     icon = "Interface\\AddOns\\WowGuides\\misc\\minimap-icon",
     OnClick = function(clickedframe, button)
         if button == "RightButton" then
-
+            print(RED .. "WIP")
         elseif button == "LeftButton" then
             if WGFrame:IsShown() then
                 WGFrame:Hide()
@@ -131,15 +131,14 @@ local bunnyLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Bunnies!", {
 })
 
 function wowGuides:OnInitialize()
-    -- Obviously you'll need a ## SavedVariables: BunniesDB line in your TOC, duh!
-    self.db = LibStub("AceDB-3.0"):New("BunniesDB", {
+    self.db = LibStub("AceDB-3.0"):New("WowGuidesDB", {
         profile = {
             minimap = {
                 hide = false,
             },
         },
     })
-    icon:Register("Bunnies!", bunnyLDB, self.db.profile.minimap)
+    icon:Register("WG", guidesLDB, self.db.profile.minimap)
     --self:RegisterChatCommand("bunnies", "CommandTheBunnies")
 end
 -- END LIBSTUB --

@@ -3,6 +3,7 @@
 ## Author: Aecx & Willios
 ## Version: 0.1 - Alpha
 ## Notes: Version(0.1 - Alpha) A simple addon which allows you to check every dungeons' guides
+## SavedVariables: WowGuidesDB
 ## DefaultState: enabled
 
 embeds.xml
