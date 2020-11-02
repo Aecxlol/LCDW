@@ -1,20 +1,38 @@
 local name, _ = ...
+local wowGuidesVersion = "0.1 Alpha"
 
 local MainFrameWidth = 500
 local MainFrameHeight = 500
-local folderGuidesPath = "Interface\\AddOns\\WowGuides\\guides\\pve\\"
-local guideIds = {}
-local penultimateGuideIdLoaded = nil
-local penultimateBlpTextureNameLoaded = nil
+local FOLDER_GUIDES_PATH = "Interface\\AddOns\\WowGuides\\guides\\pve\\"
+local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
-local blpTextureName1 = "blpTextureName1:Hide"
-local blpTextureName2 = "blpTextureName2"
-local blpTextureName3 = "blpTextureName3"
-local blpTextureName4 = "blpTextureName4"
-local blpTextureName5 = "blpTextureName5"
-local blpTextureName6 = "blpTextureName6"
-local blpTextureName7 = "blpTextureName7"
-local blpTextureName8 = "blpTextureName8"
+local GREEN =  "|cff00ff00"
+local YELLOW = "|cffffff00"
+local RED =    "|cffff0000"
+local BLUE =   "|cff0198e1"
+local ORANGE = "|cffff9933"
+local WHITE =  "|cffffffff"
+
+
+local test1 = nil
+local test2 = nil
+local test3 = nil
+local test4 = nil
+local test5 = nil
+local test6 = nil
+local test7 = nil
+local test8 = nil
+
+local isTest1Shown = false
+local isTest2Shown = false
+local isTest3Shown = false
+local isTest4Shown = false
+local isTest5Shown = false
+local isTest6Shown = false
+local isTest7Shown = false
+local isTest8Shown = false
+
+local mb = nil
 
 local dungeonSelected = nil
 local dungeons = {
@@ -43,6 +61,19 @@ local classes = {
     "Prêtre",
     "Voleur",
 }
+
+local wowGuides = LibStub("AceAddon-3.0"):NewAddon("WowGuides", "AceConsole-3.0")
+local icon = LibStub("LibDBIcon-1.0")
+
+
+--function wowGuides:CommandTheBunnies()
+--    self.db.profile.minimap.hide = not self.db.profile.minimap.hide
+--    if self.db.profile.minimap.hide then
+--        icon:Hide("Bunnies!")
+--    else
+--        icon:Show("Bunnies!")
+--    end
+--end
 
 local function onEvent(self, event, arg1, ...)
     if(event == "ADDON_LOADED" and name == arg1) then
@@ -73,22 +104,47 @@ WGFrame.title:SetPoint("CENTER", WGFrame.TitleBg, "CENTER", 0, 0)
 WGFrame.title:SetText("Wow Guides - 0.1")
 -- end title's mainFrame
 
--- @todo pve and pvp categories
+-- LIBSTUB --
+local bunnyLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Bunnies!", {
+    type = "data source",
+    icon = "Interface\\AddOns\\WowGuides\\misc\\minimap-icon",
+    OnClick = function(clickedframe, button)
+        if button == "RightButton" then
 
-local function removePreviousGuide(previousGuide)
-    previousGuide:Hide()
+        elseif button == "LeftButton" then
+            if WGFrame:IsShown() then
+                WGFrame:Hide()
+            else
+                WGFrame:Show()
+            end
+        end
+    end,
+    OnTooltipShow = function(tooltip)
+        if tooltip and tooltip.AddLine then
+            tooltip:AddLine(BLUE .. name .. " " .. wowGuidesVersion)
+            tooltip:AddLine(YELLOW .. "Click gauche" .. " " .. WHITE
+                    .. "pour ouvrir/fermer la fenêtre de guides")
+            tooltip:AddLine(YELLOW .. "Click droit" .. " " .. WHITE
+                    .. "pour ouvrir/fermer la configuration")
+        end
+    end
+})
+
+function wowGuides:OnInitialize()
+    -- Obviously you'll need a ## SavedVariables: BunniesDB line in your TOC, duh!
+    self.db = LibStub("AceDB-3.0"):New("BunniesDB", {
+        profile = {
+            minimap = {
+                hide = false,
+            },
+        },
+    })
+    icon:Register("Bunnies!", bunnyLDB, self.db.profile.minimap)
+    --self:RegisterChatCommand("bunnies", "CommandTheBunnies")
 end
+-- END LIBSTUB --
 
--- load the guide according to the id --
---local function loadGuide(blpTextureName, guideName, previousGuide)
---    blpTextureName = WGFrame:CreateTexture(nil, "ARTWORK")
---    blpTextureName:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
---    blpTextureName:SetSize(450, 450)
---    blpTextureName:SetTexture(folderGuidesPath .. guideName)
---    removePreviousGuide(previousGuide)
---    WGFrame.blpTextureName = blpTextureName
---end
--- end loading --
+-- @todo pve and pvp categories
 
 -- Onlick Dungeons dropdown items --
 local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
@@ -97,42 +153,374 @@ local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
 
     for dungeonId, dungeon in ipairs(dungeons) do
         if arg1 == dungeonId then
-            -- save every dungeon's id checked into an array
-            table.insert(guideIds, dungeonId)
 
-            -- once atleast one guide got checked
-            if #guideIds > 1 then
-                -- get the id of the previous one
-                penultimateGuideIdLoaded = guideIds[#guideIds - 1]
-                -- get his name
-                penultimateBlpTextureNameLoaded = "blpTextureName" .. penultimateGuideIdLoaded .. ":Hide"
-                print(penultimateBlpTextureNameLoaded)
-                -- and then hide the previous guide checked
-                --penultimateBlpTextureNameLoaded:Hide()
+            -- @todo REFACTORISER CI DESSOUS --
+
+            if dungeonId == 1 then
+                if isTest2Shown == true then
+                    test2:Hide()
+                    isTest2Shown = false
+                end
+
+                if isTest3Shown == true then
+                    test3:Hide()
+                    isTest3Shown = false
+                end
+
+                if isTest4Shown == true then
+                    test4:Hide()
+                    isTest4Shown = false
+                end
+
+                if isTest5Shown == true then
+                    test5:Hide()
+                    isTest5Shown = false
+                end
+
+                if isTest6Shown == true then
+                    test6:Hide()
+                    isTest6Shown = false
+                end
+
+                if isTest7Shown == true then
+                    test7:Hide()
+                    isTest7Shown = false
+                end
+
+                if isTest8Shown == true then
+                    test8:Hide()
+                    isTest8Shown = false
+                end
+
+                if isTest1Shown == false then
+                    test1 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test1:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test1:SetSize(450, 450)
+                    test1:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest1Shown = true
+                end
             end
 
-            local textureName = "blpTextureName" .. dungeonId
+            if dungeonId == 2 then
+                if isTest1Shown == true then
+                    test1:Hide()
+                    isTest1Shown = false
+                end
 
-            textureName = WGFrame:CreateTexture(nil, "ARTWORK")
-            textureName:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-            textureName:SetSize(450, 450)
-            textureName:SetTexture(folderGuidesPath .. dungeonId)
-            WGFrame.textureName = textureName
-            _G[penultimateBlpTextureNameLoaded]()
-            --loadGuide(textureName, dungeonId, penultimateBlpTextureNameLoaded)
-            --removePreviousGuide(penultimateBlpTextureNameLoaded)
+                if isTest3Shown == true then
+                    test3:Hide()
+                    isTest3Shown = false
+                end
+
+                if isTest4Shown == true then
+                    test4:Hide()
+                    isTest4Shown = false
+                end
+
+                if isTest5Shown == true then
+                    test5:Hide()
+                    isTest5Shown = false
+                end
+
+                if isTest6Shown == true then
+                    test6:Hide()
+                    isTest6Shown = false
+                end
+
+                if isTest7Shown == true then
+                    test7:Hide()
+                    isTest7Shown = false
+                end
+
+                if isTest8Shown == true then
+                    test8:Hide()
+                    isTest8Shown = false
+                end
+
+                if isTest2Shown == false then
+                    test2 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test2:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test2:SetSize(450, 450)
+                    test2:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest2Shown = true
+                end
+                table.insert(mb, "lol")
+            end
+
+            if dungeonId == 3 then
+                if isTest1Shown == true then
+                    test1:Hide()
+                    isTest1Shown = false
+                end
+
+                if isTest2Shown == true then
+                    test2:Hide()
+                    isTest2Shown = false
+                end
+
+                if isTest4Shown == true then
+                    test4:Hide()
+                    isTest4Shown = false
+                end
+
+                if isTest5Shown == true then
+                    test5:Hide()
+                    isTest5Shown = false
+                end
+
+                if isTest6Shown == true then
+                    test6:Hide()
+                    isTest6Shown = false
+                end
+
+                if isTest7Shown == true then
+                    test7:Hide()
+                    isTest7Shown = false
+                end
+
+                if isTest8Shown == true then
+                    test8:Hide()
+                    isTest8Shown = false
+                end
+
+                if isTest3Shown == false then
+                    test3 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test3:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test3:SetSize(450, 450)
+                    test3:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest3Shown = true
+                end
+            end
+
+            if dungeonId == 4 then
+                if isTest1Shown == true then
+                    test1:Hide()
+                    isTest1Shown = false
+                end
+
+                if isTest2Shown == true then
+                    test2:Hide()
+                    isTest2Shown = false
+                end
+
+                if isTest3Shown == true then
+                    test3:Hide()
+                    isTest3Shown = false
+                end
+
+                if isTest5Shown == true then
+                    test5:Hide()
+                    isTest5Shown = false
+                end
+
+                if isTest6Shown == true then
+                    test6:Hide()
+                    isTest6Shown = false
+                end
+
+                if isTest7Shown == true then
+                    test7:Hide()
+                    isTest7Shown = false
+                end
+
+                if isTest8Shown == true then
+                    test8:Hide()
+                    isTest8Shown = false
+                end
+
+                if isTest4Shown == false then
+                    test4 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test4:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test4:SetSize(450, 450)
+                    test4:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest4Shown = true
+                end
+            end
+
+            if dungeonId == 5 then
+                if isTest1Shown == true then
+                    test1:Hide()
+                    isTest1Shown = false
+                end
+
+                if isTest2Shown == true then
+                    test2:Hide()
+                    isTest2Shown = false
+                end
+
+                if isTest3Shown == true then
+                    test3:Hide()
+                    isTest3Shown = false
+                end
+
+                if isTest4Shown == true then
+                    test4:Hide()
+                    isTest4Shown = false
+                end
+
+                if isTest6Shown == true then
+                    test6:Hide()
+                    isTest6Shown = false
+                end
+
+                if isTest7Shown == true then
+                    test7:Hide()
+                    isTest7Shown = false
+                end
+
+                if isTest8Shown == true then
+                    test8:Hide()
+                    isTest8Shown = false
+                end
+
+                if isTest5Shown == false then
+                    test5 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test5:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test5:SetSize(450, 450)
+                    test5:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest5Shown = true
+                end
+            end
+
+            if dungeonId == 6 then
+                if isTest1Shown == true then
+                    test1:Hide()
+                    isTest1Shown = false
+                end
+
+                if isTest2Shown == true then
+                    test2:Hide()
+                    isTest2Shown = false
+                end
+
+                if isTest3Shown == true then
+                    test3:Hide()
+                    isTest3Shown = false
+                end
+
+                if isTest4Shown == true then
+                    test4:Hide()
+                    isTest4Shown = false
+                end
+
+                if isTest5Shown == true then
+                    test5:Hide()
+                    isTest5Shown = false
+                end
+
+                if isTest7Shown == true then
+                    test7:Hide()
+                    isTest7Shown = false
+                end
+
+                if isTest8Shown == true then
+                    test8:Hide()
+                    isTest8Shown = false
+                end
+
+                if isTest6Shown == false then
+                    test6 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test6:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test6:SetSize(450, 450)
+                    test6:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest6Shown = true
+                end
+            end
+
+            if dungeonId == 7 then
+                if isTest1Shown == true then
+                    test1:Hide()
+                    isTest1Shown = false
+                end
+
+                if isTest2Shown == true then
+                    test2:Hide()
+                    isTest2Shown = false
+                end
+
+                if isTest3Shown == true then
+                    test3:Hide()
+                    isTest3Shown = false
+                end
+
+                if isTest4Shown == true then
+                    test4:Hide()
+                    isTest4Shown = false
+                end
+
+                if isTest5Shown == true then
+                    test5:Hide()
+                    isTest5Shown = false
+                end
+
+                if isTest6Shown == true then
+                    test6:Hide()
+                    isTest6Shown = false
+                end
+
+                if isTest8Shown == true then
+                    test8:Hide()
+                    isTest8Shown = false
+                end
+
+                if isTest7Shown == false then
+                    test7 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test7:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test7:SetSize(450, 450)
+                    test7:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest7Shown = true
+                end
+            end
+
+            if dungeonId == 8 then
+                if isTest1Shown == true then
+                    test1:Hide()
+                    isTest1Shown = false
+                end
+
+                if isTest2Shown == true then
+                    test2:Hide()
+                    isTest2Shown = false
+                end
+
+                if isTest3Shown == true then
+                    test3:Hide()
+                    isTest3Shown = false
+                end
+
+                if isTest4Shown == true then
+                    test4:Hide()
+                    isTest4Shown = false
+                end
+
+                if isTest5Shown == true then
+                    test5:Hide()
+                    isTest5Shown = false
+                end
+
+                if isTest6Shown == true then
+                    test6:Hide()
+                    isTest6Shown = false
+                end
+
+                if isTest7Shown == true then
+                    test7:Hide()
+                    isTest7Shown = false
+                end
+
+
+                if isTest8Shown == false then
+                    test8 =  WGFrame:CreateTexture(nil, "ARTWORK")
+                    test8:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+                    test8:SetSize(450, 450)
+                    test8:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    isTest8Shown = true
+                end
+            end
         end
     end
 end
 -- end onclick event --
-
-local aze = WGFrame:CreateTexture(nil, "ARTWORK")
-aze:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-aze:SetSize(450, 450)
-aze:SetTexture(folderGuidesPath .. 1)
-
-print("mdrAZE" .. type(aze))
-
 
 -- display the dungeons' list --
 local function DungeonsListDropDown(frame, level, menuList)
@@ -191,22 +579,6 @@ UIDropDownMenu_Initialize(WGFrame.dropDown, DungeonsListDropDown)
 UIDropDownMenu_SetText(WGFrame.dropDown, "-- Sélectionner un donjon --")
 UIDropDownMenu_DisableDropDown(WGFrame.dropDown)
 
--- Dropdown function --
---local function createDropDownFrame(dropDownName, frameName, ofX, ofY, size, initFunc, defaultTextContent, isEnable)
---    dropDownName = CreateFrame("Frame", frameName, WGFrame, "UIDropDownMenuTemplate")
---    dropDownName:SetPoint("RIGHT", WGFrame, "TOP", ofX, ofY)
---    UIDropDownMenu_SetWidth(dropDownName, size)
---    UIDropDownMenu_Initialize(dropDownName, initFunc)
---    UIDropDownMenu_SetText(dropDownName, defaultTextContent)
---    if isEnable == false then
---        UIDropDownMenu_DisableDropDown(dropDownName)
---    end
---end
--- end Dropdown function --
-
---createDropDownFrame(WGFrame.classDropDown, "WPClassDropDown", 10, -50, 180, ClassesListDropDown, "-- Sélectionner votre classe --", true)
---createDropDownFrame(WGFrame.dropDown, "WPDungeonsListDropDown", 230, -50, 200, DungeonsListDropDown, "-- Sélectionner un donjon --", true)
-
 -- slash commands --
 SLASH_WOWGUIDES1 = '/wg'
 SlashCmdList["WOWGUIDES"] = function()
@@ -215,7 +587,7 @@ end
 
 SLASH_TEST1 = "/test"
 SlashCmdList["TEST"] = function()
-    _G[blpTextureName1]()
+
 end
 
 SLASH_RELOADUI1 = "/rl"
