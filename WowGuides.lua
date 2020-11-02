@@ -6,6 +6,9 @@ local MainFrameHeight = 500
 local FOLDER_GUIDES_PATH = "Interface\\AddOns\\WowGuides\\guides\\pve\\"
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
+local textures = {}
+local pomme = nil
+
 local GREEN =  "|cff00ff00"
 local YELLOW = "|cffffff00"
 local RED =    "|cffff0000"
@@ -31,8 +34,6 @@ local isTest5Shown = false
 local isTest6Shown = false
 local isTest7Shown = false
 local isTest8Shown = false
-
-local mb = nil
 
 local dungeonSelected = nil
 local dungeons = {
@@ -143,6 +144,14 @@ function wowGuides:OnInitialize()
 end
 -- END LIBSTUB --
 
+local function createTexture(dungeonId)
+    textures["texture" .. dungeonId] = WGFrame:CreateTexture(nil, "ARTWORK")
+    textures["texture" .. dungeonId]:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+    textures["texture" .. dungeonId]:SetSize(450, 450)
+    textures["texture" .. dungeonId]:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+    return textures["texture" .. dungeonId]
+end
+
 -- @todo pve and pvp categories
 
 -- Onlick Dungeons dropdown items --
@@ -152,367 +161,341 @@ local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
 
     for dungeonId, dungeon in ipairs(dungeons) do
         if arg1 == dungeonId then
-
             -- @todo REFACTORISER CI DESSOUS --
 
             if dungeonId == 1 then
                 if isTest2Shown == true then
-                    test2:Hide()
+                    textures.texture2:Hide()
                     isTest2Shown = false
                 end
 
                 if isTest3Shown == true then
-                    test3:Hide()
+                    textures.texture3:Hide()
                     isTest3Shown = false
                 end
 
                 if isTest4Shown == true then
-                    test4:Hide()
+                    textures.texture4:Hide()
                     isTest4Shown = false
                 end
 
                 if isTest5Shown == true then
-                    test5:Hide()
+                    textures.texture5:Hide()
                     isTest5Shown = false
                 end
 
                 if isTest6Shown == true then
-                    test6:Hide()
+                    textures.texture6:Hide()
                     isTest6Shown = false
                 end
 
                 if isTest7Shown == true then
-                    test7:Hide()
+                    textures.texture7:Hide()
                     isTest7Shown = false
                 end
 
                 if isTest8Shown == true then
-                    test8:Hide()
+                    textures.texture8:Hide()
                     isTest8Shown = false
                 end
 
                 if isTest1Shown == false then
-                    test1 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test1:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test1:SetSize(450, 450)
-                    test1:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest1Shown = true
                 end
             end
 
             if dungeonId == 2 then
                 if isTest1Shown == true then
-                    test1:Hide()
+                    textures.texture1:Hide()
                     isTest1Shown = false
                 end
 
                 if isTest3Shown == true then
-                    test3:Hide()
+                    textures.texture3:Hide()
                     isTest3Shown = false
                 end
 
                 if isTest4Shown == true then
-                    test4:Hide()
+                    textures.texture4:Hide()
                     isTest4Shown = false
                 end
 
                 if isTest5Shown == true then
-                    test5:Hide()
+                    textures.texture5:Hide()
                     isTest5Shown = false
                 end
 
                 if isTest6Shown == true then
-                    test6:Hide()
+                    textures.texture6:Hide()
                     isTest6Shown = false
                 end
 
                 if isTest7Shown == true then
-                    test7:Hide()
+                    textures.texture7:Hide()
                     isTest7Shown = false
                 end
 
                 if isTest8Shown == true then
-                    test8:Hide()
+                    textures.texture8:Hide()
                     isTest8Shown = false
                 end
 
                 if isTest2Shown == false then
-                    test2 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test2:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test2:SetSize(450, 450)
-                    test2:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest2Shown = true
                 end
-                table.insert(mb, "lol")
             end
 
             if dungeonId == 3 then
                 if isTest1Shown == true then
-                    test1:Hide()
+                    textures.texture1:Hide()
                     isTest1Shown = false
                 end
 
                 if isTest2Shown == true then
-                    test2:Hide()
+                    textures.texture2:Hide()
                     isTest2Shown = false
                 end
 
                 if isTest4Shown == true then
-                    test4:Hide()
+                    textures.texture4:Hide()
                     isTest4Shown = false
                 end
 
                 if isTest5Shown == true then
-                    test5:Hide()
+                    textures.texture5:Hide()
                     isTest5Shown = false
                 end
 
                 if isTest6Shown == true then
-                    test6:Hide()
+                    textures.texture6:Hide()
                     isTest6Shown = false
                 end
 
                 if isTest7Shown == true then
-                    test7:Hide()
+                    textures.texture7:Hide()
                     isTest7Shown = false
                 end
 
                 if isTest8Shown == true then
-                    test8:Hide()
+                    textures.texture8:Hide()
                     isTest8Shown = false
                 end
 
                 if isTest3Shown == false then
-                    test3 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test3:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test3:SetSize(450, 450)
-                    test3:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest3Shown = true
                 end
             end
 
             if dungeonId == 4 then
                 if isTest1Shown == true then
-                    test1:Hide()
+                    textures.texture1:Hide()
                     isTest1Shown = false
                 end
 
                 if isTest2Shown == true then
-                    test2:Hide()
+                    textures.texture2:Hide()
                     isTest2Shown = false
                 end
 
                 if isTest3Shown == true then
-                    test3:Hide()
+                    textures.texture3:Hide()
                     isTest3Shown = false
                 end
 
                 if isTest5Shown == true then
-                    test5:Hide()
+                    textures.texture5:Hide()
                     isTest5Shown = false
                 end
 
                 if isTest6Shown == true then
-                    test6:Hide()
+                    textures.texture6:Hide()
                     isTest6Shown = false
                 end
 
                 if isTest7Shown == true then
-                    test7:Hide()
+                    textures.texture7:Hide()
                     isTest7Shown = false
                 end
 
                 if isTest8Shown == true then
-                    test8:Hide()
+                    textures.texture8:Hide()
                     isTest8Shown = false
                 end
 
                 if isTest4Shown == false then
-                    test4 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test4:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test4:SetSize(450, 450)
-                    test4:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest4Shown = true
                 end
             end
 
             if dungeonId == 5 then
                 if isTest1Shown == true then
-                    test1:Hide()
+                    textures.texture1:Hide()
                     isTest1Shown = false
                 end
 
                 if isTest2Shown == true then
-                    test2:Hide()
+                    textures.texture2:Hide()
                     isTest2Shown = false
                 end
 
                 if isTest3Shown == true then
-                    test3:Hide()
+                    textures.texture3:Hide()
                     isTest3Shown = false
                 end
 
                 if isTest4Shown == true then
-                    test4:Hide()
+                    textures.texture4:Hide()
                     isTest4Shown = false
                 end
 
                 if isTest6Shown == true then
-                    test6:Hide()
+                    textures.texture6:Hide()
                     isTest6Shown = false
                 end
 
                 if isTest7Shown == true then
-                    test7:Hide()
+                    textures.texture7:Hide()
                     isTest7Shown = false
                 end
 
                 if isTest8Shown == true then
-                    test8:Hide()
+                    textures.texture8:Hide()
                     isTest8Shown = false
                 end
 
                 if isTest5Shown == false then
-                    test5 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test5:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test5:SetSize(450, 450)
-                    test5:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest5Shown = true
                 end
             end
 
             if dungeonId == 6 then
                 if isTest1Shown == true then
-                    test1:Hide()
+                    textures.texture1:Hide()
                     isTest1Shown = false
                 end
 
                 if isTest2Shown == true then
-                    test2:Hide()
+                    textures.texture2:Hide()
                     isTest2Shown = false
                 end
 
                 if isTest3Shown == true then
-                    test3:Hide()
+                    textures.texture3:Hide()
                     isTest3Shown = false
                 end
 
                 if isTest4Shown == true then
-                    test4:Hide()
+                    textures.texture4:Hide()
                     isTest4Shown = false
                 end
 
                 if isTest5Shown == true then
-                    test5:Hide()
+                    textures.texture5:Hide()
                     isTest5Shown = false
                 end
 
                 if isTest7Shown == true then
-                    test7:Hide()
+                    textures.texture7:Hide()
                     isTest7Shown = false
                 end
 
                 if isTest8Shown == true then
-                    test8:Hide()
+                    textures.texture8:Hide()
                     isTest8Shown = false
                 end
 
                 if isTest6Shown == false then
-                    test6 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test6:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test6:SetSize(450, 450)
-                    test6:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest6Shown = true
                 end
             end
 
             if dungeonId == 7 then
                 if isTest1Shown == true then
-                    test1:Hide()
+                    textures.texture1:Hide()
                     isTest1Shown = false
                 end
 
                 if isTest2Shown == true then
-                    test2:Hide()
+                    textures.texture2:Hide()
                     isTest2Shown = false
                 end
 
                 if isTest3Shown == true then
-                    test3:Hide()
+                    textures.texture3:Hide()
                     isTest3Shown = false
                 end
 
                 if isTest4Shown == true then
-                    test4:Hide()
+                    textures.texture4:Hide()
                     isTest4Shown = false
                 end
 
                 if isTest5Shown == true then
-                    test5:Hide()
+                    textures.texture5:Hide()
                     isTest5Shown = false
                 end
 
                 if isTest6Shown == true then
-                    test6:Hide()
+                    textures.texture6:Hide()
                     isTest6Shown = false
                 end
 
                 if isTest8Shown == true then
-                    test8:Hide()
+                    textures.texture8:Hide()
                     isTest8Shown = false
                 end
 
                 if isTest7Shown == false then
-                    test7 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test7:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test7:SetSize(450, 450)
-                    test7:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest7Shown = true
                 end
             end
 
             if dungeonId == 8 then
                 if isTest1Shown == true then
-                    test1:Hide()
+                    textures.texture1:Hide()
                     isTest1Shown = false
                 end
 
                 if isTest2Shown == true then
-                    test2:Hide()
+                    textures.texture2:Hide()
                     isTest2Shown = false
                 end
 
                 if isTest3Shown == true then
-                    test3:Hide()
+                    textures.texture3:Hide()
                     isTest3Shown = false
                 end
 
                 if isTest4Shown == true then
-                    test4:Hide()
+                    textures.texture4:Hide()
                     isTest4Shown = false
                 end
 
                 if isTest5Shown == true then
-                    test5:Hide()
+                    textures.texture5:Hide()
                     isTest5Shown = false
                 end
 
                 if isTest6Shown == true then
-                    test6:Hide()
+                    textures.texture6:Hide()
                     isTest6Shown = false
                 end
 
                 if isTest7Shown == true then
-                    test7:Hide()
+                    textures.texture7:Hide()
                     isTest7Shown = false
                 end
 
 
                 if isTest8Shown == false then
-                    test8 =  WGFrame:CreateTexture(nil, "ARTWORK")
-                    test8:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
-                    test8:SetSize(450, 450)
-                    test8:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+                    createTexture(dungeonId)
                     isTest8Shown = true
                 end
             end
@@ -586,7 +569,7 @@ end
 
 SLASH_TEST1 = "/test"
 SlashCmdList["TEST"] = function()
-
+    textures.texture1:Hide()
 end
 
 SLASH_RELOADUI1 = "/rl"
