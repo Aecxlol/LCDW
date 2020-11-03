@@ -1,5 +1,6 @@
 local name, _ = ...
-local wowGuidesVersion = "0.1 Alpha"
+local customAddonName = "Le codex de Willios"
+local addonVersion = "0.1 Alpha"
 
 local MainFrameWidth = 500
 local MainFrameHeight = 500
@@ -65,7 +66,7 @@ end
 local function onEvent(self, event, arg1, ...)
     if(event == "ADDON_LOADED" and name == arg1) then
         initTextureShown()
-        print(BLUE.. name .."|r loaded! Type /wg to access to the guides.")
+        print(BLUE.. customAddonName .."|r loaded! Type /wg to access to the guides.")
     end
 end
 
@@ -79,7 +80,9 @@ WGFrame:Hide()
 WGFrame:SetSize(MainFrameWidth, MainFrameHeight)
 WGFrame:SetPoint("CENTER", 0, 0)
 WGFrame:SetMovable(true)
+WGFrame:SetResizable(true)
 WGFrame:EnableMouse(true)
+WGFrame:SetMinResize(MainFrameWidth, MainFrameWidth)
 WGFrame:RegisterForDrag("LeftButton")
 WGFrame:SetScript("OnDragStart", WGFrame.StartMoving)
 WGFrame:SetScript("OnDragStop", WGFrame.StopMovingOrSizing)
@@ -89,8 +92,24 @@ WGFrame:SetScript("OnDragStop", WGFrame.StopMovingOrSizing)
 WGFrame.title = WGFrame:CreateFontString(nil, "OVERLAY")
 WGFrame.title:SetFontObject("GameFontHighLight")
 WGFrame.title:SetPoint("CENTER", WGFrame.TitleBg, "CENTER", 0, 0)
-WGFrame.title:SetText("Wow Guides - 0.1")
+WGFrame.title:SetText(customAddonName .. " - " .. addonVersion)
 -- end title's mainFrame
+
+-- Resize frame --
+WGFrame.rb = CreateFrame("Button", nil, WGFrame)
+WGFrame.rb:SetPoint("BOTTOMRIGHT", -5, 5)
+WGFrame.rb:SetSize(16, 16)
+WGFrame.rb:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+WGFrame.rb:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+WGFrame.rb:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+
+WGFrame.rb:SetScript("OnMouseDown", function()
+    WGFrame:StartSizing("BOTTOMRIGHT")
+end)
+WGFrame.rb:SetScript("OnMouseUp", function()
+    WGFrame:StopMovingOrSizing()
+end)
+-- end resize frame --
 
 -- LIBSTUB --
 local guidesLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
@@ -109,7 +128,7 @@ local guidesLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
     end,
     OnTooltipShow = function(tooltip)
         if tooltip and tooltip.AddLine then
-            tooltip:AddLine(BLUE .. name .. " " .. wowGuidesVersion)
+            tooltip:AddLine(BLUE .. customAddonName .. " - " .. addonVersion)
             tooltip:AddLine(YELLOW .. "Click gauche" .. " " .. WHITE
                     .. "pour ouvrir/fermer la fenêtre de guides")
             tooltip:AddLine(YELLOW .. "Click droit" .. " " .. WHITE
