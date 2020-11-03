@@ -16,15 +16,6 @@ local BLUE =   "|cff0198e1"
 local ORANGE = "|cffff9933"
 local WHITE =  "|cffffffff"
 
-local isTest1Shown = false
-local isTest2Shown = false
-local isTest3Shown = false
-local isTest4Shown = false
-local isTest5Shown = false
-local isTest6Shown = false
-local isTest7Shown = false
-local isTest8Shown = false
-
 local dungeonSelected = nil
 local dungeons = {
     "Sillage nécrotique",
