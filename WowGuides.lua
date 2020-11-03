@@ -7,7 +7,7 @@ local FOLDER_GUIDES_PATH = "Interface\\AddOns\\WowGuides\\guides\\pve\\"
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
 local textures = {}
-local pomme = nil
+local textureShown = {}
 
 local GREEN =  "|cff00ff00"
 local YELLOW = "|cffffff00"
@@ -15,16 +15,6 @@ local RED =    "|cffff0000"
 local BLUE =   "|cff0198e1"
 local ORANGE = "|cffff9933"
 local WHITE =  "|cffffffff"
-
-
-local test1 = nil
-local test2 = nil
-local test3 = nil
-local test4 = nil
-local test5 = nil
-local test6 = nil
-local test7 = nil
-local test8 = nil
 
 local isTest1Shown = false
 local isTest2Shown = false
@@ -66,7 +56,6 @@ local classes = {
 local wowGuides = LibStub("AceAddon-3.0"):NewAddon("WowGuides", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
 
-
 --function wowGuides:CommandTheBunnies()
 --    self.db.profile.minimap.hide = not self.db.profile.minimap.hide
 --    if self.db.profile.minimap.hide then
@@ -76,8 +65,15 @@ local icon = LibStub("LibDBIcon-1.0")
 --    end
 --end
 
+local function initTextureShown()
+    for dungeonId, v in ipairs(dungeons) do
+        textureShown["isTexture" .. dungeonId .. "Shown"] = false
+    end
+end
+
 local function onEvent(self, event, arg1, ...)
     if(event == "ADDON_LOADED" and name == arg1) then
+        initTextureShown()
         print(BLUE.. name .."|r loaded! Type /wg to access to the guides.")
     end
 end
@@ -160,344 +156,24 @@ local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
     dungeonSelected = arg1
 
     for dungeonId, dungeon in ipairs(dungeons) do
-        if arg1 == dungeonId then
-            -- @todo REFACTORISER CI DESSOUS --
 
-            if dungeonId == 1 then
-                if isTest2Shown == true then
-                    textures.texture2:Hide()
-                    isTest2Shown = false
-                end
-
-                if isTest3Shown == true then
-                    textures.texture3:Hide()
-                    isTest3Shown = false
-                end
-
-                if isTest4Shown == true then
-                    textures.texture4:Hide()
-                    isTest4Shown = false
-                end
-
-                if isTest5Shown == true then
-                    textures.texture5:Hide()
-                    isTest5Shown = false
-                end
-
-                if isTest6Shown == true then
-                    textures.texture6:Hide()
-                    isTest6Shown = false
-                end
-
-                if isTest7Shown == true then
-                    textures.texture7:Hide()
-                    isTest7Shown = false
-                end
-
-                if isTest8Shown == true then
-                    textures.texture8:Hide()
-                    isTest8Shown = false
-                end
-
-                if isTest1Shown == false then
-                    createTexture(dungeonId)
-                    isTest1Shown = true
-                end
+        -- if the dungeon is different that the one selected
+        if dungeonId ~= arg1 then
+            -- then check which one is currently shown
+            if textureShown["isTexture" .. dungeonId .. "Shown"] == true then
+                -- Hide it
+                textures["texture" .. dungeonId]:Hide()
+                -- and set it to false (which means it's now hidden)
+                textureShown["isTexture" .. dungeonId .. "Shown"] = false
             end
-
-            if dungeonId == 2 then
-                if isTest1Shown == true then
-                    textures.texture1:Hide()
-                    isTest1Shown = false
-                end
-
-                if isTest3Shown == true then
-                    textures.texture3:Hide()
-                    isTest3Shown = false
-                end
-
-                if isTest4Shown == true then
-                    textures.texture4:Hide()
-                    isTest4Shown = false
-                end
-
-                if isTest5Shown == true then
-                    textures.texture5:Hide()
-                    isTest5Shown = false
-                end
-
-                if isTest6Shown == true then
-                    textures.texture6:Hide()
-                    isTest6Shown = false
-                end
-
-                if isTest7Shown == true then
-                    textures.texture7:Hide()
-                    isTest7Shown = false
-                end
-
-                if isTest8Shown == true then
-                    textures.texture8:Hide()
-                    isTest8Shown = false
-                end
-
-                if isTest2Shown == false then
-                    createTexture(dungeonId)
-                    isTest2Shown = true
-                end
-            end
-
-            if dungeonId == 3 then
-                if isTest1Shown == true then
-                    textures.texture1:Hide()
-                    isTest1Shown = false
-                end
-
-                if isTest2Shown == true then
-                    textures.texture2:Hide()
-                    isTest2Shown = false
-                end
-
-                if isTest4Shown == true then
-                    textures.texture4:Hide()
-                    isTest4Shown = false
-                end
-
-                if isTest5Shown == true then
-                    textures.texture5:Hide()
-                    isTest5Shown = false
-                end
-
-                if isTest6Shown == true then
-                    textures.texture6:Hide()
-                    isTest6Shown = false
-                end
-
-                if isTest7Shown == true then
-                    textures.texture7:Hide()
-                    isTest7Shown = false
-                end
-
-                if isTest8Shown == true then
-                    textures.texture8:Hide()
-                    isTest8Shown = false
-                end
-
-                if isTest3Shown == false then
-                    createTexture(dungeonId)
-                    isTest3Shown = true
-                end
-            end
-
-            if dungeonId == 4 then
-                if isTest1Shown == true then
-                    textures.texture1:Hide()
-                    isTest1Shown = false
-                end
-
-                if isTest2Shown == true then
-                    textures.texture2:Hide()
-                    isTest2Shown = false
-                end
-
-                if isTest3Shown == true then
-                    textures.texture3:Hide()
-                    isTest3Shown = false
-                end
-
-                if isTest5Shown == true then
-                    textures.texture5:Hide()
-                    isTest5Shown = false
-                end
-
-                if isTest6Shown == true then
-                    textures.texture6:Hide()
-                    isTest6Shown = false
-                end
-
-                if isTest7Shown == true then
-                    textures.texture7:Hide()
-                    isTest7Shown = false
-                end
-
-                if isTest8Shown == true then
-                    textures.texture8:Hide()
-                    isTest8Shown = false
-                end
-
-                if isTest4Shown == false then
-                    createTexture(dungeonId)
-                    isTest4Shown = true
-                end
-            end
-
-            if dungeonId == 5 then
-                if isTest1Shown == true then
-                    textures.texture1:Hide()
-                    isTest1Shown = false
-                end
-
-                if isTest2Shown == true then
-                    textures.texture2:Hide()
-                    isTest2Shown = false
-                end
-
-                if isTest3Shown == true then
-                    textures.texture3:Hide()
-                    isTest3Shown = false
-                end
-
-                if isTest4Shown == true then
-                    textures.texture4:Hide()
-                    isTest4Shown = false
-                end
-
-                if isTest6Shown == true then
-                    textures.texture6:Hide()
-                    isTest6Shown = false
-                end
-
-                if isTest7Shown == true then
-                    textures.texture7:Hide()
-                    isTest7Shown = false
-                end
-
-                if isTest8Shown == true then
-                    textures.texture8:Hide()
-                    isTest8Shown = false
-                end
-
-                if isTest5Shown == false then
-                    createTexture(dungeonId)
-                    isTest5Shown = true
-                end
-            end
-
-            if dungeonId == 6 then
-                if isTest1Shown == true then
-                    textures.texture1:Hide()
-                    isTest1Shown = false
-                end
-
-                if isTest2Shown == true then
-                    textures.texture2:Hide()
-                    isTest2Shown = false
-                end
-
-                if isTest3Shown == true then
-                    textures.texture3:Hide()
-                    isTest3Shown = false
-                end
-
-                if isTest4Shown == true then
-                    textures.texture4:Hide()
-                    isTest4Shown = false
-                end
-
-                if isTest5Shown == true then
-                    textures.texture5:Hide()
-                    isTest5Shown = false
-                end
-
-                if isTest7Shown == true then
-                    textures.texture7:Hide()
-                    isTest7Shown = false
-                end
-
-                if isTest8Shown == true then
-                    textures.texture8:Hide()
-                    isTest8Shown = false
-                end
-
-                if isTest6Shown == false then
-                    createTexture(dungeonId)
-                    isTest6Shown = true
-                end
-            end
-
-            if dungeonId == 7 then
-                if isTest1Shown == true then
-                    textures.texture1:Hide()
-                    isTest1Shown = false
-                end
-
-                if isTest2Shown == true then
-                    textures.texture2:Hide()
-                    isTest2Shown = false
-                end
-
-                if isTest3Shown == true then
-                    textures.texture3:Hide()
-                    isTest3Shown = false
-                end
-
-                if isTest4Shown == true then
-                    textures.texture4:Hide()
-                    isTest4Shown = false
-                end
-
-                if isTest5Shown == true then
-                    textures.texture5:Hide()
-                    isTest5Shown = false
-                end
-
-                if isTest6Shown == true then
-                    textures.texture6:Hide()
-                    isTest6Shown = false
-                end
-
-                if isTest8Shown == true then
-                    textures.texture8:Hide()
-                    isTest8Shown = false
-                end
-
-                if isTest7Shown == false then
-                    createTexture(dungeonId)
-                    isTest7Shown = true
-                end
-            end
-
-            if dungeonId == 8 then
-                if isTest1Shown == true then
-                    textures.texture1:Hide()
-                    isTest1Shown = false
-                end
-
-                if isTest2Shown == true then
-                    textures.texture2:Hide()
-                    isTest2Shown = false
-                end
-
-                if isTest3Shown == true then
-                    textures.texture3:Hide()
-                    isTest3Shown = false
-                end
-
-                if isTest4Shown == true then
-                    textures.texture4:Hide()
-                    isTest4Shown = false
-                end
-
-                if isTest5Shown == true then
-                    textures.texture5:Hide()
-                    isTest5Shown = false
-                end
-
-                if isTest6Shown == true then
-                    textures.texture6:Hide()
-                    isTest6Shown = false
-                end
-
-                if isTest7Shown == true then
-                    textures.texture7:Hide()
-                    isTest7Shown = false
-                end
-
-
-                if isTest8Shown == false then
-                    createTexture(dungeonId)
-                    isTest8Shown = true
-                end
+        -- for the dungeon selected
+        else
+            -- check if the selected one is hidden
+            if textureShown["isTexture" .. dungeonId .. "Shown"] == false then
+                -- if it is, create the texture according to the dungeon selected
+                createTexture(dungeonId)
+                -- and set it to true (which means it's now shown)
+                textureShown["isTexture" .. dungeonId .. "Shown"] = true
             end
         end
     end
@@ -569,7 +245,7 @@ end
 
 SLASH_TEST1 = "/test"
 SlashCmdList["TEST"] = function()
-    textures.texture1:Hide()
+    print(textureShown.isTexture1Shown)
 end
 
 SLASH_RELOADUI1 = "/rl"
