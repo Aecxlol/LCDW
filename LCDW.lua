@@ -4,7 +4,8 @@ local addonVersion = "0.1 Alpha"
 
 local MainFrameWidth = 500
 local MainFrameHeight = 500
-local FOLDER_GUIDES_PATH = "Interface\\AddOns\\WowGuides\\guides\\pve\\"
+local FOLDER_GUIDES_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
+local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
 local textures = {}
@@ -45,17 +46,15 @@ local classes = {
     "Voleur",
 }
 
-local wowGuides = LibStub("AceAddon-3.0"):NewAddon("WowGuides", "AceConsole-3.0")
+local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
-
---function wowGuides:CommandTheBunnies()
---    self.db.profile.minimap.hide = not self.db.profile.minimap.hide
---    if self.db.profile.minimap.hide then
---        icon:Hide("Bunnies!")
---    else
---        icon:Show("Bunnies!")
---    end
---end
+local defaults = {
+    profile = {
+        minimap = {
+            hide = false
+        }
+    }
+}
 
 local function initTextureShown()
     for dungeonId, v in ipairs(dungeons) do
@@ -66,7 +65,7 @@ end
 local function onEvent(self, event, arg1, ...)
     if(event == "ADDON_LOADED" and name == arg1) then
         initTextureShown()
-        print(BLUE.. customAddonName .."|r loaded! Type /wg to access to the guides.")
+        print(BLUE.. customAddonName .."|r loaded! Type /lcdw to access to the guides.")
     end
 end
 
@@ -82,7 +81,7 @@ WGFrame:SetPoint("CENTER", 0, 0)
 WGFrame:SetMovable(true)
 WGFrame:SetResizable(true)
 WGFrame:EnableMouse(true)
-WGFrame:SetMinResize(MainFrameWidth, MainFrameWidth)
+WGFrame:SetMinResize(MainFrameWidth, MainFrameHeight)
 WGFrame:RegisterForDrag("LeftButton")
 WGFrame:SetScript("OnDragStart", WGFrame.StartMoving)
 WGFrame:SetScript("OnDragStop", WGFrame.StopMovingOrSizing)
@@ -111,10 +110,10 @@ WGFrame.rb:SetScript("OnMouseUp", function()
 end)
 -- end resize frame --
 
--- LIBSTUB --
-local guidesLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
-    type = "data source",
-    icon = "Interface\\AddOns\\WowGuides\\misc\\minimap-icon",
+-- MINIMAP --
+local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
+    type = "global",
+    icon = MINIMAP_ICON_PATH,
     OnClick = function(clickedframe, button)
         if button == "RightButton" then
             print(RED .. "WIP")
@@ -137,18 +136,12 @@ local guidesLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
     end
 })
 
-function wowGuides:OnInitialize()
-    self.db = LibStub("AceDB-3.0"):New("WowGuidesDB", {
-        profile = {
-            minimap = {
-                hide = false,
-            },
-        },
-    })
-    icon:Register("WG", guidesLDB, self.db.profile.minimap)
-    --self:RegisterChatCommand("bunnies", "CommandTheBunnies")
+function LCDW:OnInitialize()
+    self.db = LibStub("AceDB-3.0"):New("LCDWDB", defaults)
+    icon:Register("WG", LCLWLDB, self.db.profile.minimap)
+    self:RegisterChatCommand("bunnies", "CommandTheBunnies")
 end
--- END LIBSTUB --
+-- END MINIMAP --
 
 local function createTexture(dungeonId)
     textures["texture" .. dungeonId] = WGFrame:CreateTexture(nil, "ARTWORK")
@@ -248,14 +241,9 @@ UIDropDownMenu_SetText(WGFrame.dropDown, "-- Sélectionner un donjon --")
 UIDropDownMenu_DisableDropDown(WGFrame.dropDown)
 
 -- slash commands --
-SLASH_WOWGUIDES1 = '/wg'
-SlashCmdList["WOWGUIDES"] = function()
+SLASH_WOWGUIDES1 = '/lcdw'
+SlashCmdList["LECODEXDEWILLIOS"] = function()
     WGFrame:Show()
-end
-
-SLASH_TEST1 = "/test"
-SlashCmdList["TEST"] = function()
-    print(textureShown.isTexture1Shown)
 end
 
 SLASH_RELOADUI1 = "/rl"
