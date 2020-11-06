@@ -241,7 +241,7 @@ UIDropDownMenu_SetText(WGFrame.dropDown, "-- Sélectionner un donjon --")
 UIDropDownMenu_DisableDropDown(WGFrame.dropDown)
 
 -- slash commands --
-SLASH_WOWGUIDES1 = '/lcdw'
+SLASH_LECODEXDEWILLIOS1 = '/lcdw'
 SlashCmdList["LECODEXDEWILLIOS"] = function()
     WGFrame:Show()
 end
