@@ -76,73 +76,73 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", onEvent)
 
 -- MainFrame --
-local WGFrame = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
-WGFrame:Hide()
-WGFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
-WGFrame:SetPoint("CENTER", 0, 0)
-WGFrame:SetMovable(true)
-WGFrame:SetResizable(true)
-WGFrame:EnableMouse(true)
-WGFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
-WGFrame:RegisterForDrag("LeftButton")
-WGFrame:SetScript("OnDragStart", WGFrame.StartMoving)
-WGFrame:SetScript("OnDragStop", WGFrame.StopMovingOrSizing)
+local LCDWFrame = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
+LCDWFrame:Hide()
+LCDWFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
+LCDWFrame:SetPoint("CENTER", 0, 0)
+LCDWFrame:SetMovable(true)
+LCDWFrame:SetResizable(true)
+LCDWFrame:EnableMouse(true)
+LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
+LCDWFrame:RegisterForDrag("LeftButton")
+LCDWFrame:SetScript("OnDragStart", LCDWFrame.StartMoving)
+LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
 -- end MainFrame --
 
 -- Title's MainFrame
-WGFrame.title = WGFrame:CreateFontString(nil, "OVERLAY")
-WGFrame.title:SetFontObject("GameFontHighLight")
-WGFrame.title:SetPoint("CENTER", WGFrame.TitleBg, "CENTER", 0, 0)
-WGFrame.title:SetText(customAddonName .. " - " .. addonVersion)
+LCDWFrame.title = LCDWFrame:CreateFontString(nil, "OVERLAY")
+LCDWFrame.title:SetFontObject("GameFontHighLight")
+LCDWFrame.title:SetPoint("CENTER", LCDWFrame.TitleBg, "CENTER", 0, 0)
+LCDWFrame.title:SetText(customAddonName .. " - " .. addonVersion)
 -- end title's mainFrame
 
 -- Resize frame --
-WGFrame.rb = CreateFrame("Button", nil, WGFrame)
-WGFrame.rb:SetPoint("BOTTOMRIGHT", -5, 5)
-WGFrame.rb:SetSize(16, 16)
-WGFrame.rb:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
-WGFrame.rb:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
-WGFrame.rb:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+LCDWFrame.rb = CreateFrame("Button", nil, LCDWFrame)
+LCDWFrame.rb:SetPoint("BOTTOMRIGHT", -5, 5)
+LCDWFrame.rb:SetSize(16, 16)
+LCDWFrame.rb:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+LCDWFrame.rb:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+LCDWFrame.rb:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
 
-WGFrame.rb:SetScript("OnMouseDown", function()
-    WGFrame:StartSizing("BOTTOMRIGHT")
+LCDWFrame.rb:SetScript("OnMouseDown", function()
+    LCDWFrame:StartSizing("BOTTOMRIGHT")
 end)
-WGFrame.rb:SetScript("OnMouseUp", function()
-    WGFrame:StopMovingOrSizing()
+LCDWFrame.rb:SetScript("OnMouseUp", function()
+    LCDWFrame:StopMovingOrSizing()
 end)
 -- end resize frame --
 
 -- openChoiceFrameButton arrow --
-WGFrame.openChoiceFrameButton = CreateFrame("Button", nil, WGFrame)
-WGFrame.openChoiceFrameButton:SetSize(45, 45)
-WGFrame.openChoiceFrameButton:SetPoint("CENTER", WGFrame, "TOPRIGHT", -30, -50)
-WGFrame.openChoiceFrameButton:SetBackdrop({
+LCDWFrame.openChoiceFrameButton = CreateFrame("Button", nil, LCDWFrame)
+LCDWFrame.openChoiceFrameButton:SetSize(45, 45)
+LCDWFrame.openChoiceFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -30, -50)
+LCDWFrame.openChoiceFrameButton:SetBackdrop({
     bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
     insets = { left = 4, right = 4, top = 4, bottom = 4 }
 })
-WGFrame.openChoiceFrameButton.Hover = WGFrame.openChoiceFrameButton:CreateTexture(nil, "BACKGROUND")
-WGFrame.openChoiceFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
-WGFrame.openChoiceFrameButton.Hover:SetAllPoints(WGFrame.openChoiceFrameButton)
-WGFrame.openChoiceFrameButton.Hover:SetAlpha(0)
+LCDWFrame.openChoiceFrameButton.Hover = LCDWFrame.openChoiceFrameButton:CreateTexture(nil, "BACKGROUND")
+LCDWFrame.openChoiceFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
+LCDWFrame.openChoiceFrameButton.Hover:SetAllPoints(LCDWFrame.openChoiceFrameButton)
+LCDWFrame.openChoiceFrameButton.Hover:SetAlpha(0)
 
-WGFrame.openChoiceFrameButton:SetScript("OnEnter", function()
-    WGFrame.openChoiceFrameButton.Hover:SetAlpha(1)
+LCDWFrame.openChoiceFrameButton:SetScript("OnEnter", function()
+    LCDWFrame.openChoiceFrameButton.Hover:SetAlpha(1)
 end);
 --
-WGFrame.openChoiceFrameButton:SetScript("OnLeave", function()
-    WGFrame.openChoiceFrameButton.Hover:SetAlpha(0)
+LCDWFrame.openChoiceFrameButton:SetScript("OnLeave", function()
+    LCDWFrame.openChoiceFrameButton.Hover:SetAlpha(0)
 end);
 
-WGFrame.openChoiceFrameButton:SetScript("OnClick", function()
-    if WGFrame.choiceFrame:IsShown() then
-        WGFrame.choiceFrame:Hide()
-        WGFrame.openChoiceFrameButton:SetBackdrop({
+LCDWFrame.openChoiceFrameButton:SetScript("OnClick", function()
+    if LCDWFrame.choiceFrame:IsShown() then
+        LCDWFrame.choiceFrame:Hide()
+        LCDWFrame.openChoiceFrameButton:SetBackdrop({
             bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
             insets = { left = 4, right = 4, top = 4, bottom = 4 }
         })
     else
-        WGFrame.choiceFrame:Show()
-        WGFrame.openChoiceFrameButton:SetBackdrop({
+        LCDWFrame.choiceFrame:Show()
+        LCDWFrame.openChoiceFrameButton:SetBackdrop({
             bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
             insets = { left = 4, right = 4, top = 4, bottom = 4 }
         })
@@ -151,22 +151,34 @@ end);
 -- end openChoiceFrameButton arrow --
 
 -- Choices Frame --
-WGFrame.choiceFrame = CreateFrame("Frame", nil, WGFrame)
-WGFrame.choiceFrame:SetSize(CHOICE_FRAME_WIDTH, WGFrame:GetHeight())
-WGFrame.choiceFrame:SetPoint("LEFT", WGFrame, "RIGHT", -5, 0)
-WGFrame.choiceFrame:SetBackdrop({
+LCDWFrame.choiceFrame = CreateFrame("Frame", nil, LCDWFrame)
+LCDWFrame.choiceFrame:SetSize(CHOICE_FRAME_WIDTH, LCDWFrame:GetHeight())
+LCDWFrame.choiceFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
+LCDWFrame.choiceFrame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
     edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32,
     insets = { left = 11, right = 12, top = 12, bottom = 11 }
 })
 -- end Choices Frame --
 
+-- check buttons --
+LCDWFrame.choiceFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choiceFrame, "ChatConfigCheckButtonTemplate")
+LCDWFrame.choiceFrame.pveCheckButton:SetPoint("LEFT", LCDWFrame.choiceFrame, "TOPLEFT", 20, -50)
+LCDWFrame.choiceFrame.pveCheckButton:SetText("PVECheckbox")
+LCDWFrame.choiceFrame.pveCheckButton.tooltip = "PVE"
+
+LCDWFrame.choiceFrame.pvpCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choiceFrame, "ChatConfigCheckButtonTemplate")
+LCDWFrame.choiceFrame.pvpCheckButton:SetPoint("LEFT", LCDWFrame.choiceFrame, "TOPLEFT", 20, -80)
+LCDWFrame.choiceFrame.pvpCheckButton:SetText("PVPCheckbox")
+LCDWFrame.choiceFrame.pvpCheckButton.tooltip = "PVP"
+-- end check buttons --
+
 -- Reset button --
-WGFrame.choiceFrame.resetButton = CreateFrame("Button", nil, WGFrame.choiceFrame, "UIPanelButtonTemplate")
-WGFrame.choiceFrame.resetButton:SetSize(150,30)
-WGFrame.choiceFrame.resetButton:SetPoint("CENTER",0,0)
-WGFrame.choiceFrame.resetButton:SetText("Reset")
-WGFrame.choiceFrame.resetButton:SetScript("OnClick", function ()
+LCDWFrame.choiceFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.choiceFrame, "UIPanelButtonTemplate")
+LCDWFrame.choiceFrame.resetButton:SetSize(150, 30)
+LCDWFrame.choiceFrame.resetButton:SetPoint("CENTER", 0, 0)
+LCDWFrame.choiceFrame.resetButton:SetText("Reset")
+LCDWFrame.choiceFrame.resetButton:SetScript("OnClick", function ()
 
 end)
 -- end Reset button --
@@ -179,10 +191,10 @@ local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
         if button == "RightButton" then
             print(RED .. "WIP")
         elseif button == "LeftButton" then
-            if WGFrame:IsShown() then
-                WGFrame:Hide()
+            if LCDWFrame:IsShown() then
+                LCDWFrame:Hide()
             else
-                WGFrame:Show()
+                LCDWFrame:Show()
             end
         end
     end,
@@ -205,18 +217,16 @@ end
 -- END MINIMAP --
 
 local function createTexture(dungeonId)
-    textures["texture" .. dungeonId] = WGFrame:CreateTexture(nil, "ARTWORK")
-    textures["texture" .. dungeonId]:SetPoint("CENTER", WGFrame, "CENTER", 0, 0)
+    textures["texture" .. dungeonId] = LCDWFrame:CreateTexture(nil, "ARTWORK")
+    textures["texture" .. dungeonId]:SetPoint("CENTER", LCDWFrame, "CENTER", 0, 0)
     textures["texture" .. dungeonId]:SetSize(450, 450)
     textures["texture" .. dungeonId]:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
     return textures["texture" .. dungeonId]
 end
 
--- @todo pve and pvp categories
-
 -- Onlick Dungeons dropdown items --
 local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(WGFrame.dropDown, "Donjon : " .. arg2)
+    UIDropDownMenu_SetText(LCDWFrame.dropDown, "Donjon : " .. arg2)
     dungeonSelected = arg1
 
     for dungeonId, dungeon in ipairs(dungeons) do
@@ -261,13 +271,13 @@ end
 
 -- Onlick classes dropdown items --
 local function ClassesListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(WGFrame.classDropDown, "Classe : " .. arg2)
+    UIDropDownMenu_SetText(LCDWFrame.classDropDown, "Classe : " .. arg2)
     classSelected = arg1
 
     for classId, dungeon in ipairs(classes) do
         if arg1 == classId then
-            -- display the dropdown WGFrame.dropDown which is greyed out
-            UIDropDownMenu_EnableDropDown(WGFrame.dropDown)
+            -- display the dropdown LCDWFrame.dropDown which is greyed out
+            UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
         end
     end
 end
@@ -288,23 +298,25 @@ local function ClassesListDropDown(frame, level, menuList)
 end
 -- end --
 
-WGFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", WGFrame.choiceFrame, "UIDropDownMenuTemplate")
-WGFrame.classDropDown:SetPoint("CENTER", WGFrame.choiceFrame, "TOP", 0, -50)
-UIDropDownMenu_SetWidth(WGFrame.classDropDown, 200)
-UIDropDownMenu_Initialize(WGFrame.classDropDown, ClassesListDropDown)
-UIDropDownMenu_SetText(WGFrame.classDropDown, "-- Sélectionner votre classe --")
+-- DROPDOWNS --
+LCDWFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", LCDWFrame.choiceFrame, "UIDropDownMenuTemplate")
+LCDWFrame.classDropDown:SetPoint("CENTER", LCDWFrame.choiceFrame, "TOP", 0, -150)
+UIDropDownMenu_SetWidth(LCDWFrame.classDropDown, 200)
+UIDropDownMenu_Initialize(LCDWFrame.classDropDown, ClassesListDropDown)
+UIDropDownMenu_SetText(LCDWFrame.classDropDown, "-- Sélectionner votre classe --")
 
-WGFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", WGFrame.choiceFrame, "UIDropDownMenuTemplate")
-WGFrame.dropDown:SetPoint("CENTER", WGFrame.choiceFrame, "TOP", 0, -100)
-UIDropDownMenu_SetWidth(WGFrame.dropDown, 200)
-UIDropDownMenu_Initialize(WGFrame.dropDown, DungeonsListDropDown)
-UIDropDownMenu_SetText(WGFrame.dropDown, "-- Sélectionner un donjon --")
-UIDropDownMenu_DisableDropDown(WGFrame.dropDown)
+LCDWFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", LCDWFrame.choiceFrame, "UIDropDownMenuTemplate")
+LCDWFrame.dropDown:SetPoint("CENTER", LCDWFrame.choiceFrame, "TOP", 0, -200)
+UIDropDownMenu_SetWidth(LCDWFrame.dropDown, 200)
+UIDropDownMenu_Initialize(LCDWFrame.dropDown, DungeonsListDropDown)
+UIDropDownMenu_SetText(LCDWFrame.dropDown, "-- Sélectionner un donjon --")
+UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
+-- end DROPDOWNS --
 
 -- slash commands --
 SLASH_LECODEXDEWILLIOS1 = '/lcdw'
 SlashCmdList["LECODEXDEWILLIOS"] = function()
-    WGFrame:Show()
+    LCDWFrame:Show()
 end
 
 SLASH_RELOADUI1 = "/rl"
