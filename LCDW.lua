@@ -2,10 +2,12 @@ local name, _ = ...
 local customAddonName = "Le codex de Willios"
 local addonVersion = "0.1 Alpha"
 
-local MainFrameWidth = 500
-local MainFrameHeight = 500
+local MAIN_FRAME_WITH = 500
+local MAIN_FRAME_HEIGHT = 500
+local CHOICE_FRAME_WIDTH = 250
 local FOLDER_GUIDES_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
+local ARROW_IMAGE = nil
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
 local textures = {}
@@ -76,12 +78,12 @@ f:SetScript("OnEvent", onEvent)
 -- MainFrame --
 local WGFrame = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
 WGFrame:Hide()
-WGFrame:SetSize(MainFrameWidth, MainFrameHeight)
+WGFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 WGFrame:SetPoint("CENTER", 0, 0)
 WGFrame:SetMovable(true)
 WGFrame:SetResizable(true)
 WGFrame:EnableMouse(true)
-WGFrame:SetMinResize(MainFrameWidth, MainFrameHeight)
+WGFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 WGFrame:RegisterForDrag("LeftButton")
 WGFrame:SetScript("OnDragStart", WGFrame.StartMoving)
 WGFrame:SetScript("OnDragStop", WGFrame.StopMovingOrSizing)
@@ -109,6 +111,65 @@ WGFrame.rb:SetScript("OnMouseUp", function()
     WGFrame:StopMovingOrSizing()
 end)
 -- end resize frame --
+
+-- openChoiceFrameButton arrow --
+WGFrame.openChoiceFrameButton = CreateFrame("Button", nil, WGFrame)
+WGFrame.openChoiceFrameButton:SetSize(45, 45)
+WGFrame.openChoiceFrameButton:SetPoint("CENTER", WGFrame, "TOPRIGHT", -30, -50)
+WGFrame.openChoiceFrameButton:SetBackdrop({
+    bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
+    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+})
+WGFrame.openChoiceFrameButton.Hover = WGFrame.openChoiceFrameButton:CreateTexture(nil, "BACKGROUND")
+WGFrame.openChoiceFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
+WGFrame.openChoiceFrameButton.Hover:SetAllPoints(WGFrame.openChoiceFrameButton)
+WGFrame.openChoiceFrameButton.Hover:SetAlpha(0)
+
+WGFrame.openChoiceFrameButton:SetScript("OnEnter", function()
+    WGFrame.openChoiceFrameButton.Hover:SetAlpha(1)
+end);
+--
+WGFrame.openChoiceFrameButton:SetScript("OnLeave", function()
+    WGFrame.openChoiceFrameButton.Hover:SetAlpha(0)
+end);
+
+WGFrame.openChoiceFrameButton:SetScript("OnClick", function()
+    if WGFrame.choiceFrame:IsShown() then
+        WGFrame.choiceFrame:Hide()
+        WGFrame.openChoiceFrameButton:SetBackdrop({
+            bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        })
+    else
+        WGFrame.choiceFrame:Show()
+        WGFrame.openChoiceFrameButton:SetBackdrop({
+            bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        })
+    end
+end);
+-- end openChoiceFrameButton arrow --
+
+-- Choices Frame --
+WGFrame.choiceFrame = CreateFrame("Frame", nil, WGFrame)
+WGFrame.choiceFrame:SetSize(CHOICE_FRAME_WIDTH, WGFrame:GetHeight())
+WGFrame.choiceFrame:SetPoint("LEFT", WGFrame, "RIGHT", -5, 0)
+WGFrame.choiceFrame:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32,
+    insets = { left = 11, right = 12, top = 12, bottom = 11 }
+})
+-- end Choices Frame --
+
+-- Reset button --
+WGFrame.choiceFrame.resetButton = CreateFrame("Button", nil, WGFrame.choiceFrame, "UIPanelButtonTemplate")
+WGFrame.choiceFrame.resetButton:SetSize(150,30)
+WGFrame.choiceFrame.resetButton:SetPoint("CENTER",0,0)
+WGFrame.choiceFrame.resetButton:SetText("Reset")
+WGFrame.choiceFrame.resetButton:SetScript("OnClick", function ()
+
+end)
+-- end Reset button --
 
 -- MINIMAP --
 local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
@@ -145,7 +206,7 @@ end
 
 local function createTexture(dungeonId)
     textures["texture" .. dungeonId] = WGFrame:CreateTexture(nil, "ARTWORK")
-    textures["texture" .. dungeonId]:SetPoint("CENTER", WGFrame, "CENTER", 10, 0)
+    textures["texture" .. dungeonId]:SetPoint("CENTER", WGFrame, "CENTER", 0, 0)
     textures["texture" .. dungeonId]:SetSize(450, 450)
     textures["texture" .. dungeonId]:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
     return textures["texture" .. dungeonId]
@@ -227,14 +288,14 @@ local function ClassesListDropDown(frame, level, menuList)
 end
 -- end --
 
-WGFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", WGFrame, "UIDropDownMenuTemplate")
-WGFrame.classDropDown:SetPoint("RIGHT", WGFrame, "TOP", 10, -50)
-UIDropDownMenu_SetWidth(WGFrame.classDropDown, 180)
+WGFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", WGFrame.choiceFrame, "UIDropDownMenuTemplate")
+WGFrame.classDropDown:SetPoint("CENTER", WGFrame.choiceFrame, "TOP", 0, -50)
+UIDropDownMenu_SetWidth(WGFrame.classDropDown, 200)
 UIDropDownMenu_Initialize(WGFrame.classDropDown, ClassesListDropDown)
 UIDropDownMenu_SetText(WGFrame.classDropDown, "-- Sélectionner votre classe --")
 
-WGFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", WGFrame, "UIDropDownMenuTemplate")
-WGFrame.dropDown:SetPoint("RIGHT", WGFrame, "TOP", 230, -50)
+WGFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", WGFrame.choiceFrame, "UIDropDownMenuTemplate")
+WGFrame.dropDown:SetPoint("CENTER", WGFrame.choiceFrame, "TOP", 0, -100)
 UIDropDownMenu_SetWidth(WGFrame.dropDown, 200)
 UIDropDownMenu_Initialize(WGFrame.dropDown, DungeonsListDropDown)
 UIDropDownMenu_SetText(WGFrame.dropDown, "-- Sélectionner un donjon --")
