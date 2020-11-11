@@ -161,17 +161,35 @@ LCDWFrame.choiceFrame:SetBackdrop({
 })
 -- end Choices Frame --
 
--- check buttons --
+-- checkboxes --
 LCDWFrame.choiceFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choiceFrame, "ChatConfigCheckButtonTemplate")
 LCDWFrame.choiceFrame.pveCheckButton:SetPoint("LEFT", LCDWFrame.choiceFrame, "TOPLEFT", 20, -50)
 LCDWFrame.choiceFrame.pveCheckButton:SetText("PVECheckbox")
 LCDWFrame.choiceFrame.pveCheckButton.tooltip = "PVE"
+LCDWFrame.choiceFrame.pveCheckButton:SetScript("OnClick", function ()
+    if LCDWFrame.choiceFrame.pveCheckButton:GetChecked() then
+        UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
+        LCDWFrame.choiceFrame.pvpCheckButton:Disable()
+    else
+        UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
+        LCDWFrame.choiceFrame.pvpCheckButton:Enable()
+    end
+end)
 
 LCDWFrame.choiceFrame.pvpCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choiceFrame, "ChatConfigCheckButtonTemplate")
 LCDWFrame.choiceFrame.pvpCheckButton:SetPoint("LEFT", LCDWFrame.choiceFrame, "TOPLEFT", 20, -80)
 LCDWFrame.choiceFrame.pvpCheckButton:SetText("PVPCheckbox")
 LCDWFrame.choiceFrame.pvpCheckButton.tooltip = "PVP"
--- end check buttons --
+LCDWFrame.choiceFrame.pvpCheckButton:SetScript("OnClick", function ()
+    if LCDWFrame.choiceFrame.pvpCheckButton:GetChecked() then
+        UIDropDownMenu_EnableDropDown(LCDWFrame.classDropDown)
+        LCDWFrame.choiceFrame.pveCheckButton:Disable()
+    else
+        UIDropDownMenu_DisableDropDown(LCDWFrame.classDropDown)
+        LCDWFrame.choiceFrame.pveCheckButton:Enable()
+    end
+end)
+-- end checkboxes --
 
 -- Reset button --
 LCDWFrame.choiceFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.choiceFrame, "UIPanelButtonTemplate")
@@ -182,6 +200,8 @@ LCDWFrame.choiceFrame.resetButton:SetScript("OnClick", function ()
 
 end)
 -- end Reset button --
+
+--
 
 -- MINIMAP --
 local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
@@ -277,7 +297,7 @@ local function ClassesListDropDown_OnClick(self, arg1, arg2, checked)
     for classId, dungeon in ipairs(classes) do
         if arg1 == classId then
             -- display the dropdown LCDWFrame.dropDown which is greyed out
-            UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
+            --UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
         end
     end
 end
@@ -299,18 +319,19 @@ end
 -- end --
 
 -- DROPDOWNS --
-LCDWFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", LCDWFrame.choiceFrame, "UIDropDownMenuTemplate")
-LCDWFrame.classDropDown:SetPoint("CENTER", LCDWFrame.choiceFrame, "TOP", 0, -150)
-UIDropDownMenu_SetWidth(LCDWFrame.classDropDown, 200)
-UIDropDownMenu_Initialize(LCDWFrame.classDropDown, ClassesListDropDown)
-UIDropDownMenu_SetText(LCDWFrame.classDropDown, "-- Sélectionner votre classe --")
-
 LCDWFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", LCDWFrame.choiceFrame, "UIDropDownMenuTemplate")
-LCDWFrame.dropDown:SetPoint("CENTER", LCDWFrame.choiceFrame, "TOP", 0, -200)
+LCDWFrame.dropDown:SetPoint("CENTER", LCDWFrame.choiceFrame, "TOP", 0, -150)
 UIDropDownMenu_SetWidth(LCDWFrame.dropDown, 200)
 UIDropDownMenu_Initialize(LCDWFrame.dropDown, DungeonsListDropDown)
 UIDropDownMenu_SetText(LCDWFrame.dropDown, "-- Sélectionner un donjon --")
 UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
+
+LCDWFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", LCDWFrame.choiceFrame, "UIDropDownMenuTemplate")
+LCDWFrame.classDropDown:SetPoint("CENTER", LCDWFrame.choiceFrame, "TOP", 0, -200)
+UIDropDownMenu_SetWidth(LCDWFrame.classDropDown, 200)
+UIDropDownMenu_Initialize(LCDWFrame.classDropDown, ClassesListDropDown)
+UIDropDownMenu_SetText(LCDWFrame.classDropDown, "-- Sélectionner votre classe --")
+UIDropDownMenu_DisableDropDown(LCDWFrame.classDropDown)
 -- end DROPDOWNS --
 
 -- slash commands --
