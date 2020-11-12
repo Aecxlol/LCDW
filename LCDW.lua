@@ -2,18 +2,25 @@ local name, _ = ...
 local customAddonName = "Le codex de Willios"
 local addonVersion = "0.1 Alpha"
 
-local MAIN_FRAME_WITH = 500
+local MAIN_FRAME_WITH = 715
 local MAIN_FRAME_HEIGHT = 500
 local CHOICE_FRAME_WIDTH = 250
 local FRAME_TITLE_CONTAINER_WIDTH = 100
 local FRAME_TITLE_CONTAINER_HEIGHT = 20
 local FOLDER_GUIDES_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
-local ARROW_IMAGE = nil
+local DUNGEONS_ICONS_PATH = "Interface\\ENCOUNTERJOURNAL\\UI-EJ-DUNGEONBUTTON-"
+local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
+local ROW_MAX_DUNGEONS_ITEMS = 4
+local ROW_MAX_CLASSES_ITEMS = 6
+local DUNGEONS_ARRAY_SECOND_COL = 2
+local SPACE_BETWEEN_CLASSES_ITEMS = 30
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
 local textures = {}
 local textureShown = {}
+local dungeonsFrames = {}
+local classesFrames = {}
 
 local GREEN =  "|cff00ff00"
 local YELLOW = "|cffffff00"
@@ -24,31 +31,34 @@ local WHITE =  "|cffffffff"
 
 local dungeonSelected = nil
 local dungeons = {
-    "Sillage nécrotique",
-    "Malepeste",
-    "Brumes de Tirna Scrithe",
-    "Salles de l'Expiation",
-    "Flèches de l'Ascension",
-    "Théâtre de la Souffrance",
-    "L'Autre côté",
-    "Profondeurs Sanguines",
+    {"Sillage nécrotique", DUNGEONS_ICONS_PATH .. "Maraudon"},
+    {"Malepeste", DUNGEONS_ICONS_PATH .. "BlackrockDepths"},
+    {"Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "Deadmines"},
+    {"Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "DireMaul"},
+    {"Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "RagefireChasm"},
+    {"Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "ScarletMonastery"},
+    {"L'Autre côté", DUNGEONS_ICONS_PATH .. "Scholomance"},
+    {"Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "ShadowFangKeep"}
 }
 
 local classSelected = nil
 local classes = {
-    "Chaman",
-    "Chasseur",
-    "Chasseur de Démon",
-    "Chevalier de la Mort",
-    "Démoniste",
-    "Druide",
-    "Guerrier",
-    "Mage",
-    "Moine",
-    "Paladin",
-    "Prêtre",
-    "Voleur",
+    {"Chaman", CLASSES_ICONS_PATH .. "Shaman"},
+    {"Chasseur", CLASSES_ICONS_PATH .. "Hunter"},
+    {"Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter"},
+    {"Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight"},
+    {"Démoniste", CLASSES_ICONS_PATH .. "Warlock"},
+    {"Druide", CLASSES_ICONS_PATH .. "Druid"},
+    {"Guerrier", CLASSES_ICONS_PATH .. "Warrior"},
+    {"Mage", CLASSES_ICONS_PATH .. "Mage"},
+    {"Moine", CLASSES_ICONS_PATH .. "Monk"},
+    {"Paladin", CLASSES_ICONS_PATH .. "Paladin"},
+    {"Prêtre", CLASSES_ICONS_PATH .. "Priest"},
+    {"Voleur", CLASSES_ICONS_PATH .. "Rogue"}
 }
+
+-- // CLASS ICON DANS INTERFACE ICONS
+-- // DJ ICON DANS INTERFACE ENCOUNTERJOURNAL UI-EJ-DUNGEONBUTTON-Maraudon
 
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
@@ -98,6 +108,72 @@ LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
 --})
 -- end MainFrame --
 
+local function generateDungeonsFrames()
+    for dungeonsK, dungeonV in ipairs(dungeons) do
+        local frameWidth
+        local frameHeight
+
+        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Button", nil, LCDWFrame)
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(128, 64)
+
+        frameWidth = dungeonsFrames["dungeonFrame" .. dungeonsK]:GetWidth()
+        frameHeight = dungeonsFrames["dungeonFrame" .. dungeonsK]:GetHeight()
+
+        -- If 4 dungeons frame are displayed then ddd a new line --
+        if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame, "TOPLEFT", ((dungeonsK - 4) * frameWidth * 1.3) - frameWidth, frameHeight * -3.3)
+        else
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame, "TOPLEFT", (dungeonsK * frameWidth * 1.3) - frameWidth, -130)
+        end
+
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
+            --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
+            bgFile = dungeons[dungeonsK][DUNGEONS_ARRAY_SECOND_COL],
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 15, edgeSize = 15,
+            insets = { left = 2, right = -60, top = 2, bottom = -20 }
+        })
+
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetScript("OnClick", function (self, button)
+            print(dungeonsFrames["dungeonFrame" .. dungeonsK]:GetSize())
+        end)
+    end
+end
+
+generateDungeonsFrames()
+
+local function generateClassesFrames()
+    for classesK, classesV in ipairs(classes) do
+        local frameWidth
+        local frameHeight
+
+        classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame)
+        classesFrames["classeFrame" .. classesK]:SetSize(48, 48)
+
+        frameWidth = classesFrames["classeFrame" .. classesK]:GetWidth()
+        frameHeight = classesFrames["classeFrame" .. classesK]:GetHeight()
+
+        -- If 4 dungeons frame are displayed then ddd a new line --
+        if classesK > ROW_MAX_CLASSES_ITEMS then
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 7)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 7))), -150)
+        else
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 1))), -90)
+        end
+
+        classesFrames["classeFrame" .. classesK]:SetBackdrop({
+            --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
+            bgFile = classes[classesK][DUNGEONS_ARRAY_SECOND_COL],
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 10, edgeSize = 10,
+            insets = { left = 2, right = 0, top = 2, bottom = 0 }
+        })
+
+        classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function (self, button)
+            print(classesFrames["classeFrame" .. classesK]:GetSize())
+        end)
+    end
+end
+
+generateClassesFrames()
+
 -- MainFrame title container --
 LCDWFrame.LCDWMainFrameNameContainer = CreateFrame("Frame", nil, LCDWFrame, "GlowBoxTemplate")
 LCDWFrame.LCDWMainFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
@@ -120,25 +196,25 @@ end)
 -- End Close button --
 
 -- Resize frame --
-LCDWFrame.resizeButton = CreateFrame("Button", nil, LCDWFrame)
-LCDWFrame.resizeButton:SetPoint("BOTTOMRIGHT", 0, 0)
-LCDWFrame.resizeButton:SetSize(16, 16)
-LCDWFrame.resizeButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
-LCDWFrame.resizeButton:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
-LCDWFrame.resizeButton:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
-
-LCDWFrame.resizeButton:SetScript("OnMouseDown", function()
-    LCDWFrame:StartSizing("BOTTOMRIGHT")
-end)
-LCDWFrame.resizeButton:SetScript("OnMouseUp", function()
-    LCDWFrame:StopMovingOrSizing()
-end)
+--LCDWFrame.resizeButton = CreateFrame("Button", nil, LCDWFrame)
+--LCDWFrame.resizeButton:SetPoint("BOTTOMRIGHT", 0, 0)
+--LCDWFrame.resizeButton:SetSize(16, 16)
+--LCDWFrame.resizeButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+--LCDWFrame.resizeButton:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+--LCDWFrame.resizeButton:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+--
+--LCDWFrame.resizeButton:SetScript("OnMouseDown", function()
+--    LCDWFrame:StartSizing("BOTTOMRIGHT")
+--end)
+--LCDWFrame.resizeButton:SetScript("OnMouseUp", function()
+--    LCDWFrame:StopMovingOrSizing()
+--end)
 -- end resize frame --
 
 -- openChoicesFrameButton arrow --
 LCDWFrame.openChoicesFrameButton = CreateFrame("Button", nil, LCDWFrame)
 LCDWFrame.openChoicesFrameButton:SetSize(45, 45)
-LCDWFrame.openChoicesFrameButton:SetPoint("CENTER", LCDWFrame, "RIGHT", -30, 0)
+LCDWFrame.openChoicesFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -25, -55)
 LCDWFrame.openChoicesFrameButton:SetBackdrop({
     bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
     insets = { left = 4, right = 4, top = 4, bottom = 4 }
@@ -198,33 +274,33 @@ LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetText("Options")
 -- end title's ChoicesFrame --
 
 -- checkboxes --
-LCDWFrame.choicesFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choicesFrame, "UIRadioButtonTemplate")
-LCDWFrame.choicesFrame.pveCheckButton:SetPoint("LEFT", LCDWFrame.choicesFrame, "TOPLEFT", 20, -50)
-LCDWFrame.choicesFrame.pveCheckButton:SetText("PVECheckbox")
-LCDWFrame.choicesFrame.pveCheckButton.tooltip = "PVE"
-LCDWFrame.choicesFrame.pveCheckButton:SetScript("OnClick", function ()
-    if LCDWFrame.choicesFrame.pveCheckButton:GetChecked() then
-        UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
-        LCDWFrame.choicesFrame.pvpCheckButton:Disable()
-    else
-        UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
-        LCDWFrame.choicesFrame.pvpCheckButton:Enable()
-    end
-end)
-
-LCDWFrame.choicesFrame.pvpCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choicesFrame, "ChatConfigCheckButtonTemplate")
-LCDWFrame.choicesFrame.pvpCheckButton:SetPoint("LEFT", LCDWFrame.choicesFrame, "TOPLEFT", 20, -80)
-LCDWFrame.choicesFrame.pvpCheckButton:SetText("PVPCheckbox")
-LCDWFrame.choicesFrame.pvpCheckButton.tooltip = "PVP"
-LCDWFrame.choicesFrame.pvpCheckButton:SetScript("OnClick", function ()
-    if LCDWFrame.choicesFrame.pvpCheckButton:GetChecked() then
-        UIDropDownMenu_EnableDropDown(LCDWFrame.classDropDown)
-        LCDWFrame.choicesFrame.pveCheckButton:Disable()
-    else
-        UIDropDownMenu_DisableDropDown(LCDWFrame.classDropDown)
-        LCDWFrame.choicesFrame.pveCheckButton:Enable()
-    end
-end)
+--LCDWFrame.choicesFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choicesFrame, "UIRadioButtonTemplate")
+--LCDWFrame.choicesFrame.pveCheckButton:SetPoint("LEFT", LCDWFrame.choicesFrame, "TOPLEFT", 20, -50)
+--LCDWFrame.choicesFrame.pveCheckButton:SetText("PVECheckbox")
+--LCDWFrame.choicesFrame.pveCheckButton.tooltip = "PVE"
+--LCDWFrame.choicesFrame.pveCheckButton:SetScript("OnClick", function ()
+--    if LCDWFrame.choicesFrame.pveCheckButton:GetChecked() then
+--        UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
+--        LCDWFrame.choicesFrame.pvpCheckButton:Disable()
+--    else
+--        UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
+--        LCDWFrame.choicesFrame.pvpCheckButton:Enable()
+--    end
+--end)
+--
+--LCDWFrame.choicesFrame.pvpCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choicesFrame, "ChatConfigCheckButtonTemplate")
+--LCDWFrame.choicesFrame.pvpCheckButton:SetPoint("LEFT", LCDWFrame.choicesFrame, "TOPLEFT", 20, -80)
+--LCDWFrame.choicesFrame.pvpCheckButton:SetText("PVPCheckbox")
+--LCDWFrame.choicesFrame.pvpCheckButton.tooltip = "PVP"
+--LCDWFrame.choicesFrame.pvpCheckButton:SetScript("OnClick", function ()
+--    if LCDWFrame.choicesFrame.pvpCheckButton:GetChecked() then
+--        UIDropDownMenu_EnableDropDown(LCDWFrame.classDropDown)
+--        LCDWFrame.choicesFrame.pveCheckButton:Disable()
+--    else
+--        UIDropDownMenu_DisableDropDown(LCDWFrame.classDropDown)
+--        LCDWFrame.choicesFrame.pveCheckButton:Enable()
+--    end
+--end)
 -- end checkboxes --
 
 -- Reset button --
@@ -237,7 +313,7 @@ LCDWFrame.choicesFrame.resetButton:SetScript("OnClick", function ()
 end)
 -- end Reset button --
 
---
+
 
 -- MINIMAP --
 local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
