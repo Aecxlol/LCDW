@@ -11,6 +11,7 @@ local FOLDER_GUIDES_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
 local DUNGEONS_ICONS_PATH = "Interface\\ENCOUNTERJOURNAL\\UI-EJ-DUNGEONBUTTON-"
 local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
+local SECTION_ARROW_PATH = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
 local ROW_MAX_DUNGEONS_ITEMS = 4
 local ROW_MAX_CLASSES_ITEMS = 6
 local DUNGEONS_ARRAY_SECOND_COL = 2
@@ -108,16 +109,14 @@ LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
 --})
 -- end MainFrame --
 
+
 local function generateDungeonsFrames()
     for dungeonsK, dungeonV in ipairs(dungeons) do
-        local frameWidth
-        local frameHeight
+        local frameWidth = 128
+        local frameHeight = 64
 
         dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Button", nil, LCDWFrame)
-        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(128, 64)
-
-        frameWidth = dungeonsFrames["dungeonFrame" .. dungeonsK]:GetWidth()
-        frameHeight = dungeonsFrames["dungeonFrame" .. dungeonsK]:GetHeight()
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(frameWidth, frameHeight)
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
@@ -127,9 +126,8 @@ local function generateDungeonsFrames()
         end
 
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
-            --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
             bgFile = dungeons[dungeonsK][DUNGEONS_ARRAY_SECOND_COL],
-            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 15, edgeSize = 15,
+            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 15, edgeSize = 15,
             insets = { left = 2, right = -60, top = 2, bottom = -20 }
         })
 
@@ -143,26 +141,23 @@ generateDungeonsFrames()
 
 local function generateClassesFrames()
     for classesK, classesV in ipairs(classes) do
-        local frameWidth
-        local frameHeight
+        local frameWidth = 48
+        local frameHeight = 48
 
         classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame)
-        classesFrames["classeFrame" .. classesK]:SetSize(48, 48)
-
-        frameWidth = classesFrames["classeFrame" .. classesK]:GetWidth()
-        frameHeight = classesFrames["classeFrame" .. classesK]:GetHeight()
+        classesFrames["classeFrame" .. classesK]:SetSize(frameWidth, frameHeight)
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if classesK > ROW_MAX_CLASSES_ITEMS then
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 7)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 7))), -150)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 7)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 7))), -185)
         else
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 1))), -90)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 1))), -125)
         end
 
         classesFrames["classeFrame" .. classesK]:SetBackdrop({
             --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
             bgFile = classes[classesK][DUNGEONS_ARRAY_SECOND_COL],
-            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 10, edgeSize = 10,
+            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 10, edgeSize = 10,
             insets = { left = 2, right = 0, top = 2, bottom = 0 }
         })
 
@@ -253,25 +248,21 @@ end);
 LCDWFrame.choicesFrame = CreateFrame("Frame", nil, LCDWFrame, "InsetFrameTemplate")
 LCDWFrame.choicesFrame:SetSize(CHOICE_FRAME_WIDTH, LCDWFrame:GetHeight())
 LCDWFrame.choicesFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
---LCDWFrame.choiceFrame:SetBackdrop({
---    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
---    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32,
---    insets = { left = 11, right = 12, top = 12, bottom = 11 }
---})
--- end Choices Frame --
-
--- ChoicesFrame title container --
 LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer = CreateFrame("Frame", nil, LCDWFrame.choicesFrame, "GlowBoxTemplate")
 LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
 LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer:SetPoint("CENTER",  LCDWFrame.choicesFrame, "TOP", 0, 0)
--- end ChoicesFrame title container --
-
--- Title's ChoicesFrame --
 LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title = LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer:CreateFontString(nil, "OVERLAY")
 LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetFontObject("GameFontHighLight")
 LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetPoint("CENTER", LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer, "CENTER", 0, 0)
 LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetText("Options")
--- end title's ChoicesFrame --
+LCDWFrame.choicesFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.choicesFrame, "UIPanelButtonTemplate")
+LCDWFrame.choicesFrame.resetButton:SetSize(100, 30)
+LCDWFrame.choicesFrame.resetButton:SetPoint("CENTER", 0, 0)
+LCDWFrame.choicesFrame.resetButton:SetText("Reset")
+LCDWFrame.choicesFrame.resetButton:SetScript("OnClick", function ()
+
+end)
+-- end Choices Frame --
 
 -- checkboxes --
 --LCDWFrame.choicesFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choicesFrame, "UIRadioButtonTemplate")
@@ -303,17 +294,43 @@ LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetText("Options")
 --end)
 -- end checkboxes --
 
--- Reset button --
-LCDWFrame.choicesFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.choicesFrame, "UIPanelButtonTemplate")
-LCDWFrame.choicesFrame.resetButton:SetSize(150, 30)
-LCDWFrame.choicesFrame.resetButton:SetPoint("CENTER", 0, 0)
-LCDWFrame.choicesFrame.resetButton:SetText("Reset")
-LCDWFrame.choicesFrame.resetButton:SetScript("OnClick", function ()
+-- first section container  --
+LCDWFrame.sectionNameContainer = CreateFrame("Frame", nil, LCDWFrame)
+LCDWFrame.sectionNameContainer:SetSize(200, 30)
+LCDWFrame.sectionNameContainer:SetPoint("LEFT", LCDWFrame, "TOPLEFT", 40, -50)
+LCDWFrame.sectionNameContainer:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+})
+LCDWFrame.sectionNameContainer.arrowTitle = CreateFrame("Frame", nil, LCDWFrame.sectionNameContainer)
+LCDWFrame.sectionNameContainer.arrowTitle:SetSize(32, 32)
+LCDWFrame.sectionNameContainer.arrowTitle:SetPoint("LEFT", LCDWFrame.sectionNameContainer, "LEFT")
+LCDWFrame.sectionNameContainer.arrowTitle:SetBackdrop({
+    bgFile = SECTION_ARROW_PATH
+})
+LCDWFrame.sectionNameContainer.sectionTitle = LCDWFrame.sectionNameContainer:CreateFontString(nil, "OVERLAY")
+LCDWFrame.sectionNameContainer.sectionTitle:SetFontObject("GameFontHighLight")
+LCDWFrame.sectionNameContainer.sectionTitle:SetPoint("CENTER", LCDWFrame.sectionNameContainer, "CENTER")
+LCDWFrame.sectionNameContainer.sectionTitle:SetText("Guides PVE")
+-- end first section container --
 
-end)
--- end Reset button --
-
-
+-- second section container  --
+LCDWFrame.sectionNameContainer = CreateFrame("Frame", nil, LCDWFrame)
+LCDWFrame.sectionNameContainer:SetSize(200, 30)
+LCDWFrame.sectionNameContainer:SetPoint("LEFT", LCDWFrame, "LEFT", 40, -46)
+LCDWFrame.sectionNameContainer:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+})
+LCDWFrame.sectionNameContainer.arrowTitle = CreateFrame("Frame", nil, LCDWFrame.sectionNameContainer)
+LCDWFrame.sectionNameContainer.arrowTitle:SetSize(32, 32)
+LCDWFrame.sectionNameContainer.arrowTitle:SetPoint("LEFT", LCDWFrame.sectionNameContainer, "LEFT")
+LCDWFrame.sectionNameContainer.arrowTitle:SetBackdrop({
+    bgFile = SECTION_ARROW_PATH
+})
+LCDWFrame.sectionNameContainer.sectionTitle = LCDWFrame.sectionNameContainer:CreateFontString(nil, "OVERLAY")
+LCDWFrame.sectionNameContainer.sectionTitle:SetFontObject("GameFontHighLight")
+LCDWFrame.sectionNameContainer.sectionTitle:SetPoint("CENTER", LCDWFrame.sectionNameContainer, "CENTER")
+LCDWFrame.sectionNameContainer.sectionTitle:SetText("Guides PVP")
+-- end second section container --
 
 -- MINIMAP --
 local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
