@@ -206,90 +206,90 @@ end)
 --end)
 -- end resize frame --
 
--- openChoicesFrameButton arrow --
-LCDWFrame.openChoicesFrameButton = CreateFrame("Button", nil, LCDWFrame)
-LCDWFrame.openChoicesFrameButton:SetSize(45, 45)
-LCDWFrame.openChoicesFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -25, -55)
-LCDWFrame.openChoicesFrameButton:SetBackdrop({
+-- openOptionsFrameButton arrow --
+LCDWFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame)
+LCDWFrame.openOptionsFrameButton:SetSize(45, 45)
+LCDWFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -25, -55)
+LCDWFrame.openOptionsFrameButton:SetBackdrop({
     bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
     insets = { left = 4, right = 4, top = 4, bottom = 4 }
 })
-LCDWFrame.openChoicesFrameButton.Hover = LCDWFrame.openChoicesFrameButton:CreateTexture(nil, "BACKGROUND")
-LCDWFrame.openChoicesFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
-LCDWFrame.openChoicesFrameButton.Hover:SetAllPoints(LCDWFrame.openChoicesFrameButton)
-LCDWFrame.openChoicesFrameButton.Hover:SetAlpha(0)
+LCDWFrame.openOptionsFrameButton.Hover = LCDWFrame.openOptionsFrameButton:CreateTexture(nil, "BACKGROUND")
+LCDWFrame.openOptionsFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
+LCDWFrame.openOptionsFrameButton.Hover:SetAllPoints(LCDWFrame.openOptionsFrameButton)
+LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
 
-LCDWFrame.openChoicesFrameButton:SetScript("OnEnter", function()
-    LCDWFrame.openChoicesFrameButton.Hover:SetAlpha(1)
+LCDWFrame.openOptionsFrameButton:SetScript("OnEnter", function()
+    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(1)
 end);
 --
-LCDWFrame.openChoicesFrameButton:SetScript("OnLeave", function()
-    LCDWFrame.openChoicesFrameButton.Hover:SetAlpha(0)
+LCDWFrame.openOptionsFrameButton:SetScript("OnLeave", function()
+    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
 end);
 
-LCDWFrame.openChoicesFrameButton:SetScript("OnClick", function()
-    if LCDWFrame.choicesFrame:IsShown() then
-        LCDWFrame.choicesFrame:Hide()
-        LCDWFrame.openChoicesFrameButton:SetBackdrop({
+LCDWFrame.openOptionsFrameButton:SetScript("OnClick", function()
+    if LCDWFrame.OptionsFrame:IsShown() then
+        LCDWFrame.OptionsFrame:Hide()
+        LCDWFrame.openOptionsFrameButton:SetBackdrop({
             bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
             insets = { left = 4, right = 4, top = 4, bottom = 4 }
         })
     else
-        LCDWFrame.choicesFrame:Show()
-        LCDWFrame.openChoicesFrameButton:SetBackdrop({
+        LCDWFrame.OptionsFrame:Show()
+        LCDWFrame.openOptionsFrameButton:SetBackdrop({
             bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
             insets = { left = 4, right = 4, top = 4, bottom = 4 }
         })
     end
 end);
--- end openChoicesFrameButton arrow --
+-- end openOptionsFrameButton arrow --
 
--- Choices Frame --
-LCDWFrame.choicesFrame = CreateFrame("Frame", nil, LCDWFrame, "InsetFrameTemplate")
-LCDWFrame.choicesFrame:SetSize(CHOICE_FRAME_WIDTH, LCDWFrame:GetHeight())
-LCDWFrame.choicesFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
-LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer = CreateFrame("Frame", nil, LCDWFrame.choicesFrame, "GlowBoxTemplate")
-LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
-LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer:SetPoint("CENTER",  LCDWFrame.choicesFrame, "TOP", 0, 0)
-LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title = LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer:CreateFontString(nil, "OVERLAY")
-LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetFontObject("GameFontHighLight")
-LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetPoint("CENTER", LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer, "CENTER", 0, 0)
-LCDWFrame.choicesFrame.LCDWChoicesFrameNameContainer.title:SetText("Options")
-LCDWFrame.choicesFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.choicesFrame, "UIPanelButtonTemplate")
-LCDWFrame.choicesFrame.resetButton:SetSize(100, 30)
-LCDWFrame.choicesFrame.resetButton:SetPoint("CENTER", 0, 0)
-LCDWFrame.choicesFrame.resetButton:SetText("Reset")
-LCDWFrame.choicesFrame.resetButton:SetScript("OnClick", function ()
+-- Options Frame --
+LCDWFrame.OptionsFrame = CreateFrame("Frame", nil, LCDWFrame, "InsetFrameTemplate")
+LCDWFrame.OptionsFrame:SetSize(CHOICE_FRAME_WIDTH, LCDWFrame:GetHeight())
+LCDWFrame.OptionsFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
+LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer = CreateFrame("Frame", nil, LCDWFrame.OptionsFrame, "GlowBoxTemplate")
+LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
+LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer:SetPoint("CENTER",  LCDWFrame.OptionsFrame, "TOP", 0, 0)
+LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title = LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer:CreateFontString(nil, "OVERLAY")
+LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title:SetFontObject("GameFontHighLight")
+LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title:SetPoint("CENTER", LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer, "CENTER", 0, 0)
+LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title:SetText("Options")
+LCDWFrame.OptionsFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.OptionsFrame, "UIPanelButtonTemplate")
+LCDWFrame.OptionsFrame.resetButton:SetSize(100, 30)
+LCDWFrame.OptionsFrame.resetButton:SetPoint("CENTER", 0, 0)
+LCDWFrame.OptionsFrame.resetButton:SetText("Reset")
+LCDWFrame.OptionsFrame.resetButton:SetScript("OnClick", function ()
 
 end)
--- end Choices Frame --
+-- end Options Frame --
 
 -- checkboxes --
---LCDWFrame.choicesFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choicesFrame, "UIRadioButtonTemplate")
---LCDWFrame.choicesFrame.pveCheckButton:SetPoint("LEFT", LCDWFrame.choicesFrame, "TOPLEFT", 20, -50)
---LCDWFrame.choicesFrame.pveCheckButton:SetText("PVECheckbox")
---LCDWFrame.choicesFrame.pveCheckButton.tooltip = "PVE"
---LCDWFrame.choicesFrame.pveCheckButton:SetScript("OnClick", function ()
---    if LCDWFrame.choicesFrame.pveCheckButton:GetChecked() then
+--LCDWFrame.OptionsFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.OptionsFrame, "UIRadioButtonTemplate")
+--LCDWFrame.OptionsFrame.pveCheckButton:SetPoint("LEFT", LCDWFrame.OptionsFrame, "TOPLEFT", 20, -50)
+--LCDWFrame.OptionsFrame.pveCheckButton:SetText("PVECheckbox")
+--LCDWFrame.OptionsFrame.pveCheckButton.tooltip = "PVE"
+--LCDWFrame.OptionsFrame.pveCheckButton:SetScript("OnClick", function ()
+--    if LCDWFrame.OptionsFrame.pveCheckButton:GetChecked() then
 --        UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
---        LCDWFrame.choicesFrame.pvpCheckButton:Disable()
+--        LCDWFrame.OptionsFrame.pvpCheckButton:Disable()
 --    else
 --        UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
---        LCDWFrame.choicesFrame.pvpCheckButton:Enable()
+--        LCDWFrame.OptionsFrame.pvpCheckButton:Enable()
 --    end
 --end)
 --
---LCDWFrame.choicesFrame.pvpCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.choicesFrame, "ChatConfigCheckButtonTemplate")
---LCDWFrame.choicesFrame.pvpCheckButton:SetPoint("LEFT", LCDWFrame.choicesFrame, "TOPLEFT", 20, -80)
---LCDWFrame.choicesFrame.pvpCheckButton:SetText("PVPCheckbox")
---LCDWFrame.choicesFrame.pvpCheckButton.tooltip = "PVP"
---LCDWFrame.choicesFrame.pvpCheckButton:SetScript("OnClick", function ()
---    if LCDWFrame.choicesFrame.pvpCheckButton:GetChecked() then
+--LCDWFrame.OptionsFrame.pvpCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.OptionsFrame, "ChatConfigCheckButtonTemplate")
+--LCDWFrame.OptionsFrame.pvpCheckButton:SetPoint("LEFT", LCDWFrame.OptionsFrame, "TOPLEFT", 20, -80)
+--LCDWFrame.OptionsFrame.pvpCheckButton:SetText("PVPCheckbox")
+--LCDWFrame.OptionsFrame.pvpCheckButton.tooltip = "PVP"
+--LCDWFrame.OptionsFrame.pvpCheckButton:SetScript("OnClick", function ()
+--    if LCDWFrame.OptionsFrame.pvpCheckButton:GetChecked() then
 --        UIDropDownMenu_EnableDropDown(LCDWFrame.classDropDown)
---        LCDWFrame.choicesFrame.pveCheckButton:Disable()
+--        LCDWFrame.OptionsFrame.pveCheckButton:Disable()
 --    else
 --        UIDropDownMenu_DisableDropDown(LCDWFrame.classDropDown)
---        LCDWFrame.choicesFrame.pveCheckButton:Enable()
+--        LCDWFrame.OptionsFrame.pveCheckButton:Enable()
 --    end
 --end)
 -- end checkboxes --
@@ -448,15 +448,15 @@ end
 -- end --
 
 -- DROPDOWNS --
-LCDWFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", LCDWFrame.choicesFrame, "UIDropDownMenuTemplate")
-LCDWFrame.dropDown:SetPoint("CENTER", LCDWFrame.choicesFrame, "TOP", 0, -150)
+LCDWFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", LCDWFrame.OptionsFrame, "UIDropDownMenuTemplate")
+LCDWFrame.dropDown:SetPoint("CENTER", LCDWFrame.OptionsFrame, "TOP", 0, -150)
 UIDropDownMenu_SetWidth(LCDWFrame.dropDown, 200)
 UIDropDownMenu_Initialize(LCDWFrame.dropDown, DungeonsListDropDown)
 UIDropDownMenu_SetText(LCDWFrame.dropDown, "-- Sélectionner un donjon --")
 UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
 
-LCDWFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", LCDWFrame.choicesFrame, "UIDropDownMenuTemplate")
-LCDWFrame.classDropDown:SetPoint("CENTER", LCDWFrame.choicesFrame, "TOP", 0, -200)
+LCDWFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", LCDWFrame.OptionsFrame, "UIDropDownMenuTemplate")
+LCDWFrame.classDropDown:SetPoint("CENTER", LCDWFrame.OptionsFrame, "TOP", 0, -200)
 UIDropDownMenu_SetWidth(LCDWFrame.classDropDown, 200)
 UIDropDownMenu_Initialize(LCDWFrame.classDropDown, ClassesListDropDown)
 UIDropDownMenu_SetText(LCDWFrame.classDropDown, "-- Sélectionner votre classe --")
