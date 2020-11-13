@@ -61,6 +61,7 @@ local classes = {
 -- // CLASS ICON DANS INTERFACE ICONS
 -- // DJ ICON DANS INTERFACE ENCOUNTERJOURNAL UI-EJ-DUNGEONBUTTON-Maraudon
 
+
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
 local defaults = {
@@ -108,7 +109,6 @@ LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
 --    insets = { left = 11, right = 12, top = 12, bottom = 11 }
 --})
 -- end MainFrame --
-
 
 local function generateDungeonsFrames()
     for dungeonsK, dungeonV in ipairs(dungeons) do
@@ -262,6 +262,16 @@ LCDWFrame.OptionsFrame.resetButton:SetText("Reset")
 LCDWFrame.OptionsFrame.resetButton:SetScript("OnClick", function ()
 
 end)
+LCDWFrame.OptionsFrame.credits = CreateFrame("Frame", nil, LCDWFrame.OptionsFrame)
+LCDWFrame.OptionsFrame.credits:SetSize(LCDWFrame.OptionsFrame:GetWidth() - 6, 20)
+LCDWFrame.OptionsFrame.credits:SetPoint("BOTTOM", LCDWFrame.OptionsFrame, "BOTTOM", 0, 3)
+LCDWFrame.OptionsFrame.credits:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+})
+LCDWFrame.OptionsFrame.credits.content = LCDWFrame.OptionsFrame.credits:CreateFontString(nil, "OVERLAY")
+LCDWFrame.OptionsFrame.credits.content:SetFontObject("GameFontHighLight")
+LCDWFrame.OptionsFrame.credits.content:SetPoint("CENTER", LCDWFrame.OptionsFrame.credits, "CENTER")
+LCDWFrame.OptionsFrame.credits.content:SetText("Made by Aecx & Willios")
 -- end Options Frame --
 
 -- checkboxes --
