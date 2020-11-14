@@ -1,6 +1,11 @@
+--------------------------------------------------------
+--/////////////////////// VARS ///////////////////////--
+--------------------------------------------------------
 local name, _ = ...
 local customAddonName = "Le codex de Willios"
-local addonVersion = "0.1 Alpha"
+local addonVersion = "0.4 Alpha"
+
+local LCDWOptionsFrame = nil
 
 local MAIN_FRAME_WITH = 715
 local MAIN_FRAME_HEIGHT = 500
@@ -11,17 +16,13 @@ local FOLDER_GUIDES_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
 local DUNGEONS_ICONS_PATH = "Interface\\ENCOUNTERJOURNAL\\UI-EJ-DUNGEONBUTTON-"
 local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
-local SECTION_ARROW_PATH = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
+local ARROW_TITLE_SECTION = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
 local ROW_MAX_DUNGEONS_ITEMS = 4
 local ROW_MAX_CLASSES_ITEMS = 6
+local DUNGEONS_ARRAY_FIRST_COL = 1
 local DUNGEONS_ARRAY_SECOND_COL = 2
 local SPACE_BETWEEN_CLASSES_ITEMS = 30
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
-
-local textures = {}
-local textureShown = {}
-local dungeonsFrames = {}
-local classesFrames = {}
 
 local GREEN =  "|cff00ff00"
 local YELLOW = "|cffffff00"
@@ -30,7 +31,14 @@ local BLUE =   "|cff0198e1"
 local ORANGE = "|cffff9933"
 local WHITE =  "|cffffffff"
 
+local textures = {}
+local textureShown = {}
+local dungeonsFrames = {}
+local classesFrames = {}
+
 local dungeonSelected = nil
+local classSelected = nil
+
 local dungeons = {
     {"Sillage nécrotique", DUNGEONS_ICONS_PATH .. "Maraudon"},
     {"Malepeste", DUNGEONS_ICONS_PATH .. "BlackrockDepths"},
@@ -41,8 +49,6 @@ local dungeons = {
     {"L'Autre côté", DUNGEONS_ICONS_PATH .. "Scholomance"},
     {"Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "ShadowFangKeep"}
 }
-
-local classSelected = nil
 local classes = {
     {"Chaman", CLASSES_ICONS_PATH .. "Shaman"},
     {"Chasseur", CLASSES_ICONS_PATH .. "Hunter"},
@@ -58,19 +64,18 @@ local classes = {
     {"Voleur", CLASSES_ICONS_PATH .. "Rogue"}
 }
 
--- // CLASS ICON DANS INTERFACE ICONS
--- // DJ ICON DANS INTERFACE ENCOUNTERJOURNAL UI-EJ-DUNGEONBUTTON-Maraudon
-
-
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
 local defaults = {
     profile = {
-        minimap = {
+        minimapOption = {
             hide = false
         }
     }
 }
+--------------------------------------------------------
+--///////////////////// END VARS /////////////////////--
+--------------------------------------------------------
 
 local function initTextureShown()
     for dungeonId, v in ipairs(dungeons) do
@@ -89,7 +94,9 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", onEvent)
 
--- MainFrame --
+--------------------------------------------------------
+--/////////////// MAIN FRAME (Général) ///////////////--
+--------------------------------------------------------
 local LCDWFrame = CreateFrame("Frame", nil, UIParent, "InsetFrameTemplate")
 LCDWFrame:Hide()
 LCDWFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
@@ -103,93 +110,55 @@ LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:RegisterForDrag("LeftButton")
 LCDWFrame:SetScript("OnDragStart", LCDWFrame.StartMoving)
 LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
---LCDWFrame:SetBackdrop( {
---    bgFile = "Interface\\QUESTFRAME\\QuestBookBG",
---    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 32, edgeSize = 32,
---    insets = { left = 11, right = 12, top = 12, bottom = 11 }
---})
--- end MainFrame --
-
-local function generateDungeonsFrames()
-    for dungeonsK, dungeonV in ipairs(dungeons) do
-        local frameWidth = 128
-        local frameHeight = 64
-
-        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Button", nil, LCDWFrame)
-        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(frameWidth, frameHeight)
-
-        -- If 4 dungeons frame are displayed then ddd a new line --
-        if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame, "TOPLEFT", ((dungeonsK - 4) * frameWidth * 1.3) - frameWidth, frameHeight * -3.3)
-        else
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame, "TOPLEFT", (dungeonsK * frameWidth * 1.3) - frameWidth, -130)
-        end
-
-        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
-            bgFile = dungeons[dungeonsK][DUNGEONS_ARRAY_SECOND_COL],
-            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 15, edgeSize = 15,
-            insets = { left = 2, right = -60, top = 2, bottom = -20 }
-        })
-
-        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetScript("OnClick", function (self, button)
-            print(dungeonsFrames["dungeonFrame" .. dungeonsK]:GetSize())
-        end)
-    end
-end
-
-generateDungeonsFrames()
-
-local function generateClassesFrames()
-    for classesK, classesV in ipairs(classes) do
-        local frameWidth = 48
-        local frameHeight = 48
-
-        classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame)
-        classesFrames["classeFrame" .. classesK]:SetSize(frameWidth, frameHeight)
-
-        -- If 4 dungeons frame are displayed then ddd a new line --
-        if classesK > ROW_MAX_CLASSES_ITEMS then
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 7)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 7))), -185)
-        else
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame, "LEFT", 139 + ((frameWidth * (classesK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 1))), -125)
-        end
-
-        classesFrames["classeFrame" .. classesK]:SetBackdrop({
-            --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
-            bgFile = classes[classesK][DUNGEONS_ARRAY_SECOND_COL],
-            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 10, edgeSize = 10,
-            insets = { left = 2, right = 0, top = 2, bottom = 0 }
-        })
-
-        classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function (self, button)
-            print(classesFrames["classeFrame" .. classesK]:GetSize())
-        end)
-    end
-end
-
-generateClassesFrames()
-
--- MainFrame title container --
-LCDWFrame.LCDWMainFrameNameContainer = CreateFrame("Frame", nil, LCDWFrame, "GlowBoxTemplate")
-LCDWFrame.LCDWMainFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
-LCDWFrame.LCDWMainFrameNameContainer:SetPoint("CENTER",  LCDWFrame, "TOP", 0, 0)
--- end MainFrame title container --
-
--- Title's MainFrame --
-LCDWFrame.LCDWMainFrameNameContainer.title = LCDWFrame.LCDWMainFrameNameContainer:CreateFontString(nil, "OVERLAY")
-LCDWFrame.LCDWMainFrameNameContainer.title:SetFontObject("GameFontHighLight")
-LCDWFrame.LCDWMainFrameNameContainer.title:SetPoint("CENTER", LCDWFrame.LCDWMainFrameNameContainer, "CENTER", 0, 0)
-LCDWFrame.LCDWMainFrameNameContainer.title:SetText("Général")
--- end title's mainFrame --
-
--- Close button --
+-- title container --
+LCDWFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame, "GlowBoxTemplate")
+LCDWFrame.titleContainerFrame:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
+LCDWFrame.titleContainerFrame:SetPoint("CENTER",  LCDWFrame, "TOP", 0, 0)
+-- title --
+LCDWFrame.titleContainerFrame.title = LCDWFrame.titleContainerFrame:CreateFontString(nil, "OVERLAY")
+LCDWFrame.titleContainerFrame.title:SetFontObject("GameFontHighLight")
+LCDWFrame.titleContainerFrame.title:SetPoint("CENTER", LCDWFrame.titleContainerFrame, "CENTER", 0, 0)
+LCDWFrame.titleContainerFrame.title:SetText("Général")
+-- close button --
 LCDWFrame.CloseButton = CreateFrame("Button", nil, LCDWFrame, "UIPanelCloseButton")
 LCDWFrame.CloseButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -20, -20)
 LCDWFrame.CloseButton:SetScript("OnClick", function(self, Button, Down)
     LCDWFrame:Hide()
 end)
--- End Close button --
-
+-- open options panel button --
+LCDWFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame)
+LCDWFrame.openOptionsFrameButton:SetSize(45, 45)
+LCDWFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -25, -55)
+LCDWFrame.openOptionsFrameButton:SetBackdrop({
+    bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
+    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+})
+-- open options panel button hover --
+LCDWFrame.openOptionsFrameButton.Hover = LCDWFrame.openOptionsFrameButton:CreateTexture(nil, "BACKGROUND")
+LCDWFrame.openOptionsFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
+LCDWFrame.openOptionsFrameButton.Hover:SetAllPoints(LCDWFrame.openOptionsFrameButton)
+LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
+LCDWFrame.openOptionsFrameButton:SetScript("OnEnter", function()
+    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(1)
+end);
+LCDWFrame.openOptionsFrameButton:SetScript("OnLeave", function()
+    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
+end);
+LCDWFrame.openOptionsFrameButton:SetScript("OnClick", function()
+    if LCDWOptionsFrame:IsShown() then
+        LCDWOptionsFrame:Hide()
+        LCDWFrame.openOptionsFrameButton:SetBackdrop({
+            bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        })
+    else
+        LCDWOptionsFrame:Show()
+        LCDWFrame.openOptionsFrameButton:SetBackdrop({
+            bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        })
+    end
+end);
 -- Resize frame --
 --LCDWFrame.resizeButton = CreateFrame("Button", nil, LCDWFrame)
 --LCDWFrame.resizeButton:SetPoint("BOTTOMRIGHT", 0, 0)
@@ -205,145 +174,188 @@ end)
 --    LCDWFrame:StopMovingOrSizing()
 --end)
 -- end resize frame --
-
--- openOptionsFrameButton arrow --
-LCDWFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame)
-LCDWFrame.openOptionsFrameButton:SetSize(45, 45)
-LCDWFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -25, -55)
-LCDWFrame.openOptionsFrameButton:SetBackdrop({
-    bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
-    insets = { left = 4, right = 4, top = 4, bottom = 4 }
-})
-LCDWFrame.openOptionsFrameButton.Hover = LCDWFrame.openOptionsFrameButton:CreateTexture(nil, "BACKGROUND")
-LCDWFrame.openOptionsFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
-LCDWFrame.openOptionsFrameButton.Hover:SetAllPoints(LCDWFrame.openOptionsFrameButton)
-LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
-
-LCDWFrame.openOptionsFrameButton:SetScript("OnEnter", function()
-    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(1)
-end);
---
-LCDWFrame.openOptionsFrameButton:SetScript("OnLeave", function()
-    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
-end);
-
-LCDWFrame.openOptionsFrameButton:SetScript("OnClick", function()
-    if LCDWFrame.OptionsFrame:IsShown() then
-        LCDWFrame.OptionsFrame:Hide()
-        LCDWFrame.openOptionsFrameButton:SetBackdrop({
-            bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
-            insets = { left = 4, right = 4, top = 4, bottom = 4 }
-        })
-    else
-        LCDWFrame.OptionsFrame:Show()
-        LCDWFrame.openOptionsFrameButton:SetBackdrop({
-            bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
-            insets = { left = 4, right = 4, top = 4, bottom = 4 }
-        })
+------------------------------
+--// secondary main frame //--
+------------------------------
+-- this frame contains the whole content of the mainFrame but the frame title, the close button and the open options button --
+-- it will be easier to hide all elements when a dungeons is selected --
+LCDWFrame.allElementsContainerFrame = CreateFrame("Frame", nil, LCDWFrame)
+LCDWFrame.allElementsContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
+LCDWFrame.allElementsContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
+-- create a section name container --
+local function createSectionNameContainer(frameName, relativePoint, ofsy, title)
+    -- dungeons section name container dungeonsSectionNameContainer --
+    LCDWFrame.frameName = CreateFrame("Frame", nil, LCDWFrame.allElementsContainerFrame)
+    LCDWFrame.frameName:SetSize(200, 30)
+    LCDWFrame.frameName:SetPoint("LEFT", LCDWFrame.allElementsContainerFrame, relativePoint, 40, ofsy)
+    LCDWFrame.frameName:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+    })
+    -- arrow on the left of the container --
+    LCDWFrame.frameName.arrowTitle = CreateFrame("Frame", nil, LCDWFrame.frameName)
+    LCDWFrame.frameName.arrowTitle:SetSize(32, 32)
+    LCDWFrame.frameName.arrowTitle:SetPoint("LEFT", LCDWFrame.frameName, "LEFT")
+    LCDWFrame.frameName.arrowTitle:SetBackdrop({
+        bgFile = ARROW_TITLE_SECTION
+    })
+    -- dungeons section name --
+    LCDWFrame.frameName.sectionTitle = LCDWFrame.frameName:CreateFontString(nil, "OVERLAY")
+    LCDWFrame.frameName.sectionTitle:SetFontObject("GameFontHighLight")
+    LCDWFrame.frameName.sectionTitle:SetPoint("CENTER", LCDWFrame.frameName, "CENTER")
+    LCDWFrame.frameName.sectionTitle:SetText(title)
+end
+createSectionNameContainer("dungeonsSectionNameContainer", "TOPLEFT", -50, "Guides PVE")
+createSectionNameContainer("classesSectionNameContainer", "LEFT", -46, "Guides PVP")
+------------------------------
+--// tertiary main frame  //--
+------------------------------
+---@todo faire une frame qui englobe le titre et l'icone
+local function guideFrame(icon, name, id)
+    -- frame that appears after selecting a guide --
+    LCDWFrame.titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame)
+    LCDWFrame.titleAndGuideContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
+    LCDWFrame.titleAndGuideContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
+    -- title --
+    LCDWFrame.titleAndGuideContainerFrame.title = LCDWFrame.titleAndGuideContainerFrame:CreateFontString(nil, "OVERLAY")
+    LCDWFrame.titleAndGuideContainerFrame.title:SetFontObject("GameFontHighlightLarge")
+    LCDWFrame.titleAndGuideContainerFrame.title:SetPoint("CENTER", LCDWFrame.titleAndGuideContainerFrame, "TOP", 0, -50)
+    LCDWFrame.titleAndGuideContainerFrame.title:SetText(name)
+    -- icon --
+    if icon then
+        LCDWFrame.titleAndGuideContainerFrame.icon = LCDWFrame.titleAndGuideContainerFrame:CreateTexture(nil, "ARTWORK")
+        LCDWFrame.titleAndGuideContainerFrame.icon:SetSize(30, 30)
+        LCDWFrame.titleAndGuideContainerFrame.icon:SetPoint("CENTER", LCDWFrame.titleAndGuideContainerFrame, "TOP", -100, -50)
+        LCDWFrame.titleAndGuideContainerFrame.icon:SetTexture(classes[id][DUNGEONS_ARRAY_SECOND_COL])
     end
-end);
--- end openOptionsFrameButton arrow --
+    -- core image --
+    textures["texture" .. id] = LCDWFrame.titleAndGuideContainerFrame:CreateTexture(nil, "ARTWORK")
+    textures["texture" .. id]:SetPoint("CENTER", LCDWFrame.titleAndGuideContainerFrame, "CENTER", 0, -30)
+    textures["texture" .. id]:SetSize(400, 400)
+    textures["texture" .. id]:SetTexture(FOLDER_GUIDES_PATH .. 1)
+end
+--------------------------------------------------------
+--///////////// END MAIN FRAME (Général) /////////////--
+--------------------------------------------------------
 
--- Options Frame --
-LCDWFrame.OptionsFrame = CreateFrame("Frame", nil, LCDWFrame, "InsetFrameTemplate")
-LCDWFrame.OptionsFrame:SetSize(CHOICE_FRAME_WIDTH, LCDWFrame:GetHeight())
-LCDWFrame.OptionsFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
-LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer = CreateFrame("Frame", nil, LCDWFrame.OptionsFrame, "GlowBoxTemplate")
-LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
-LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer:SetPoint("CENTER",  LCDWFrame.OptionsFrame, "TOP", 0, 0)
-LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title = LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer:CreateFontString(nil, "OVERLAY")
-LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title:SetFontObject("GameFontHighLight")
-LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title:SetPoint("CENTER", LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer, "CENTER", 0, 0)
-LCDWFrame.OptionsFrame.LCDWOptionsFrameNameContainer.title:SetText("Options")
-LCDWFrame.OptionsFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.OptionsFrame, "UIPanelButtonTemplate")
-LCDWFrame.OptionsFrame.resetButton:SetSize(100, 30)
-LCDWFrame.OptionsFrame.resetButton:SetPoint("CENTER", 0, 0)
-LCDWFrame.OptionsFrame.resetButton:SetText("Reset")
-LCDWFrame.OptionsFrame.resetButton:SetScript("OnClick", function ()
 
+
+--------------------------------------------------------
+--///////////// OPTIONS FRAME (Options) //////////////--
+--------------------------------------------------------
+LCDWOptionsFrame = CreateFrame("Frame", nil, LCDWFrame, "InsetFrameTemplate")
+LCDWOptionsFrame:SetSize(CHOICE_FRAME_WIDTH, LCDWFrame:GetHeight())
+LCDWOptionsFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer = CreateFrame("Frame", nil, LCDWOptionsFrame, "GlowBoxTemplate")
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer:SetPoint("CENTER",  LCDWOptionsFrame, "TOP", 0, 0)
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title = LCDWOptionsFrame.LCDWOptionsFrameNameContainer:CreateFontString(nil, "OVERLAY")
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title:SetFontObject("GameFontHighLight")
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title:SetPoint("CENTER", LCDWOptionsFrame.LCDWOptionsFrameNameContainer, "CENTER", 0, 0)
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title:SetText("Options")
+LCDWOptionsFrame.resetButton = CreateFrame("Button", nil, LCDWOptionsFrame, "UIPanelButtonTemplate")
+LCDWOptionsFrame.resetButton:SetSize(100, 30)
+LCDWOptionsFrame.resetButton:SetPoint("CENTER", 0, 0)
+LCDWOptionsFrame.resetButton:SetText("Reset")
+LCDWOptionsFrame.resetButton:SetScript("OnClick", function ()
+    if LCDWFrame.titleAndGuideContainerFrame:IsShown() then
+        LCDWFrame.titleAndGuideContainerFrame:Hide()
+    end
+    if not LCDWFrame.allElementsContainerFrame:IsShown() then
+        LCDWFrame.allElementsContainerFrame:Show()
+    end
 end)
-LCDWFrame.OptionsFrame.credits = CreateFrame("Frame", nil, LCDWFrame.OptionsFrame)
-LCDWFrame.OptionsFrame.credits:SetSize(LCDWFrame.OptionsFrame:GetWidth() - 6, 20)
-LCDWFrame.OptionsFrame.credits:SetPoint("BOTTOM", LCDWFrame.OptionsFrame, "BOTTOM", 0, 3)
-LCDWFrame.OptionsFrame.credits:SetBackdrop({
+LCDWOptionsFrame.credits = CreateFrame("Frame", nil, LCDWOptionsFrame)
+LCDWOptionsFrame.credits:SetSize(LCDWOptionsFrame:GetWidth() - 6, 20)
+LCDWOptionsFrame.credits:SetPoint("BOTTOM", LCDWOptionsFrame, "BOTTOM", 0, 3)
+LCDWOptionsFrame.credits:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
-LCDWFrame.OptionsFrame.credits.content = LCDWFrame.OptionsFrame.credits:CreateFontString(nil, "OVERLAY")
-LCDWFrame.OptionsFrame.credits.content:SetFontObject("GameFontHighLight")
-LCDWFrame.OptionsFrame.credits.content:SetPoint("CENTER", LCDWFrame.OptionsFrame.credits, "CENTER")
-LCDWFrame.OptionsFrame.credits.content:SetText("Made by Aecx & Willios")
--- end Options Frame --
+LCDWOptionsFrame.credits.content = LCDWOptionsFrame.credits:CreateFontString(nil, "OVERLAY")
+LCDWOptionsFrame.credits.content:SetFontObject("GameFontHighlightSmall")
+LCDWOptionsFrame.credits.content:SetPoint("CENTER", LCDWOptionsFrame.credits, "CENTER")
+LCDWOptionsFrame.credits.content:SetText("Made by Aecx & Willios - v." .. addonVersion)
+LCDWOptionsFrame.mmButtonOption = CreateFrame("CheckButton", nil, LCDWOptionsFrame, "UICheckButtonTemplate")
+LCDWOptionsFrame.mmButtonOption:SetPoint("LEFT", LCDWOptionsFrame, "BOTTOMLEFT", 15, 50)
+LCDWOptionsFrame.mmButtonOption.text:SetText("Cacher l'icône de la minimap")
+LCDWOptionsFrame.mmButtonOption:SetChecked(false)
+LCDWOptionsFrame.mmButtonOption:SetScript("OnClick", function()
+    --icon:Show()
+end)
+--------------------------------------------------------
+--//////////// END OPTIONS FRAME (Options) ///////////--
+--------------------------------------------------------
+local function createTexture(dungeonId)
+    textures["texture" .. dungeonId] = LCDWFrame:CreateTexture(nil, "ARTWORK")
+    textures["texture" .. dungeonId]:SetPoint("CENTER", LCDWFrame, "CENTER", 0, 0)
+    textures["texture" .. dungeonId]:SetSize(450, 450)
+    textures["texture" .. dungeonId]:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
+    return textures["texture" .. dungeonId]
+end
 
--- checkboxes --
---LCDWFrame.OptionsFrame.pveCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.OptionsFrame, "UIRadioButtonTemplate")
---LCDWFrame.OptionsFrame.pveCheckButton:SetPoint("LEFT", LCDWFrame.OptionsFrame, "TOPLEFT", 20, -50)
---LCDWFrame.OptionsFrame.pveCheckButton:SetText("PVECheckbox")
---LCDWFrame.OptionsFrame.pveCheckButton.tooltip = "PVE"
---LCDWFrame.OptionsFrame.pveCheckButton:SetScript("OnClick", function ()
---    if LCDWFrame.OptionsFrame.pveCheckButton:GetChecked() then
---        UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
---        LCDWFrame.OptionsFrame.pvpCheckButton:Disable()
---    else
---        UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
---        LCDWFrame.OptionsFrame.pvpCheckButton:Enable()
---    end
---end)
---
---LCDWFrame.OptionsFrame.pvpCheckButton = CreateFrame("CheckButton", nil, LCDWFrame.OptionsFrame, "ChatConfigCheckButtonTemplate")
---LCDWFrame.OptionsFrame.pvpCheckButton:SetPoint("LEFT", LCDWFrame.OptionsFrame, "TOPLEFT", 20, -80)
---LCDWFrame.OptionsFrame.pvpCheckButton:SetText("PVPCheckbox")
---LCDWFrame.OptionsFrame.pvpCheckButton.tooltip = "PVP"
---LCDWFrame.OptionsFrame.pvpCheckButton:SetScript("OnClick", function ()
---    if LCDWFrame.OptionsFrame.pvpCheckButton:GetChecked() then
---        UIDropDownMenu_EnableDropDown(LCDWFrame.classDropDown)
---        LCDWFrame.OptionsFrame.pveCheckButton:Disable()
---    else
---        UIDropDownMenu_DisableDropDown(LCDWFrame.classDropDown)
---        LCDWFrame.OptionsFrame.pveCheckButton:Enable()
---    end
---end)
--- end checkboxes --
+local function generateDungeonsFrames()
+    for dungeonsK, dungeonV in ipairs(dungeons) do
+        local frameWidth = 128
+        local frameHeight = 64
 
--- first section container  --
-LCDWFrame.sectionNameContainer = CreateFrame("Frame", nil, LCDWFrame)
-LCDWFrame.sectionNameContainer:SetSize(200, 30)
-LCDWFrame.sectionNameContainer:SetPoint("LEFT", LCDWFrame, "TOPLEFT", 40, -50)
-LCDWFrame.sectionNameContainer:SetBackdrop({
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
-})
-LCDWFrame.sectionNameContainer.arrowTitle = CreateFrame("Frame", nil, LCDWFrame.sectionNameContainer)
-LCDWFrame.sectionNameContainer.arrowTitle:SetSize(32, 32)
-LCDWFrame.sectionNameContainer.arrowTitle:SetPoint("LEFT", LCDWFrame.sectionNameContainer, "LEFT")
-LCDWFrame.sectionNameContainer.arrowTitle:SetBackdrop({
-    bgFile = SECTION_ARROW_PATH
-})
-LCDWFrame.sectionNameContainer.sectionTitle = LCDWFrame.sectionNameContainer:CreateFontString(nil, "OVERLAY")
-LCDWFrame.sectionNameContainer.sectionTitle:SetFontObject("GameFontHighLight")
-LCDWFrame.sectionNameContainer.sectionTitle:SetPoint("CENTER", LCDWFrame.sectionNameContainer, "CENTER")
-LCDWFrame.sectionNameContainer.sectionTitle:SetText("Guides PVE")
--- end first section container --
+        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame)
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(frameWidth, frameHeight)
 
--- second section container  --
-LCDWFrame.sectionNameContainer = CreateFrame("Frame", nil, LCDWFrame)
-LCDWFrame.sectionNameContainer:SetSize(200, 30)
-LCDWFrame.sectionNameContainer:SetPoint("LEFT", LCDWFrame, "LEFT", 40, -46)
-LCDWFrame.sectionNameContainer:SetBackdrop({
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
-})
-LCDWFrame.sectionNameContainer.arrowTitle = CreateFrame("Frame", nil, LCDWFrame.sectionNameContainer)
-LCDWFrame.sectionNameContainer.arrowTitle:SetSize(32, 32)
-LCDWFrame.sectionNameContainer.arrowTitle:SetPoint("LEFT", LCDWFrame.sectionNameContainer, "LEFT")
-LCDWFrame.sectionNameContainer.arrowTitle:SetBackdrop({
-    bgFile = SECTION_ARROW_PATH
-})
-LCDWFrame.sectionNameContainer.sectionTitle = LCDWFrame.sectionNameContainer:CreateFontString(nil, "OVERLAY")
-LCDWFrame.sectionNameContainer.sectionTitle:SetFontObject("GameFontHighLight")
-LCDWFrame.sectionNameContainer.sectionTitle:SetPoint("CENTER", LCDWFrame.sectionNameContainer, "CENTER")
-LCDWFrame.sectionNameContainer.sectionTitle:SetText("Guides PVP")
--- end second section container --
+        -- If 4 dungeons frame are displayed then ddd a new line --
+        if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", ((dungeonsK - 4) * frameWidth * 1.3) - frameWidth, frameHeight * -3.3)
+        else
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", (dungeonsK * frameWidth * 1.3) - frameWidth, -130)
+        end
+
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
+            bgFile = dungeons[dungeonsK][DUNGEONS_ARRAY_SECOND_COL],
+            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 15, edgeSize = 15,
+            insets = { left = 2, right = -60, top = 2, bottom = -20 }
+        })
+
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetScript("OnClick", function (self, button)
+            LCDWFrame.allElementsContainerFrame:Hide()
+            guideFrame(nil, dungeons[dungeonsK][DUNGEONS_ARRAY_FIRST_COL], dungeonsK)
+        end)
+    end
+end
+
+generateDungeonsFrames()
+
+local function generateClassesFrames()
+    for classesK, classesV in ipairs(classes) do
+        local frameWidth = 48
+        local frameHeight = 48
+
+        classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame)
+        classesFrames["classeFrame" .. classesK]:SetSize(frameWidth, frameHeight)
+
+        -- If 4 dungeons frame are displayed then ddd a new line --
+        if classesK > ROW_MAX_CLASSES_ITEMS then
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "LEFT", 139 + ((frameWidth * (classesK - 7)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 7))), -185)
+        else
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "LEFT", 139 + ((frameWidth * (classesK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 1))), -125)
+        end
+
+        classesFrames["classeFrame" .. classesK]:SetBackdrop({
+            --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
+            bgFile = classes[classesK][DUNGEONS_ARRAY_SECOND_COL],
+            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 10, edgeSize = 10,
+            insets = { left = 2, right = 0, top = 2, bottom = 0 }
+        })
+
+        classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function (self, button)
+            LCDWFrame.allElementsContainerFrame:Hide()
+            guideFrame(true, classes[classesK][DUNGEONS_ARRAY_FIRST_COL], classesK)
+        end)
+    end
+end
+
+generateClassesFrames()
+
 
 -- MINIMAP --
-local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
+local LCDWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
     type = "global",
     icon = MINIMAP_ICON_PATH,
     OnClick = function(clickedframe, button)
@@ -370,22 +382,15 @@ local LCLWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
 
 function LCDW:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("LCDWDB", defaults)
-    icon:Register("WG", LCLWLDB, self.db.profile.minimap)
-    self:RegisterChatCommand("bunnies", "CommandTheBunnies")
+    icon:Register("LCDWLDB", LCDWLDB, self.db.profile.minimapOption)
 end
 -- END MINIMAP --
 
-local function createTexture(dungeonId)
-    textures["texture" .. dungeonId] = LCDWFrame:CreateTexture(nil, "ARTWORK")
-    textures["texture" .. dungeonId]:SetPoint("CENTER", LCDWFrame, "CENTER", 0, 0)
-    textures["texture" .. dungeonId]:SetSize(450, 450)
-    textures["texture" .. dungeonId]:SetTexture(FOLDER_GUIDES_PATH .. dungeonId)
-    return textures["texture" .. dungeonId]
-end
+
 
 -- Onlick Dungeons dropdown items --
 local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(LCDWFrame.dropDown, "Donjon : " .. arg2)
+    UIDropDownMenu_SetText(LCDWFrame.OptionsFrame.dropDown, "Donjon : " .. arg2)
     dungeonSelected = arg1
 
     for dungeonId, dungeon in ipairs(dungeons) do
@@ -430,7 +435,7 @@ end
 
 -- Onlick classes dropdown items --
 local function ClassesListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(LCDWFrame.classDropDown, "Classe : " .. arg2)
+    UIDropDownMenu_SetText(LCDWFrame.OptionsFrame.classDropDown, "Classe : " .. arg2)
     classSelected = arg1
 
     for classId, dungeon in ipairs(classes) do
@@ -458,19 +463,16 @@ end
 -- end --
 
 -- DROPDOWNS --
-LCDWFrame.dropDown = CreateFrame("Frame", "WPDungeonsListDropDown", LCDWFrame.OptionsFrame, "UIDropDownMenuTemplate")
-LCDWFrame.dropDown:SetPoint("CENTER", LCDWFrame.OptionsFrame, "TOP", 0, -150)
-UIDropDownMenu_SetWidth(LCDWFrame.dropDown, 200)
-UIDropDownMenu_Initialize(LCDWFrame.dropDown, DungeonsListDropDown)
-UIDropDownMenu_SetText(LCDWFrame.dropDown, "-- Sélectionner un donjon --")
-UIDropDownMenu_DisableDropDown(LCDWFrame.dropDown)
-
-LCDWFrame.classDropDown = CreateFrame("Frame", "WPClassDropDown", LCDWFrame.OptionsFrame, "UIDropDownMenuTemplate")
-LCDWFrame.classDropDown:SetPoint("CENTER", LCDWFrame.OptionsFrame, "TOP", 0, -200)
-UIDropDownMenu_SetWidth(LCDWFrame.classDropDown, 200)
-UIDropDownMenu_Initialize(LCDWFrame.classDropDown, ClassesListDropDown)
-UIDropDownMenu_SetText(LCDWFrame.classDropDown, "-- Sélectionner votre classe --")
-UIDropDownMenu_DisableDropDown(LCDWFrame.classDropDown)
+local function createDropdown(dropDownName, frameName, ofsy, setTextContent)
+    LCDWOptionsFrame.dropDownName = CreateFrame("Frame", frameName, LCDWOptionsFrame, "UIDropDownMenuTemplate")
+    LCDWOptionsFrame.dropDownName:SetPoint("CENTER", LCDWOptionsFrame, "TOP", 0, ofsy)
+    UIDropDownMenu_SetWidth(LCDWOptionsFrame.dropDownName, 200)
+    UIDropDownMenu_Initialize(LCDWOptionsFrame.dropDownName, DungeonsListDropDown)
+    UIDropDownMenu_SetText(LCDWOptionsFrame.dropDownName, setTextContent)
+    UIDropDownMenu_DisableDropDown(LCDWOptionsFrame.dropDownName)
+end
+createDropdown("dropDown", "WPDungeonsListDropDown", -150, "-- Sélectionner un donjon --")
+createDropdown("classDropDown", "WPClassDropDown", -200, "-- Sélectionner une classe --")
 -- end DROPDOWNS --
 
 -- slash commands --
