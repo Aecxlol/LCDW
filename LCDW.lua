@@ -126,11 +126,11 @@ LCDWFrame.CloseButton:SetScript("OnClick", function(self, Button, Down)
     LCDWFrame:Hide()
 end)
 -- open options panel button --
-LCDWFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame)
+LCDWFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.openOptionsFrameButton:SetSize(45, 45)
 LCDWFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -25, -55)
 LCDWFrame.openOptionsFrameButton:SetBackdrop({
-    bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
+    bgFile = "Interface\\BUTTONS\\UI-SpellbookIcon-PrevPage-Up",
     insets = { left = 4, right = 4, top = 4, bottom = 4 }
 })
 -- open options panel button hover --
@@ -185,14 +185,14 @@ LCDWFrame.allElementsContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
 -- create a section name container --
 local function createSectionNameContainer(frameName, relativePoint, ofsy, title)
     -- dungeons section name container dungeonsSectionNameContainer --
-    LCDWFrame.frameName = CreateFrame("Frame", nil, LCDWFrame.allElementsContainerFrame)
+    LCDWFrame.frameName = CreateFrame("Frame", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
     LCDWFrame.frameName:SetSize(200, 30)
     LCDWFrame.frameName:SetPoint("LEFT", LCDWFrame.allElementsContainerFrame, relativePoint, 40, ofsy)
     LCDWFrame.frameName:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
     })
     -- arrow on the left of the container --
-    LCDWFrame.frameName.arrowTitle = CreateFrame("Frame", nil, LCDWFrame.frameName)
+    LCDWFrame.frameName.arrowTitle = CreateFrame("Frame", nil, LCDWFrame.frameName, BackdropTemplateMixin and "BackdropTemplate")
     LCDWFrame.frameName.arrowTitle:SetSize(32, 32)
     LCDWFrame.frameName.arrowTitle:SetPoint("LEFT", LCDWFrame.frameName, "LEFT")
     LCDWFrame.frameName.arrowTitle:SetBackdrop({
@@ -264,7 +264,7 @@ LCDWOptionsFrame.resetButton:SetScript("OnClick", function ()
         LCDWFrame.allElementsContainerFrame:Show()
     end
 end)
-LCDWOptionsFrame.credits = CreateFrame("Frame", nil, LCDWOptionsFrame)
+LCDWOptionsFrame.credits = CreateFrame("Frame", nil, LCDWOptionsFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWOptionsFrame.credits:SetSize(LCDWOptionsFrame:GetWidth() - 6, 20)
 LCDWOptionsFrame.credits:SetPoint("BOTTOM", LCDWOptionsFrame, "BOTTOM", 0, 3)
 LCDWOptionsFrame.credits:SetBackdrop({
@@ -297,7 +297,7 @@ local function generateDungeonsFrames()
         local frameWidth = 128
         local frameHeight = 64
 
-        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame)
+        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(frameWidth, frameHeight)
 
         -- If 4 dungeons frame are displayed then ddd a new line --
@@ -327,7 +327,7 @@ local function generateClassesFrames()
         local frameWidth = 48
         local frameHeight = 48
 
-        classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame)
+        classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         classesFrames["classeFrame" .. classesK]:SetSize(frameWidth, frameHeight)
 
         -- If 4 dungeons frame are displayed then ddd a new line --
@@ -404,7 +404,7 @@ local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
                 -- and set it to false (which means it's now hidden)
                 textureShown["isTexture" .. dungeonId .. "Shown"] = false
             end
-        -- for the dungeon selected
+            -- for the dungeon selected
         else
             -- check if the selected one is hidden
             if textureShown["isTexture" .. dungeonId .. "Shown"] == false then
