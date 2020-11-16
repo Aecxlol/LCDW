@@ -339,12 +339,12 @@ local function generateDungeonsFrames()
     end
 end
 
-generateDungeonsFrames()
-
 local function generateClassesFrames()
+
+    local frameWidth = 48
+    local frameHeight = 48
+
     for classesK, classesV in ipairs(classes) do
-        local frameWidth = 48
-        local frameHeight = 48
 
         classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         classesFrames["classeFrame" .. classesK]:SetSize(frameWidth, frameHeight)
@@ -357,21 +357,19 @@ local function generateClassesFrames()
         end
 
         classesFrames["classeFrame" .. classesK]:SetBackdrop({
-            --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
             bgFile = classes[classesK][ARRAY_SECOND_COL],
-            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 10, edgeSize = 10,
-            insets = { left = 2, right = 0, top = 2, bottom = 0 }
+            insets = { left = 5, right = 5, top = 5, bottom = 5 }
         })
 
         classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function (self, button)
             LCDWFrame.allElementsContainerFrame:Hide()
-            guideFrame(true, classes[classesK][ARRAY_FIRST_COL], classesK)
+            showGuide(true, classes[classesK][ARRAY_FIRST_COL], classesK)
         end)
     end
 end
 
+generateDungeonsFrames()
 generateClassesFrames()
-
 
 -- MINIMAP --
 local LCDWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
