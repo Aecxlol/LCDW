@@ -294,8 +294,11 @@ end
 
 local function generateDungeonsFrames()
 
-    local frameWidth = 200
-    local frameHeight = 100
+    local frameWidth = 220
+    local frameHeight = 110
+    --local widthCoef = 1,4814814814814814814814814814815
+    --local heightCoef = 1,369863013698630136986301369863
+
     local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
 
     for dungeonsK, dungeonV in ipairs(dungeons) do
@@ -311,9 +314,9 @@ local function generateDungeonsFrames()
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.5 * (dungeonsK - 5)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 5))), -230)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.7 * (dungeonsK - 5)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 5))), -230)
         else
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.5 * (dungeonsK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 1))), -140)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.7 * (dungeonsK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 1))), -140)
         end
 
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
@@ -324,7 +327,8 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetText(dungeons[dungeonsK][ARRAY_FIRST_COL])
         dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetWidth(70)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(135, 73)
+        -- divide the frameWidth and frameHeight by the coef associated
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(148.5, 80.3)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetNormalTexture(buttonTexture)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetHighlightTexture(buttonTexture)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPushedTexture(buttonTexture)
