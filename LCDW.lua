@@ -64,6 +64,12 @@ local classes = {
     {"Voleur", CLASSES_ICONS_PATH .. "Rogue"}
 }
 
+local dropDownLvlOneMenu = {
+    "Guides PVE",
+    "Guides PVP",
+    "Glossaire",
+}
+
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
 local defaults = {
@@ -97,6 +103,7 @@ f:SetScript("OnEvent", onEvent)
 --------------------------------------------------------
 --/////////////// MAIN FRAME (Général) ///////////////--
 --------------------------------------------------------
+--local LCDWFrame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local LCDWFrame = CreateFrame("Frame", nil, UIParent, "InsetFrameTemplate")
 LCDWFrame:Hide()
 LCDWFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
@@ -110,6 +117,9 @@ LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:RegisterForDrag("LeftButton")
 LCDWFrame:SetScript("OnDragStart", LCDWFrame.StartMoving)
 LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
+--LCDWFrame:SetBackdrop({
+--    bgFile = "Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4"
+--})
 -- title container --
 LCDWFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame, "GlowBoxTemplate")
 LCDWFrame.titleContainerFrame:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
@@ -279,7 +289,7 @@ LCDWOptionsFrame.mmButtonOption:SetPoint("LEFT", LCDWOptionsFrame, "BOTTOMLEFT",
 LCDWOptionsFrame.mmButtonOption.text:SetText("Cacher l'icône de la minimap")
 LCDWOptionsFrame.mmButtonOption:SetChecked(false)
 LCDWOptionsFrame.mmButtonOption:SetScript("OnClick", function()
-    --icon:Show()
+    -- Hide minimap icon
 end)
 --------------------------------------------------------
 --//////////// END OPTIONS FRAME (Options) ///////////--
@@ -308,7 +318,7 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(frameWidth, frameHeight)
         -- dungeons title --
         dungeonsFrames["dungeonFrame" .. dungeonsK].title =  dungeonsFrames["dungeonFrame" .. dungeonsK]:CreateFontString(nil, "OVERLAY")
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetFontObject("GameFontHighlightSmall")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetFontObject("NumberFontNormalYellow")
         -- dungeons thumbnails borders and click hander --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border = CreateFrame("Button", nil, dungeonsFrames["dungeonFrame" .. dungeonsK])
 
@@ -322,10 +332,10 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
             bgFile = dungeons[dungeonsK][ARRAY_SECOND_COL],
         })
-
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK], "LEFT", 45, 0)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetWidth(80)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetHeight(30)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK], "CENTER", 0 - (dungeonsFrames["dungeonFrame" .. dungeonsK].title:GetWidth() / 2), 0 + (dungeonsFrames["dungeonFrame" .. dungeonsK].title:GetHeight() / 2))
         dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetText(dungeons[dungeonsK][ARRAY_FIRST_COL])
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetWidth(70)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
         -- divide the frameWidth and frameHeight by the coef associated
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(148.5, 80.3)
@@ -411,89 +421,63 @@ end
 
 -- Onlick Dungeons dropdown items --
 local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(LCDWFrame.OptionsFrame.dropDown, "Donjon : " .. arg2)
+    UIDropDownMenu_SetText(LCDWOptionsFrame.dropDownName, "Donjon : " .. arg2)
     dungeonSelected = arg1
-
+    print("salut")
     for dungeonId, dungeon in ipairs(dungeons) do
+        if arg1 == classId then
 
-        -- if the dungeon is different that the one selected
-        if dungeonId ~= arg1 then
-            -- then check which one is currently shown
-            if textureShown["isTexture" .. dungeonId .. "Shown"] == true then
-                -- Hide it
-                textures["texture" .. dungeonId]:Hide()
-                -- and set it to false (which means it's now hidden)
-                textureShown["isTexture" .. dungeonId .. "Shown"] = false
-            end
-            -- for the dungeon selected
-        else
-            -- check if the selected one is hidden
-            if textureShown["isTexture" .. dungeonId .. "Shown"] == false then
-                -- if it is, create the texture according to the dungeon selected
-                createTexture(dungeonId)
-                -- and set it to true (which means it's now shown)
-                textureShown["isTexture" .. dungeonId .. "Shown"] = true
-            end
         end
+        -- if the dungeon is different that the one selected
+        --if dungeonId ~= arg1 then
+        --    -- then check which one is currently shown
+        --    if textureShown["isTexture" .. dungeonId .. "Shown"] == true then
+        --        -- Hide it
+        --        textures["texture" .. dungeonId]:Hide()
+        --        -- and set it to false (which means it's now hidden)
+        --        textureShown["isTexture" .. dungeonId .. "Shown"] = false
+        --    end
+        --    -- for the dungeon selected
+        --else
+        --    -- check if the selected one is hidden
+        --    if textureShown["isTexture" .. dungeonId .. "Shown"] == false then
+        --        -- if it is, create the texture according to the dungeon selected
+        --        createTexture(dungeonId)
+        --        -- and set it to true (which means it's now shown)
+        --        textureShown["isTexture" .. dungeonId .. "Shown"] = true
+        --    end
+        --end
     end
 end
 -- end onclick event --
 
 -- display the dungeons' list --
 local function DungeonsListDropDown(frame, level, menuList)
+
     local info = UIDropDownMenu_CreateInfo()
-    info.func = DungeonsListDropDown_OnClick
 
     if level == 1 then
         -- Outermost menu level
+        for k, v in ipairs(dropDownLvlOneMenu) do
+            info.text, info.arg1, info.arg2, info.hasArrow = v, k, v, true
+            UIDropDownMenu_AddButton(info)
+        end
+    else
+        info.func = DungeonsListDropDown_OnClick
         for i, dungeon in ipairs(dungeons) do
-            info.text, info.arg1, info.arg2, info.checked = dungeon, i, dungeon, i == dungeonSelected
-            UIDropDownMenu_AddButton(info)
+            info.text, info.arg1, info.arg2, info.checked = dungeon[1], i, dungeon[1], i == dungeonSelected
+            UIDropDownMenu_AddButton(info, level)
         end
     end
 end
 -- end --
 
--- Onlick classes dropdown items --
-local function ClassesListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(LCDWFrame.OptionsFrame.classDropDown, "Classe : " .. arg2)
-    classSelected = arg1
+LCDWOptionsFrame.dropDownName = CreateFrame("Frame", "WPDungeonsListDropDown", LCDWOptionsFrame, "UIDropDownMenuTemplate")
+LCDWOptionsFrame.dropDownName:SetPoint("CENTER", LCDWOptionsFrame, "TOP", 0, -150)
+UIDropDownMenu_SetWidth(LCDWOptionsFrame.dropDownName, 200)
+UIDropDownMenu_Initialize(LCDWOptionsFrame.dropDownName, DungeonsListDropDown)
+UIDropDownMenu_SetText(LCDWOptionsFrame.dropDownName, "Accès rapide")
 
-    for classId, dungeon in ipairs(classes) do
-        if arg1 == classId then
-            -- display the dropdown LCDWFrame.dropDown which is greyed out
-            --UIDropDownMenu_EnableDropDown(LCDWFrame.dropDown)
-        end
-    end
-end
--- end onclick event --
-
--- display the classes' list --
-local function ClassesListDropDown(frame, level, menuList)
-    local info = UIDropDownMenu_CreateInfo()
-    info.func = ClassesListDropDown_OnClick
-
-    if level == 1 then
-        -- Outermost menu level
-        for i, class in ipairs(classes) do
-            info.text, info.arg1, info.arg2, info.checked = class, i, class, i == classSelected
-            UIDropDownMenu_AddButton(info)
-        end
-    end
-end
--- end --
-
--- DROPDOWNS --
-local function createDropdown(dropDownName, frameName, ofsy, setTextContent)
-    LCDWOptionsFrame.dropDownName = CreateFrame("Frame", frameName, LCDWOptionsFrame, "UIDropDownMenuTemplate")
-    LCDWOptionsFrame.dropDownName:SetPoint("CENTER", LCDWOptionsFrame, "TOP", 0, ofsy)
-    UIDropDownMenu_SetWidth(LCDWOptionsFrame.dropDownName, 200)
-    UIDropDownMenu_Initialize(LCDWOptionsFrame.dropDownName, DungeonsListDropDown)
-    UIDropDownMenu_SetText(LCDWOptionsFrame.dropDownName, setTextContent)
-    UIDropDownMenu_DisableDropDown(LCDWOptionsFrame.dropDownName)
-end
-createDropdown("dropDown", "WPDungeonsListDropDown", -150, "-- Sélectionner un donjon --")
-createDropdown("classDropDown", "WPClassDropDown", -200, "-- Sélectionner une classe --")
 -- end DROPDOWNS --
 
 -- slash commands --
