@@ -19,8 +19,8 @@ local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
 local ARROW_TITLE_SECTION = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
 local ROW_MAX_DUNGEONS_ITEMS = 4
 local ROW_MAX_CLASSES_ITEMS = 6
-local DUNGEONS_ARRAY_FIRST_COL = 1
-local DUNGEONS_ARRAY_SECOND_COL = 2
+local ARRAY_FIRST_COL = 1
+local ARRAY_SECOND_COL = 2
 local SPACE_BETWEEN_CLASSES_ITEMS = 30
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
@@ -166,7 +166,7 @@ end);
 --LCDWFrame.resizeButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
 --LCDWFrame.resizeButton:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
 --LCDWFrame.resizeButton:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
---
+
 --LCDWFrame.resizeButton:SetScript("OnMouseDown", function()
 --    LCDWFrame:StartSizing("BOTTOMRIGHT")
 --end)
@@ -210,7 +210,7 @@ createSectionNameContainer("classesSectionNameContainer", "LEFT", -46, "Guides P
 --// tertiary main frame  //--
 ------------------------------
 ---@todo faire une frame qui englobe le titre et l'icone
-local function guideFrame(icon, name, id)
+local function showGuide(icon, name, id)
     -- frame that appears after selecting a guide --
     LCDWFrame.titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame)
     LCDWFrame.titleAndGuideContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
@@ -225,7 +225,7 @@ local function guideFrame(icon, name, id)
         LCDWFrame.titleAndGuideContainerFrame.icon = LCDWFrame.titleAndGuideContainerFrame:CreateTexture(nil, "ARTWORK")
         LCDWFrame.titleAndGuideContainerFrame.icon:SetSize(30, 30)
         LCDWFrame.titleAndGuideContainerFrame.icon:SetPoint("CENTER", LCDWFrame.titleAndGuideContainerFrame, "TOP", -100, -50)
-        LCDWFrame.titleAndGuideContainerFrame.icon:SetTexture(classes[id][DUNGEONS_ARRAY_SECOND_COL])
+        LCDWFrame.titleAndGuideContainerFrame.icon:SetTexture(classes[id][ARRAY_SECOND_COL])
     end
     -- core image --
     textures["texture" .. id] = LCDWFrame.titleAndGuideContainerFrame:CreateTexture(nil, "ARTWORK")
@@ -293,29 +293,48 @@ local function createTexture(dungeonId)
 end
 
 local function generateDungeonsFrames()
-    for dungeonsK, dungeonV in ipairs(dungeons) do
-        local frameWidth = 128
-        local frameHeight = 64
 
-        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+    local frameWidth = 200
+    local frameHeight = 100
+    local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
+
+    for dungeonsK, dungeonV in ipairs(dungeons) do
+
+        -- dungeons thumbnail --
+        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Frame", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(frameWidth, frameHeight)
+        -- dungeons title --
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title =  dungeonsFrames["dungeonFrame" .. dungeonsK]:CreateFontString(nil, "OVERLAY")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetFontObject("GameFontHighlightSmall")
+        -- dungeons thumbnails borders and click hander --
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border = CreateFrame("Button", nil, dungeonsFrames["dungeonFrame" .. dungeonsK])
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", ((dungeonsK - 4) * frameWidth * 1.3) - frameWidth, frameHeight * -3.3)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.5 * (dungeonsK - 5)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 5))), -230)
         else
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", (dungeonsK * frameWidth * 1.3) - frameWidth, -130)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.5 * (dungeonsK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 1))), -140)
         end
 
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
-            bgFile = dungeons[dungeonsK][DUNGEONS_ARRAY_SECOND_COL],
-            --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 15, edgeSize = 15,
-            insets = { left = 2, right = -60, top = 2, bottom = -20 }
+            bgFile = dungeons[dungeonsK][ARRAY_SECOND_COL],
         })
 
-        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetScript("OnClick", function (self, button)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK], "LEFT", 45, 0)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetText(dungeons[dungeonsK][ARRAY_FIRST_COL])
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetWidth(70)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(135, 73)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetNormalTexture(buttonTexture)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetHighlightTexture(buttonTexture)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPushedTexture(buttonTexture)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:GetNormalTexture():SetTexCoord(0, 0.34, 0.428, 0.522)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:GetPushedTexture():SetTexCoord(0, 0.34, 0.332, 0.425)
+
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetScript("OnClick", function (self, button)
             LCDWFrame.allElementsContainerFrame:Hide()
-            guideFrame(nil, dungeons[dungeonsK][DUNGEONS_ARRAY_FIRST_COL], dungeonsK)
+            showGuide(nil, dungeons[dungeonsK][ARRAY_FIRST_COL], dungeonsK)
         end)
     end
 end
@@ -339,14 +358,14 @@ local function generateClassesFrames()
 
         classesFrames["classeFrame" .. classesK]:SetBackdrop({
             --bgFile = FOLDER_GUIDES_PATH .. dungeonsK,
-            bgFile = classes[classesK][DUNGEONS_ARRAY_SECOND_COL],
+            bgFile = classes[classesK][ARRAY_SECOND_COL],
             --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 10, edgeSize = 10,
             insets = { left = 2, right = 0, top = 2, bottom = 0 }
         })
 
         classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function (self, button)
             LCDWFrame.allElementsContainerFrame:Hide()
-            guideFrame(true, classes[classesK][DUNGEONS_ARRAY_FIRST_COL], classesK)
+            guideFrame(true, classes[classesK][ARRAY_FIRST_COL], classesK)
         end)
     end
 end
