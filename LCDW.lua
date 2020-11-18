@@ -9,7 +9,7 @@ local LCDWOptionsFrame = nil
 
 local MAIN_FRAME_WITH = 715
 local MAIN_FRAME_HEIGHT = 500
-local CHOICE_FRAME_WIDTH = 250
+local OPTIONS_FRAME_WIDTH = 250
 local FRAME_TITLE_CONTAINER_WIDTH = 100
 local FRAME_TITLE_CONTAINER_HEIGHT = 20
 local FOLDER_GUIDES_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
@@ -70,6 +70,10 @@ local dropDownLvlOneMenu = {
     "Glossaire",
 }
 
+local function degreesToRadians(angle)
+    return angle * 0,0174533
+end
+
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
 local defaults = {
@@ -104,7 +108,7 @@ f:SetScript("OnEvent", onEvent)
 --/////////////// MAIN FRAME (Général) ///////////////--
 --------------------------------------------------------
 --local LCDWFrame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-local LCDWFrame = CreateFrame("Frame", nil, UIParent, "InsetFrameTemplate")
+local LCDWFrame = CreateFrame("Frame", nil, UIParent)
 LCDWFrame:Hide()
 LCDWFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:SetPoint("CENTER", 0, 0)
@@ -117,53 +121,110 @@ LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:RegisterForDrag("LeftButton")
 LCDWFrame:SetScript("OnDragStart", LCDWFrame.StartMoving)
 LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
---LCDWFrame:SetBackdrop({
---    bgFile = "Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4"
---})
+
+local function createBorder(isACorner, borderSide, frameName, point, relativePoint, ofsx, ofsy)
+
+    local width = (isACorner) and 100 or 256
+    local height = 7
+
+    local coord = {
+        right = (isACorner) and 0.565 or 1,
+        top = (isACorner) and 0.5 or 0.467,
+        bottom = (isACorner) and 0.545 or 0.5
+    }
+    local borderSideAngle = {
+        top = -3.14159,
+        left = -1.5708,
+        right = 1.5708,
+    }
+
+    frameName = LCDWFrame:CreateTexture(nil, "BACKGROUND")
+    frameName:SetTexture("Interface\\Calendar\\CALENDARFRAME_TOPANDBOTTOM")
+    frameName:SetPoint(point, LCDWFrame, relativePoint, ofsx, ofsy)
+    frameName:SetSize(width, height)
+    frameName:SetTexCoord(0, coord["right"], coord["top"], coord["bottom"])
+    if borderSide ~= "bottom" then
+        frameName:SetRotation(borderSideAngle[borderSide])
+    end
+end
+-- corner border textures --
+createBorder(true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
+createBorder(true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
+createBorder(true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
+createBorder(true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -8)
+-- side border textures --
+-- LEFT --
+createBorder(false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
+createBorder(false, "left", LCDWFrame.leftBorderTwo, "LEFT", "LEFT", -130, 124)
+-- TOP --
+createBorder(false, "top", LCDWFrame.topBorder, "TOP", "TOP", -135, 6)
+createBorder(false, "top", LCDWFrame.topBorderTwo, "TOP", "TOP", 121, 6)
+createBorder(false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
+-- RIGHT --
+createBorder(false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 129, 30)
+createBorder(false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 129, -125)
+-- BOTTOM --
+createBorder(false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -7)
+createBorder(false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -7)
+createBorder(false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -7)
+------------------------------
+---//  second main frame //---
+------------------------------
+-- background container frame --
+LCDWFrame.backgroundContainerFrame = CreateFrame("Frame", nil, LCDWFrame)
+LCDWFrame.backgroundContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
+LCDWFrame.backgroundContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
+-- background texture --
+LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
+LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
+LCDWFrame.backgroundContainerFrame.mainBackground:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame, "TOPLEFT")
+LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0.000976562, 0.416016)
+LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
 -- title container --
-LCDWFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame, "GlowBoxTemplate")
-LCDWFrame.titleContainerFrame:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
-LCDWFrame.titleContainerFrame:SetPoint("CENTER",  LCDWFrame, "TOP", 0, 0)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER",  LCDWFrame, "TOP", 0, 0)
 -- title --
-LCDWFrame.titleContainerFrame.title = LCDWFrame.titleContainerFrame:CreateFontString(nil, "OVERLAY")
-LCDWFrame.titleContainerFrame.title:SetFontObject("GameFontHighLight")
-LCDWFrame.titleContainerFrame.title:SetPoint("CENTER", LCDWFrame.titleContainerFrame, "CENTER", 0, 0)
-LCDWFrame.titleContainerFrame.title:SetText("Général")
+LCDWFrame.backgroundContainerFrame.titleContainerFrame.title = LCDWFrame.backgroundContainerFrame.titleContainerFrame:CreateFontString(nil, "OVERLAY")
+LCDWFrame.backgroundContainerFrame.titleContainerFrame.title:SetFontObject("GameFontHighLight")
+LCDWFrame.backgroundContainerFrame.titleContainerFrame.title:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame.titleContainerFrame, "CENTER", 0, 0)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame.title:SetText("Général")
 -- close button --
-LCDWFrame.CloseButton = CreateFrame("Button", nil, LCDWFrame, "UIPanelCloseButton")
-LCDWFrame.CloseButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -20, -20)
-LCDWFrame.CloseButton:SetScript("OnClick", function(self, Button, Down)
+LCDWFrame.backgroundContainerFrame.CloseButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame, "UIPanelCloseButton")
+LCDWFrame.backgroundContainerFrame.CloseButton:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "TOPRIGHT", -20, -20)
+LCDWFrame.backgroundContainerFrame.CloseButton:SetScript("OnClick", function(self, Button, Down)
     LCDWFrame:Hide()
 end)
 -- open options panel button --
-LCDWFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
-LCDWFrame.openOptionsFrameButton:SetSize(45, 45)
-LCDWFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame, "TOPRIGHT", -25, -55)
-LCDWFrame.openOptionsFrameButton:SetBackdrop({
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetSize(45, 45)
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "TOPRIGHT", -25, -55)
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetBackdrop({
     bgFile = "Interface\\BUTTONS\\UI-SpellbookIcon-PrevPage-Up",
     insets = { left = 4, right = 4, top = 4, bottom = 4 }
 })
 -- open options panel button hover --
-LCDWFrame.openOptionsFrameButton.Hover = LCDWFrame.openOptionsFrameButton:CreateTexture(nil, "BACKGROUND")
-LCDWFrame.openOptionsFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
-LCDWFrame.openOptionsFrameButton.Hover:SetAllPoints(LCDWFrame.openOptionsFrameButton)
-LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
-LCDWFrame.openOptionsFrameButton:SetScript("OnEnter", function()
-    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(1)
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton.Hover = LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:CreateTexture(nil, "BACKGROUND")
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton.Hover:SetAllPoints(LCDWFrame.backgroundContainerFrame.openOptionsFrameButton)
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton.Hover:SetAlpha(0)
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetScript("OnEnter", function()
+    LCDWFrame.backgroundContainerFrame.openOptionsFrameButton.Hover:SetAlpha(1)
 end);
-LCDWFrame.openOptionsFrameButton:SetScript("OnLeave", function()
-    LCDWFrame.openOptionsFrameButton.Hover:SetAlpha(0)
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetScript("OnLeave", function()
+    LCDWFrame.backgroundContainerFrame.openOptionsFrameButton.Hover:SetAlpha(0)
 end);
-LCDWFrame.openOptionsFrameButton:SetScript("OnClick", function()
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetScript("OnClick", function()
     if LCDWOptionsFrame:IsShown() then
         LCDWOptionsFrame:Hide()
-        LCDWFrame.openOptionsFrameButton:SetBackdrop({
+        LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetBackdrop({
             bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
             insets = { left = 4, right = 4, top = 4, bottom = 4 }
         })
     else
         LCDWOptionsFrame:Show()
-        LCDWFrame.openOptionsFrameButton:SetBackdrop({
+        LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetBackdrop({
             bgFile = "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up",
             insets = { left = 4, right = 4, top = 4, bottom = 4 }
         })
@@ -185,7 +246,7 @@ end);
 --end)
 -- end resize frame --
 ------------------------------
---// secondary main frame //--
+----// third main frame //----
 ------------------------------
 -- this frame contains the whole content of the mainFrame but the frame title, the close button and the open options button --
 -- it will be easier to hide all elements when a dungeons is selected --
@@ -217,7 +278,7 @@ end
 createSectionNameContainer("dungeonsSectionNameContainer", "TOPLEFT", -50, "Guides PVE")
 createSectionNameContainer("classesSectionNameContainer", "LEFT", -46, "Guides PVP")
 ------------------------------
---// tertiary main frame  //--
+---// fourth main frame  //---
 ------------------------------
 ---@todo faire une frame qui englobe le titre et l'icone
 local function showGuide(icon, name, id)
@@ -253,15 +314,24 @@ end
 --///////////// OPTIONS FRAME (Options) //////////////--
 --------------------------------------------------------
 LCDWOptionsFrame = CreateFrame("Frame", nil, LCDWFrame, "InsetFrameTemplate")
-LCDWOptionsFrame:SetSize(CHOICE_FRAME_WIDTH, LCDWFrame:GetHeight())
+LCDWOptionsFrame:SetSize(OPTIONS_FRAME_WIDTH, LCDWFrame:GetHeight())
 LCDWOptionsFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
+-- background --
+--LCDWOptionsFrame.optionsBackground = LCDWFrame.allElementsContainerFrame:CreateTexture(nil, "BACKGROUND")
+--LCDWOptionsFrame.optionsBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
+--LCDWOptionsFrame.optionsBackground:SetPoint("TOPLEFT", LCDWOptionsFrame, "TOPLEFT")
+--LCDWOptionsFrame.optionsBackground:SetSize(OPTIONS_FRAME_WIDTH, MAIN_FRAME_HEIGHT)
+--LCDWOptionsFrame.optionsBackground:SetTexCoord(0.63, 0.85, 0.000976562, 0.416016)
+-- title container --
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer = CreateFrame("Frame", nil, LCDWOptionsFrame, "GlowBoxTemplate")
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer:SetPoint("CENTER",  LCDWOptionsFrame, "TOP", 0, 0)
+-- title --
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title = LCDWOptionsFrame.LCDWOptionsFrameNameContainer:CreateFontString(nil, "OVERLAY")
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title:SetFontObject("GameFontHighLight")
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title:SetPoint("CENTER", LCDWOptionsFrame.LCDWOptionsFrameNameContainer, "CENTER", 0, 0)
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title:SetText("Options")
+-- reset button --
 LCDWOptionsFrame.resetButton = CreateFrame("Button", nil, LCDWOptionsFrame, "UIPanelButtonTemplate")
 LCDWOptionsFrame.resetButton:SetSize(100, 30)
 LCDWOptionsFrame.resetButton:SetPoint("CENTER", 0, 0)
@@ -274,22 +344,25 @@ LCDWOptionsFrame.resetButton:SetScript("OnClick", function ()
         LCDWFrame.allElementsContainerFrame:Show()
     end
 end)
+-- credits container --
 LCDWOptionsFrame.credits = CreateFrame("Frame", nil, LCDWOptionsFrame, BackdropTemplateMixin and "BackdropTemplate")
-LCDWOptionsFrame.credits:SetSize(LCDWOptionsFrame:GetWidth() - 6, 20)
-LCDWOptionsFrame.credits:SetPoint("BOTTOM", LCDWOptionsFrame, "BOTTOM", 0, 3)
+LCDWOptionsFrame.credits:SetSize(LCDWOptionsFrame:GetWidth() - 15, 20)
+LCDWOptionsFrame.credits:SetPoint("BOTTOM", LCDWOptionsFrame, "BOTTOM", 4, 3)
 LCDWOptionsFrame.credits:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
+-- credits text --
 LCDWOptionsFrame.credits.content = LCDWOptionsFrame.credits:CreateFontString(nil, "OVERLAY")
 LCDWOptionsFrame.credits.content:SetFontObject("GameFontHighlightSmall")
 LCDWOptionsFrame.credits.content:SetPoint("CENTER", LCDWOptionsFrame.credits, "CENTER")
 LCDWOptionsFrame.credits.content:SetText("Made by Aecx & Willios - v." .. addonVersion)
+-- hide minimap checkbox --
 LCDWOptionsFrame.mmButtonOption = CreateFrame("CheckButton", nil, LCDWOptionsFrame, "UICheckButtonTemplate")
 LCDWOptionsFrame.mmButtonOption:SetPoint("LEFT", LCDWOptionsFrame, "BOTTOMLEFT", 15, 50)
 LCDWOptionsFrame.mmButtonOption.text:SetText("Cacher l'icône de la minimap")
 LCDWOptionsFrame.mmButtonOption:SetChecked(false)
 LCDWOptionsFrame.mmButtonOption:SetScript("OnClick", function()
-    -- Hide minimap icon
+    --@todo Hide minimap icon
 end)
 --------------------------------------------------------
 --//////////// END OPTIONS FRAME (Options) ///////////--
@@ -477,6 +550,7 @@ LCDWOptionsFrame.dropDownName:SetPoint("CENTER", LCDWOptionsFrame, "TOP", 0, -15
 UIDropDownMenu_SetWidth(LCDWOptionsFrame.dropDownName, 200)
 UIDropDownMenu_Initialize(LCDWOptionsFrame.dropDownName, DungeonsListDropDown)
 UIDropDownMenu_SetText(LCDWOptionsFrame.dropDownName, "Accès rapide")
+--UIDropDownMenu_DisableDropDown(LCDWOptionsFrame.dropDownName)
 
 -- end DROPDOWNS --
 
