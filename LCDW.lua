@@ -1,7 +1,10 @@
 --------------------------------------------------------
 --/////////////////////// VARS ///////////////////////--
 --------------------------------------------------------
-local name, _ = ...
+local name, addonNamespace = ...
+addonNamespace.Helpers = {}
+
+local Helpers = addonNamespace.Helpers
 local customAddonName = "Le codex de Willios"
 local addonVersion = "0.4 Alpha"
 
@@ -17,19 +20,16 @@ local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
 local DUNGEONS_ICONS_PATH = "Interface\\ENCOUNTERJOURNAL\\UI-EJ-DUNGEONBUTTON-"
 local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
 local ARROW_TITLE_SECTION = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
-local ROW_MAX_DUNGEONS_ITEMS = 4
-local ROW_MAX_CLASSES_ITEMS = 6
 local ARRAY_FIRST_COL = 1
 local ARRAY_SECOND_COL = 2
-local SPACE_BETWEEN_CLASSES_ITEMS = 30
 local CURRENT_BUILD, _, _, _ = GetBuildInfo()
 
-local GREEN =  "|cff00ff00"
+local GREEN = "|cff00ff00"
 local YELLOW = "|cffffff00"
-local RED =    "|cffff0000"
-local BLUE =   "|cff0198e1"
+local RED = "|cffff0000"
+local BLUE = "|cff0198e1"
 local ORANGE = "|cffff9933"
-local WHITE =  "|cffffffff"
+local WHITE = "|cffffffff"
 
 local textures = {}
 local textureShown = {}
@@ -40,28 +40,28 @@ local dungeonSelected = nil
 local classSelected = nil
 
 local dungeons = {
-    {"Sillage nécrotique", DUNGEONS_ICONS_PATH .. "Maraudon"},
-    {"Malepeste", DUNGEONS_ICONS_PATH .. "BlackrockDepths"},
-    {"Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "Deadmines"},
-    {"Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "DireMaul"},
-    {"Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "RagefireChasm"},
-    {"Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "ScarletMonastery"},
-    {"L'Autre côté", DUNGEONS_ICONS_PATH .. "Scholomance"},
-    {"Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "ShadowFangKeep"}
+    { "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "Maraudon" },
+    { "Malepeste", DUNGEONS_ICONS_PATH .. "BlackrockDepths" },
+    { "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "Deadmines" },
+    { "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "DireMaul" },
+    { "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "RagefireChasm" },
+    { "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "ScarletMonastery" },
+    { "L'Autre côté", DUNGEONS_ICONS_PATH .. "Scholomance" },
+    { "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "ShadowFangKeep" }
 }
 local classes = {
-    {"Chaman", CLASSES_ICONS_PATH .. "Shaman"},
-    {"Chasseur", CLASSES_ICONS_PATH .. "Hunter"},
-    {"Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter"},
-    {"Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight"},
-    {"Démoniste", CLASSES_ICONS_PATH .. "Warlock"},
-    {"Druide", CLASSES_ICONS_PATH .. "Druid"},
-    {"Guerrier", CLASSES_ICONS_PATH .. "Warrior"},
-    {"Mage", CLASSES_ICONS_PATH .. "Mage"},
-    {"Moine", CLASSES_ICONS_PATH .. "Monk"},
-    {"Paladin", CLASSES_ICONS_PATH .. "Paladin"},
-    {"Prêtre", CLASSES_ICONS_PATH .. "Priest"},
-    {"Voleur", CLASSES_ICONS_PATH .. "Rogue"}
+    { "Chaman", CLASSES_ICONS_PATH .. "Shaman" },
+    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter" },
+    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter" },
+    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight" },
+    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock" },
+    { "Druide", CLASSES_ICONS_PATH .. "Druid" },
+    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior" },
+    { "Mage", CLASSES_ICONS_PATH .. "Mage" },
+    { "Moine", CLASSES_ICONS_PATH .. "Monk" },
+    { "Paladin", CLASSES_ICONS_PATH .. "Paladin" },
+    { "Prêtre", CLASSES_ICONS_PATH .. "Priest" },
+    { "Voleur", CLASSES_ICONS_PATH .. "Rogue" }
 }
 
 local dropDownLvlOneMenu = {
@@ -70,8 +70,8 @@ local dropDownLvlOneMenu = {
     "Glossaire",
 }
 
-local function degreesToRadians(angle)
-    return angle * 0,0174533
+function Helpers:degreesToRadians(angle)
+    return angle * 0.0174533
 end
 
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
@@ -94,9 +94,9 @@ local function initTextureShown()
 end
 
 local function onEvent(self, event, arg1, ...)
-    if(event == "ADDON_LOADED" and name == arg1) then
+    if (event == "ADDON_LOADED" and name == arg1) then
         initTextureShown()
-        print(BLUE.. customAddonName .."|r loaded! Type /lcdw to access to the guides.")
+        print(BLUE .. customAddonName .. "|r loaded! Type /lcdw to access to the guides.")
     end
 end
 
@@ -132,10 +132,10 @@ local function createBorder(isACorner, borderSide, frameName, point, relativePoi
         top = (isACorner) and 0.5 or 0.467,
         bottom = (isACorner) and 0.545 or 0.5
     }
-    local borderSideAngle = {
-        top = -3.14159,
-        left = -1.5708,
-        right = 1.5708,
+    local borderSideTextureAngle = {
+        top = Helpers:degreesToRadians(-180),
+        left = Helpers:degreesToRadians(-90),
+        right = Helpers:degreesToRadians(90),
     }
 
     frameName = LCDWFrame:CreateTexture(nil, "BACKGROUND")
@@ -143,15 +143,16 @@ local function createBorder(isACorner, borderSide, frameName, point, relativePoi
     frameName:SetPoint(point, LCDWFrame, relativePoint, ofsx, ofsy)
     frameName:SetSize(width, height)
     frameName:SetTexCoord(0, coord["right"], coord["top"], coord["bottom"])
+
     if borderSide ~= "bottom" then
-        frameName:SetRotation(borderSideAngle[borderSide])
+        frameName:SetRotation(borderSideTextureAngle[borderSide])
     end
 end
 -- corner border textures --
 createBorder(true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
 createBorder(true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
 createBorder(true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
-createBorder(true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -8)
+createBorder(true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -7)
 -- side border textures --
 -- LEFT --
 createBorder(false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
@@ -164,9 +165,9 @@ createBorder(false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
 createBorder(false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 129, 30)
 createBorder(false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 129, -125)
 -- BOTTOM --
-createBorder(false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -7)
-createBorder(false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -7)
-createBorder(false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -7)
+createBorder(false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -6)
+createBorder(false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -6)
+createBorder(false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -6)
 ------------------------------
 ---//  second main frame //---
 ------------------------------
@@ -184,7 +185,7 @@ LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4
 -- title container --
 LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
 LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
-LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER",  LCDWFrame, "TOP", 0, 0)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, 0)
 -- title --
 LCDWFrame.backgroundContainerFrame.titleContainerFrame.title = LCDWFrame.backgroundContainerFrame.titleContainerFrame:CreateFontString(nil, "OVERLAY")
 LCDWFrame.backgroundContainerFrame.titleContainerFrame.title:SetFontObject("GameFontHighLight")
@@ -325,7 +326,7 @@ LCDWOptionsFrame:SetPoint("LEFT", LCDWFrame, "RIGHT", -5, 0)
 -- title container --
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer = CreateFrame("Frame", nil, LCDWOptionsFrame, "GlowBoxTemplate")
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
-LCDWOptionsFrame.LCDWOptionsFrameNameContainer:SetPoint("CENTER",  LCDWOptionsFrame, "TOP", 0, 0)
+LCDWOptionsFrame.LCDWOptionsFrameNameContainer:SetPoint("CENTER", LCDWOptionsFrame, "TOP", 0, 0)
 -- title --
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title = LCDWOptionsFrame.LCDWOptionsFrameNameContainer:CreateFontString(nil, "OVERLAY")
 LCDWOptionsFrame.LCDWOptionsFrameNameContainer.title:SetFontObject("GameFontHighLight")
@@ -336,7 +337,7 @@ LCDWOptionsFrame.resetButton = CreateFrame("Button", nil, LCDWOptionsFrame, "UIP
 LCDWOptionsFrame.resetButton:SetSize(100, 30)
 LCDWOptionsFrame.resetButton:SetPoint("CENTER", 0, 0)
 LCDWOptionsFrame.resetButton:SetText("Reset")
-LCDWOptionsFrame.resetButton:SetScript("OnClick", function ()
+LCDWOptionsFrame.resetButton:SetScript("OnClick", function()
     if LCDWFrame.titleAndGuideContainerFrame:IsShown() then
         LCDWFrame.titleAndGuideContainerFrame:Hide()
     end
@@ -377,10 +378,12 @@ end
 
 local function generateDungeonsFrames()
 
-    local frameWidth = 220
-    local frameHeight = 110
-    --local widthCoef = 1,4814814814814814814814814814815
-    --local heightCoef = 1,369863013698630136986301369863
+    local FRAME_WIDTH = 220
+    local FRAME_HEIGHT = 110
+    local SPACE_BETWEEN_ITEMS = 30
+    local ROW_MAX_DUNGEONS_ITEMS = 4
+    local WIDTH_COEF = 1.4814814814814814814814814814815
+    local HEIGHT_COEF = 1.369863013698630136986301369863
 
     local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
 
@@ -388,18 +391,18 @@ local function generateDungeonsFrames()
 
         -- dungeons thumbnail --
         dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Frame", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(frameWidth, frameHeight)
+        dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
         -- dungeons title --
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title =  dungeonsFrames["dungeonFrame" .. dungeonsK]:CreateFontString(nil, "OVERLAY")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].title = dungeonsFrames["dungeonFrame" .. dungeonsK]:CreateFontString(nil, "OVERLAY")
         dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetFontObject("NumberFontNormalYellow")
         -- dungeons thumbnails borders and click hander --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border = CreateFrame("Button", nil, dungeonsFrames["dungeonFrame" .. dungeonsK])
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.7 * (dungeonsK - 5)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 5))), -230)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), -230)
         else
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((frameWidth / 1.7 * (dungeonsK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (dungeonsK - 1))), -140)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), -140)
         end
 
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
@@ -410,8 +413,8 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK], "CENTER", 0 - (dungeonsFrames["dungeonFrame" .. dungeonsK].title:GetWidth() / 2), 0 + (dungeonsFrames["dungeonFrame" .. dungeonsK].title:GetHeight() / 2))
         dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetText(dungeons[dungeonsK][ARRAY_FIRST_COL])
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
-        -- divide the frameWidth and frameHeight by the coef associated
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(148.5, 80.3)
+        -- divide the frameWidth and frameHeight by the coef associated to keep the same size ratio as the parent frame
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(FRAME_WIDTH / WIDTH_COEF, FRAME_HEIGHT / HEIGHT_COEF)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetNormalTexture(buttonTexture)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetHighlightTexture(buttonTexture)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPushedTexture(buttonTexture)
@@ -419,7 +422,7 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:GetPushedTexture():SetTexCoord(0, 0.34, 0.332, 0.425)
 
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetScript("OnClick", function (self, button)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetScript("OnClick", function(self, button)
             LCDWFrame.allElementsContainerFrame:Hide()
             showGuide(nil, dungeons[dungeonsK][ARRAY_FIRST_COL], dungeonsK)
         end)
@@ -428,19 +431,21 @@ end
 
 local function generateClassesFrames()
 
-    local frameWidth = 48
-    local frameHeight = 48
+    local FRAME_WIDTH = 48
+    local FRAME_HEIGHT = 48
+    local SPACE_BETWEEN_ITEMS = 30
+    local ROW_MAX_CLASSES_ITEMS = 6
 
     for classesK, classesV in ipairs(classes) do
 
         classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-        classesFrames["classeFrame" .. classesK]:SetSize(frameWidth, frameHeight)
+        classesFrames["classeFrame" .. classesK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if classesK > ROW_MAX_CLASSES_ITEMS then
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "LEFT", 139 + ((frameWidth * (classesK - 7)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 7))), -185)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.allElementsContainerFrame, "LEFT", 139 + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), -185)
         else
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT",  LCDWFrame.allElementsContainerFrame, "LEFT", 139 + ((frameWidth * (classesK - 1)) + (SPACE_BETWEEN_CLASSES_ITEMS * (classesK - 1))), -125)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.allElementsContainerFrame, "LEFT", 139 + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), -125)
         end
 
         classesFrames["classeFrame" .. classesK]:SetBackdrop({
@@ -448,7 +453,7 @@ local function generateClassesFrames()
             insets = { left = 5, right = 5, top = 5, bottom = 5 }
         })
 
-        classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function (self, button)
+        classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function(self, button)
             LCDWFrame.allElementsContainerFrame:Hide()
             showGuide(true, classes[classesK][ARRAY_FIRST_COL], classesK)
         end)
