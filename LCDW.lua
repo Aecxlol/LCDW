@@ -3,8 +3,12 @@
 ----------------------------------------------------------
 local name, addonNamespace = ...
 addonNamespace.Helpers = {}
+addonNamespace.UIElements = {}
 
 local Helpers = addonNamespace.Helpers
+local UIElements = addonNamespace.UIElements
+
+
 local customAddonName = "Le codex de Willios"
 local addonVersion = "0.4 Alpha"
 
@@ -67,6 +71,8 @@ local classes = {
     { "Voleur", CLASSES_ICONS_PATH .. "Rogue" }
 }
 
+local isGuideSelected = false
+
 local dropDownLvlOneMenu = {
     "Guides PVE",
     "Guides PVP",
@@ -78,7 +84,14 @@ function Helpers:degreesToRadians(angle)
     return angle * 0.0174533
 end
 
-function Helpers:CreateFontString(frameName, frameToAttach, font, width, height, point, relativePoint, ofsx, ofsy, text)
+function Helpers:hexadecimalToBlizzardColor(hexaNumber)
+    return hexaNumber / 255
+end
+
+function UIElements:CreateFontString(frameName, frameToAttach, font, width, height, point, relativePoint, ofsx, ofsy, text, r, g, b)
+    local fontColor
+    local alpha = 1
+
     frameName = frameToAttach:CreateFontString(nil, "OVERLAY")
     frameName:SetFontObject(font)
     if width then
@@ -87,8 +100,14 @@ function Helpers:CreateFontString(frameName, frameToAttach, font, width, height,
     if height then
         frameName:SetHeight(height)
     end
-    frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
     frameName:SetText(text)
+
+    if r and g and b then
+        fontColor = frameName:GetFontObject():SetTextColor(Helpers:hexadecimalToBlizzardColor(r), Helpers:hexadecimalToBlizzardColor(g), Helpers:hexadecimalToBlizzardColor(b), alpha)
+        frameName:SetFontObject(fontColor)
+    end
+
+    frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
 end
 
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
@@ -204,7 +223,7 @@ LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", ni
 LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
 LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, 0)
 -- title --
-Helpers:CreateFontString(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, "Général")
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, "ItemTextFontNormal", false, false, "CENTER", "CENTER", 0, 0, "Général", 255, 255, 255)
 -- scroll frame --
 LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil, LCDWFrame.backgroundContainerFrame, "UIPanelScrollFrameTemplate")
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame, "TOPLEFT", 0, -120)
@@ -225,7 +244,7 @@ end)
 -- open options panel button --
 LCDWFrame.backgroundContainerFrame.openOptionsFrameButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetSize(45, 45)
-LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "TOPRIGHT", -25, -55)
+LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "TOPRIGHT", -25, -90)
 LCDWFrame.backgroundContainerFrame.openOptionsFrameButton:SetBackdrop({
     bgFile = "Interface\\BUTTONS\\UI-SpellbookIcon-PrevPage-Up",
     insets = { left = 4, right = 4, top = 4, bottom = 4 }
@@ -279,7 +298,7 @@ LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
 -- social networks text --
-Helpers:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.content, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "CENTER", "CENTER", 0, 0, SOCIAL_NETWORK_TEXT)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.content, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "CENTER", "CENTER", 0, 0, SOCIAL_NETWORK_TEXT)
 --------------------------------
 ------// third main frame //----
 --------------------------------
@@ -289,11 +308,11 @@ LCDWFrame.backgroundContainerFrame.allElementsContainerFrame = CreateFrame("Fram
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
 -- create a section name container --
-local function createSectionNameContainer(frameName, relativePoint, ofsy, title)
+local function createSectionNameContainer(frameName, frameToAttach, point, relativePoint, ofsx, ofsy, title)
     -- dungeons section name container --
-    frameName = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+    frameName = CreateFrame("Frame", nil, frameToAttach, BackdropTemplateMixin and "BackdropTemplate")
     frameName:SetSize(200, 30)
-    frameName:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, relativePoint, 40, ofsy)
+    frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
     frameName:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
     })
@@ -305,10 +324,10 @@ local function createSectionNameContainer(frameName, relativePoint, ofsy, title)
         bgFile = ARROW_TITLE_SECTION
     })
     -- dungeons section name --
-    Helpers:CreateFontString(frameName.sectionTitle, frameName, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, title)
+    UIElements:CreateFontString(frameName.sectionTitle, frameName, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, title)
 end
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, "TOPLEFT", -50, "Guides PVE")
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, "LEFT", -46, "Guides PVP")
+createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 40, -92, "Guides PVE")
+createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 40, -76, "Guides PVP")
 -- glossary frame --
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetSize(200, 30)
@@ -317,28 +336,26 @@ LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetBa
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetScript("OnClick", function ()
-    LCDWFrame.backgroundContainerFrame:showGuide(false, "Glossaire", 5)
+    LCDWFrame.backgroundContainerFrame:showGuide(nil, "Glossaire", 5)
 end)
-Helpers:CreateFontString(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.title, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, "Glossaire")
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.title, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, "Glossaire")
 --------------------------------
 --// third main frame prime //--
 --------------------------------
 ---@todo faire une frame qui englobe le titre et l'icone
 -- this function creates the frame displayed when a dungeon is selected
 function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id)
-    -- hide all the previous elements --
+    isGuideSelected = true
+    -- hide all the homepage elements --
     LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Hide()
     -- show the scroll frame --
     LCDWFrame.backgroundContainerFrame.scrollFrame:Show()
     -- frame that appears after selecting a guide --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.scrollFrame)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame)
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.bg = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:CreateTexture(nil, "BACKGROUND")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.bg:SetAllPoints(true)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.bg:SetColorTexture(0.2, 0.6, 0, 0.8)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "CENTER")
     -- title --
-    Helpers:CreateFontString(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "GameFontHighlightLarge", false, false, "CENTER", "TOP", 0, -50, name)
+    UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "GameFontHighlightLarge", false, false, "CENTER", "TOP", 0, -50, name)
     -- icon --
     if icon then
         LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.icon = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:CreateTexture(nil, "ARTWORK")
@@ -346,13 +363,21 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id)
         LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.icon:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "TOP", -100, -50)
         LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.icon:SetTexture(classes[id][ARRAY_SECOND_COL])
     end
+    -- guide frame --
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight() - 100)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "BOTTOM")
+
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.bg = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "BACKGROUND")
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.bg:SetAllPoints(true)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.bg:SetColorTexture(0.2, 0.6, 0, 0.8)
     -- core image --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guide = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:CreateTexture(nil, "ARTWORK")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guide:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "CENTER", 0, -150)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guide:SetSize(600, 600)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guide:SetTexture(FOLDER_GUIDES_PATH .. 1)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetSize(600, 600)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetTexture(FOLDER_GUIDES_PATH .. 1)
     -- set the scroll child to be able to scroll --
-    LCDWFrame.backgroundContainerFrame.scrollFrame:SetScrollChild(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame)
+    --LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.scrollFrame:SetScrollChild(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame)
     --LCDWFrame.backgroundContainerFrame.scrollFrame.scrollBar:ClearAllPoints()
     --LCDWFrame.backgroundContainerFrame.scrollFrame.scrollBar:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame.scrollFrame, "TOPLEFT", -30, -18)
     --LCDWFrame.backgroundContainerFrame.scrollFrame.scrollBar:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame.scrollFrame, "BOTTOMRIGHT", -30, -18)
@@ -360,9 +385,8 @@ end
 ----------------------------------------------------------
 ----///////////// END MAIN FRAME (Général) /////////////--
 ----------------------------------------------------------
---
---
---
+
+
 ----------------------------------------------------------
 ----///////////// OPTIONS FRAME (Options) //////////////--
 ----------------------------------------------------------
@@ -392,25 +416,47 @@ LCDWOptionsFrame.backgroundContainerFrame.LCDWOptionsFrameNameContainer = Create
 LCDWOptionsFrame.backgroundContainerFrame.LCDWOptionsFrameNameContainer:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
 LCDWOptionsFrame.backgroundContainerFrame.LCDWOptionsFrameNameContainer:SetPoint("CENTER", LCDWOptionsFrame.backgroundContainerFrame, "TOP", 0, 0)
 -- title --
-Helpers:CreateFontString(LCDWOptionsFrame.backgroundContainerFrame.LCDWOptionsFrameNameContainer.title, LCDWOptionsFrame.backgroundContainerFrame.LCDWOptionsFrameNameContainer, "ItemTextFontNormal", false, false, "CENTER", "CENTER", 0, 0, "Options")
--- reset button --
-LCDWOptionsFrame.backgroundContainerFrame.resetButton = CreateFrame("Button", nil, LCDWOptionsFrame.backgroundContainerFrame, "UIPanelButtonTemplate")
-LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetSize(100, 30)
-LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetPoint("CENTER", 0, 0)
-LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetText("Accueil")
-LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetScript("OnClick", function()
+UIElements:CreateFontString(LCDWOptionsFrame.backgroundContainerFrame.LCDWOptionsFrameNameContainer.title, LCDWOptionsFrame.backgroundContainerFrame.LCDWOptionsFrameNameContainer, "ItemTextFontNormal", false, false, "CENTER", "CENTER", 0, 0, "Options", 255, 255, 255)
+function LCDWOptionsFrame.backgroundContainerFrame:resetAll()
     -- hide the scroll frame --
     if LCDWFrame.backgroundContainerFrame.scrollFrame:IsShown() then
         LCDWFrame.backgroundContainerFrame.scrollFrame:Hide()
     end
     -- hide guide currently displayed --
-    if LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:IsShown() then
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:Hide()
+    if isGuideSelected then
+        if LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:IsShown() then
+            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:Hide()
+            isGuideSelected = false
+        end
     end
     -- show the homepage --
     if not LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:IsShown() then
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Show()
     end
+end
+-- reset button --
+LCDWOptionsFrame.backgroundContainerFrame.resetButton = CreateFrame("Button", nil, LCDWOptionsFrame.backgroundContainerFrame, "UIPanelButtonTemplate")
+LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetSize(100, 30)
+LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetPoint("CENTER", 0, 10)
+LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetText("Accueil")
+LCDWOptionsFrame.backgroundContainerFrame.resetButton:SetScript("OnClick", function()
+    LCDWOptionsFrame.backgroundContainerFrame:resetAll()
+    ---- hide the scroll frame --
+    --if LCDWFrame.backgroundContainerFrame.scrollFrame:IsShown() then
+    --    LCDWFrame.backgroundContainerFrame.scrollFrame:Hide()
+    --end
+    ---- hide guide currently displayed --
+    --if isGuideSelected then
+    --    if LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:IsShown() then
+    --        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:Hide()
+    --        isGuideSelected = false
+    --    end
+    --end
+    ---- show the homepage --
+    --if not LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:IsShown() then
+    --    LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Show()
+    --end
+    --UIDropDownMenu_SetText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, " -- Liste des guides --")
 end)
 -- credits container --
 LCDWOptionsFrame.backgroundContainerFrame.credits = CreateFrame("Frame", nil, LCDWOptionsFrame.backgroundContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
@@ -420,7 +466,7 @@ LCDWOptionsFrame.backgroundContainerFrame.credits:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
 -- credits text --
-Helpers:CreateFontString(LCDWOptionsFrame.backgroundContainerFrame.credits.content, LCDWOptionsFrame.backgroundContainerFrame.credits, "GameFontHighlightSmall", false, false, "CENTER", "CENTER", 0, 0, CREDITS_TEST)
+UIElements:CreateFontString(LCDWOptionsFrame.backgroundContainerFrame.credits.content, LCDWOptionsFrame.backgroundContainerFrame.credits, "GameFontHighlightSmall", false, false, "CENTER", "CENTER", 0, 0, CREDITS_TEST)
 -- hide minimap checkbox --
 LCDWOptionsFrame.backgroundContainerFrame.mmButtonOption = CreateFrame("CheckButton", nil, LCDWOptionsFrame.backgroundContainerFrame, "UICheckButtonTemplate")
 LCDWOptionsFrame.backgroundContainerFrame.mmButtonOption:SetPoint("LEFT", LCDWOptionsFrame.backgroundContainerFrame, "BOTTOMLEFT", 15, 50)
@@ -429,6 +475,77 @@ LCDWOptionsFrame.backgroundContainerFrame.mmButtonOption:SetChecked(false)
 LCDWOptionsFrame.backgroundContainerFrame.mmButtonOption:SetScript("OnClick", function()
     --@todo Hide minimap icon
 end)
+-- dropdown --
+LCDWOptionsFrame.backgroundContainerFrame.dropDown = CreateFrame("FRAME", "RapidAccessDropdown", LCDWOptionsFrame.backgroundContainerFrame, "UIDropDownMenuTemplate")
+LCDWOptionsFrame.backgroundContainerFrame.dropDown:SetPoint("TOPLEFT", LCDWOptionsFrame.backgroundContainerFrame, "TOPLEFT", 0, -120)
+UIDropDownMenu_SetWidth(LCDWOptionsFrame.backgroundContainerFrame.dropDown, 200)
+UIDropDownMenu_JustifyText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, "LEFT")
+UIDropDownMenu_SetText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, " -- Liste des guides --")
+UIDropDownMenu_Initialize(LCDWOptionsFrame.backgroundContainerFrame.dropDown, function(self, level, menuList)
+    local info = UIDropDownMenu_CreateInfo()
+
+    -- first lvl menu --
+    if (level or 1) == 1 then
+        info.func = self.goToGlossary
+        for dropDownLvlOneMenuK, dropDownLvlOneMenuV in ipairs(dropDownLvlOneMenu) do
+            info.text, info.checked = dropDownLvlOneMenu[dropDownLvlOneMenuK], false
+            info.menuList, info.hasArrow, info.arg1 = dropDownLvlOneMenuK, (dropDownLvlOneMenuK < #dropDownLvlOneMenu) and true or false, (dropDownLvlOneMenuK == #dropDownLvlOneMenu) and true or false
+            UIDropDownMenu_AddButton(info)
+        end
+    else
+        -- second lvl menu --
+        if menuList == 1 then
+            info.func = self.SetDungeonValue
+            for dungeonsK, dungeonV in ipairs(dungeons) do
+                info.text, info.arg1, info.arg2, info.checked = dungeons[dungeonsK][1], dungeonsK, dungeons[dungeonsK][1], dungeonsK == dungeonSelected
+                UIDropDownMenu_AddButton(info, level)
+            end
+        elseif menuList == 2 then
+            info.func = self.SetClassValue
+            for classesK, classesV in ipairs(classes) do
+                info.text, info.arg1, info.arg2, info.checked = classes[classesK][1], classesK, classes[classesK][1], classesK == classSelected
+                UIDropDownMenu_AddButton(info, level)
+            end
+        else
+            --info.checked = false
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end
+end)
+-- function executed when a dungeon list item is selected --
+function LCDWOptionsFrame.backgroundContainerFrame.dropDown:SetDungeonValue(arg1, arg2)
+    if classSelected then
+        classSelected = nil
+    end
+    dungeonSelected = arg1
+    UIDropDownMenu_SetText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, "Donjon : " .. arg2)
+    CloseDropDownMenus()
+    LCDWOptionsFrame.backgroundContainerFrame:resetAll()
+    LCDWFrame.backgroundContainerFrame:showGuide(nil, dungeons[dungeonSelected][ARRAY_FIRST_COL], dungeonSelected)
+end
+-- function executed when a class list item is selected --
+function LCDWOptionsFrame.backgroundContainerFrame.dropDown:SetClassValue(arg1, arg2)
+    if dungeonSelected then
+        dungeonSelected = nil
+    end
+    classSelected = arg1
+    UIDropDownMenu_SetText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, "Classe : " .. arg2)
+    CloseDropDownMenus()
+    LCDWOptionsFrame.backgroundContainerFrame:resetAll()
+    LCDWFrame.backgroundContainerFrame:showGuide(true, classes[classSelected][ARRAY_FIRST_COL], classSelected)
+end
+-- function executed when the glossary is selected --
+function LCDWOptionsFrame.backgroundContainerFrame.dropDown:goToGlossary(arg1)
+    local isGlossarySelected = arg1
+    if isGlossarySelected then
+        UIDropDownMenu_SetText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, "Glossaire")
+        CloseDropDownMenus()
+        LCDWOptionsFrame.backgroundContainerFrame:resetAll()
+        LCDWFrame.backgroundContainerFrame:showGuide(nil, "Glossaire", 5)
+    end
+end
+-- dropdown title --
+createSectionNameContainer(LCDWOptionsFrame.backgroundContainerFrame.dropDown.dropDownNameContainer, LCDWOptionsFrame.backgroundContainerFrame.dropDown, "CENTER", "CENTER", 0, 45, "Accès rapide")
 ----------------------------------------------------------
 ----//////////// END OPTIONS FRAME (Options) ///////////--
 ----------------------------------------------------------
@@ -448,6 +565,8 @@ local function generateDungeonsFrames()
     local ROW_MAX_DUNGEONS_ITEMS = 4
     local WIDTH_COEF = 1.4814814814814814814814814814815
     local HEIGHT_COEF = 1.369863013698630136986301369863
+    local firstRowOfsy = -177
+    local secondRowOfsy = firstRowOfsy - 90
 
     local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
 
@@ -456,29 +575,22 @@ local function generateDungeonsFrames()
         -- dungeons thumbnail --
         dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
-        -- dungeons title --
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title = dungeonsFrames["dungeonFrame" .. dungeonsK]:CreateFontString(nil, "OVERLAY")
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetFontObject("ItemTextFontNormal")
+
         -- dungeons thumbnails borders and click hander --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border = CreateFrame("Button", nil, dungeonsFrames["dungeonFrame" .. dungeonsK])
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), -230)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", 40 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), secondRowOfsy)
         else
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", 45 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), -140)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", 40 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), firstRowOfsy)
         end
 
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
             bgFile = dungeons[dungeonsK][ARRAY_SECOND_COL],
         })
 
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetWidth(100)
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetHeight(50)
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK], "CENTER", 0 - (dungeonsFrames["dungeonFrame" .. dungeonsK].title:GetWidth() / 2), 0 + (dungeonsFrames["dungeonFrame" .. dungeonsK].title:GetHeight() / 2))
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetText(dungeons[dungeonsK][ARRAY_FIRST_COL])
-        local font = dungeonsFrames["dungeonFrame" .. dungeonsK].title:GetFontObject():SetTextColor(0.95, 0.78, 0, 1)
-        dungeonsFrames["dungeonFrame" .. dungeonsK].title:SetFontObject(font)
+
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
         -- divide the frameWidth and frameHeight by the coef associated to keep the same size ratio as the parent frame
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(FRAME_WIDTH / WIDTH_COEF, FRAME_HEIGHT / HEIGHT_COEF)
@@ -492,6 +604,17 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetScript("OnClick", function(self, button)
             LCDWFrame.backgroundContainerFrame:showGuide(nil, dungeons[dungeonsK][ARRAY_FIRST_COL], dungeonsK)
         end)
+
+        -- dungeons title --
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title = dungeonsFrames["dungeonFrame" .. dungeonsK].border:CreateFontString(nil, "OVERLAY")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetFont("Fonts\\MORPHEUS.TTF", 15, "OUTLINE")
+        --dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(0.95, 0.78, 0, 1)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(Helpers:hexadecimalToBlizzardColor(249), Helpers:hexadecimalToBlizzardColor(204), Helpers:hexadecimalToBlizzardColor(0), 1)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetWidth(110)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetHeight(55)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK].border, "CENTER")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetText(dungeons[dungeonsK][ARRAY_FIRST_COL])
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetJustifyH("CENTER")
     end
 end
 
@@ -560,70 +683,6 @@ function LCDW:OnInitialize()
 end
 -- END MINIMAP --
 
-
-
--- Onlick Dungeons dropdown items --
-local function DungeonsListDropDown_OnClick(self, arg1, arg2, checked)
-    UIDropDownMenu_SetText(LCDWOptionsFrame.dropDownName, "Donjon : " .. arg2)
-    dungeonSelected = arg1
-    print("salut")
-    for dungeonId, dungeon in ipairs(dungeons) do
-        if arg1 == classId then
-
-        end
-        -- if the dungeon is different that the one selected
-        --if dungeonId ~= arg1 then
-        --    -- then check which one is currently shown
-        --    if textureShown["isTexture" .. dungeonId .. "Shown"] == true then
-        --        -- Hide it
-        --        textures["texture" .. dungeonId]:Hide()
-        --        -- and set it to false (which means it's now hidden)
-        --        textureShown["isTexture" .. dungeonId .. "Shown"] = false
-        --    end
-        --    -- for the dungeon selected
-        --else
-        --    -- check if the selected one is hidden
-        --    if textureShown["isTexture" .. dungeonId .. "Shown"] == false then
-        --        -- if it is, create the texture according to the dungeon selected
-        --        createTexture(dungeonId)
-        --        -- and set it to true (which means it's now shown)
-        --        textureShown["isTexture" .. dungeonId .. "Shown"] = true
-        --    end
-        --end
-    end
-end
--- end onclick event --
-
--- display the dungeons' list --
-local function DungeonsListDropDown(frame, level, menuList)
-
-    local info = UIDropDownMenu_CreateInfo()
-
-    if level == 1 then
-        -- Outermost menu level
-        for k, v in ipairs(dropDownLvlOneMenu) do
-            info.text, info.arg1, info.arg2, info.hasArrow = v, k, v, true
-            UIDropDownMenu_AddButton(info)
-        end
-    else
-        info.func = DungeonsListDropDown_OnClick
-        for i, dungeon in ipairs(dungeons) do
-            info.text, info.arg1, info.arg2, info.checked = dungeon[1], i, dungeon[1], i == dungeonSelected
-            UIDropDownMenu_AddButton(info, level)
-        end
-    end
-end
--- end --
-
-LCDWOptionsFrame.dropDownName = CreateFrame("Frame", "WPDungeonsListDropDown", LCDWOptionsFrame, "UIDropDownMenuTemplate")
-LCDWOptionsFrame.dropDownName:SetPoint("CENTER", LCDWOptionsFrame, "TOP", 0, -150)
-UIDropDownMenu_SetWidth(LCDWOptionsFrame.dropDownName, 200)
-UIDropDownMenu_Initialize(LCDWOptionsFrame.dropDownName, DungeonsListDropDown)
-UIDropDownMenu_SetText(LCDWOptionsFrame.dropDownName, "Accès rapide")
-UIDropDownMenu_DisableDropDown(LCDWOptionsFrame.dropDownName)
-
--- end DROPDOWNS --
-
 -- slash commands --
 SLASH_LECODEXDEWILLIOS1 = '/lcdw'
 SlashCmdList["LECODEXDEWILLIOS"] = function()
@@ -632,31 +691,3 @@ end
 
 SLASH_RELOADUI1 = "/rl"
 SlashCmdList.RELOADUI = ReloadUI
--- end slash commands --
-local f = CreateFrame("Frame", nil, UIParent, "UIPanelDialogTemplate")
-f:SetSize(400, 400)
-f:SetPoint("CENTER")
-
-f.scrollFrame = CreateFrame("ScrollFrame", nil, f, "UIPanelScrollFrameTemplate")
-f.scrollFrame:SetPoint("TOPLEFT", f, "TOPLEFT", 4, 4)
-f.scrollFrame:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 4, 40)
-
-
-local child = CreateFrame("Frame", nil, f.scrollFrame)
-child:SetSize(f:GetWidth(), f:GetHeight() * 2)
-
-child.b = CreateFrame("Button", nil, child, "GameMenuButtonTemplate")
-child.b:SetSize(150, 60)
-child.b:SetPoint("CENTER")
-child.b:SetText("child")
-
-
-child.bg = child:CreateTexture(nil, "BACKGROUND")
-child.bg:SetAllPoints(true)
-child.bg:SetColorTexture(0.2, 0.6, 0, 0.8)
-f.scrollFrame:SetScrollChild(child)
-
-f.ScrollFrame.ScrollBar:ClearAllPoints();
-f.ScrollFrame.ScrollBar:SetPoint("TOPLEFT", f.ScrollFrame, "TOPRIGHT", -12, -18);
-f.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", f.ScrollFrame, "BOTTOMRIGHT", -7, 18);
---f.ScrollFrame:SetClipsChildren(true);
