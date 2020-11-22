@@ -29,6 +29,7 @@ local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
 local ARROW_TITLE_SECTION = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
 local QUESTIONMARK_PATH = "Interface\\Calendar\\EventNotification"
 local PVP_ICON = "Interface\\Calendar\\UI-Calendar-Event-PVP"
+local PVE_ICON = "Interface\\LFGFRAME\\UI-LFG-ICON-HEROIC"
 local DUNGEON_THUMBNAIL_PATH = "Interface\\LFGFRAME\\LFGIcon-"
 local NAME_COL = 1
 local ICON_COL = 2
@@ -353,7 +354,7 @@ LCDWFrame.backgroundContainerFrame.allElementsContainerFrame = CreateFrame("Fram
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
 -- create a section name container --
-local function createSectionNameContainer(frameName, frameToAttach, point, relativePoint, ofsx, ofsy, title, icon)
+local function createSectionNameContainer(frameName, frameToAttach, point, relativePoint, ofsx, ofsy, title, icon, iconWidth, iconHeight, iconOfsx, iconOfsy)
     local titleIcon
 
     if icon == "blank" then
@@ -372,16 +373,16 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     })
     -- arrow on the left of the container --
     frameName.arrowTitle = CreateFrame("Frame", nil, frameName, BackdropTemplateMixin and "BackdropTemplate")
-    frameName.arrowTitle:SetSize(icon and 17 or 32, icon and 17 or 32)
-    frameName.arrowTitle:SetPoint("LEFT", frameName, "LEFT", icon and 17 or 0, 0)
+    frameName.arrowTitle:SetSize(iconWidth and iconWidth or 0, iconHeight and iconHeight or 0)
+    frameName.arrowTitle:SetPoint("LEFT", frameName, "LEFT", iconOfsx and iconOfsx or 0, iconOfsy and iconOfsy or 0)
     frameName.arrowTitle:SetBackdrop({
         bgFile = titleIcon
     })
     -- dungeons section name --
     UIElements:CreateFontString(frameName.sectionTitle, frameName, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, title)
 end
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 40, -92, "Guides PVE")
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 40, -76, "Guides PVP", PVP_ICON)
+createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 40, -92, "Guides PVE", PVE_ICON, 25, 25, 17, -5)
+createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 40, -76, "Guides PVP", PVP_ICON, 17, 17, 17, 0)
 -- glossary frame --
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetSize(110, 30)
