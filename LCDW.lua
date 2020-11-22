@@ -319,6 +319,15 @@ LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetSize(LCDWFrame:G
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
 -- create a section name container --
 local function createSectionNameContainer(frameName, frameToAttach, point, relativePoint, ofsx, ofsy, title, icon)
+    local titleIcon
+
+    if icon == "blank" then
+        titleIcon = nil
+    elseif icon and icon ~= "blank" then
+        titleIcon = icon
+    else
+        titleIcon = ARROW_TITLE_SECTION
+    end
     -- dungeons section name container --
     frameName = CreateFrame("Frame", nil, frameToAttach, BackdropTemplateMixin and "BackdropTemplate")
     frameName:SetSize(160, 30)
@@ -331,7 +340,7 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     frameName.arrowTitle:SetSize(icon and 17 or 32, icon and 17 or 32)
     frameName.arrowTitle:SetPoint("LEFT", frameName, "LEFT", icon and 17 or 0, 0)
     frameName.arrowTitle:SetBackdrop({
-        bgFile = icon and icon or ARROW_TITLE_SECTION
+        bgFile = titleIcon
     })
     -- dungeons section name --
     UIElements:CreateFontString(frameName.sectionTitle, frameName, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, title)
@@ -341,7 +350,7 @@ createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContain
 -- glossary frame --
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetSize(110, 30)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetPoint("RIGHT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPRIGHT", -80, -90)
+LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetPoint("RIGHT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "RIGHT", 0, -90)
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
@@ -572,7 +581,7 @@ function LCDWOptionsFrame.backgroundContainerFrame.dropDown:goToGlossary(arg1)
     end
 end
 -- dropdown title --
-createSectionNameContainer(LCDWOptionsFrame.backgroundContainerFrame.dropDown.dropDownNameContainer, LCDWOptionsFrame.backgroundContainerFrame.dropDown, "CENTER", "CENTER", 0, 45, "Accès rapide")
+createSectionNameContainer(LCDWOptionsFrame.backgroundContainerFrame.dropDown.dropDownNameContainer, LCDWOptionsFrame.backgroundContainerFrame.dropDown, "CENTER", "CENTER", 0, 45, "Accès rapide", "blank")
 ----------------------------------------------------------
 ----//////////// END OPTIONS FRAME (Options) ///////////--
 ----------------------------------------------------------
@@ -679,12 +688,12 @@ generateDungeonsFrames()
 generateClassesFrames()
 
 -- MINIMAP --
-local LCDWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
+local LCDWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("LCDWIcon", {
     type = "global",
     icon = MINIMAP_ICON_PATH,
     OnClick = function(clickedframe, button)
         if button == "RightButton" then
-            print(RED .. "WIP")
+
         elseif button == "LeftButton" then
             if LCDWFrame:IsShown() then
                 LCDWFrame:Hide()
@@ -706,7 +715,7 @@ local LCDWLDB = LibStub("LibDataBroker-1.1"):NewDataObject("WowGuides", {
 
 function LCDW:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("LCDWDB", defaults)
-    icon:Register("LCDWLDB", LCDWLDB, self.db.profile.minimapOption)
+    icon:Register("LCDWIcon", LCDWLDB, self.db.profile.minimapOption)
 end
 -- END MINIMAP --
 
