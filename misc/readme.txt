@@ -17,3 +17,6 @@ frame Général (3 layers du plus bas au plus haut)
 frame Options
 
 WIP
+
+
+SI UN GUILDE EST AJOUTÉ IL FAUT METTRE A JOUR LA TABLE foldersItemsNb (ligne 94 dans le lua)

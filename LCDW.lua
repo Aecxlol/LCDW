@@ -29,9 +29,11 @@ local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
 local ARROW_TITLE_SECTION = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
 local QUESTIONMARK_PATH = "Interface\\Calendar\\EventNotification"
 local PVP_ICON = "Interface\\Calendar\\UI-Calendar-Event-PVP"
-local ARRAY_FIRST_COL = 1
-local ARRAY_SECOND_COL = 2
-local VERSION, BUID, DATE, TOC_VERSION = GetBuildInfo()
+local DUNGEON_THUMBNAIL_PATH = "Interface\\LFGFRAME\\LFGIcon-"
+local NAME_COL = 1
+local ICON_COL = 2
+local DUNGEON_THUMBNAIL_COL = 3
+local _, _, _, TOC_VERSION = GetBuildInfo()
 
 local GREEN = "|cff00ff00"
 local YELLOW = "|cffffff00"
@@ -56,28 +58,28 @@ local dungeonSelected = nil
 local classSelected = nil
 
 local dungeons = {
-    { "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "Maraudon" },
-    { "Malepeste", DUNGEONS_ICONS_PATH .. "BlackrockDepths" },
-    { "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "Deadmines" },
-    { "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "DireMaul" },
-    { "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "RagefireChasm" },
-    { "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "ScarletMonastery" },
-    { "L'Autre côté", DUNGEONS_ICONS_PATH .. "Scholomance" },
-    { "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "ShadowFangKeep" }
+    { "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "Maraudon", DUNGEON_THUMBNAIL_PATH .. "Maraudon"},
+    { "Malepeste", DUNGEONS_ICONS_PATH .. "BlackrockDepths", DUNGEON_THUMBNAIL_PATH .. "BlackrockDepths"},
+    { "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "Deadmines", DUNGEON_THUMBNAIL_PATH .. "Deadmines"},
+    { "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "DireMaul", DUNGEON_THUMBNAIL_PATH .. "DireMaul"},
+    { "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "RagefireChasm", DUNGEON_THUMBNAIL_PATH .. "RagefireChasm"},
+    { "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "ScarletMonastery", DUNGEON_THUMBNAIL_PATH .. "ScarletMonastery"},
+    { "L'Autre côté", DUNGEONS_ICONS_PATH .. "Scholomance", DUNGEON_THUMBNAIL_PATH .. "Scholomance"},
+    { "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "ShadowFangKeep", DUNGEON_THUMBNAIL_PATH .. "ShadowFangKeep"}
 }
 local classes = {
-    { "Chaman", CLASSES_ICONS_PATH .. "Shaman" },
-    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter" },
-    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter" },
-    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight" },
-    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock" },
-    { "Druide", CLASSES_ICONS_PATH .. "Druid" },
-    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior" },
-    { "Mage", CLASSES_ICONS_PATH .. "Mage" },
-    { "Moine", CLASSES_ICONS_PATH .. "Monk" },
-    { "Paladin", CLASSES_ICONS_PATH .. "Paladin" },
-    { "Prêtre", CLASSES_ICONS_PATH .. "Priest" },
-    { "Voleur", CLASSES_ICONS_PATH .. "Rogue" }
+    { "Chaman", CLASSES_ICONS_PATH .. "Shaman"},
+    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter"},
+    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter"},
+    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight"},
+    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock"},
+    { "Druide", CLASSES_ICONS_PATH .. "Druid"},
+    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior"},
+    { "Mage", CLASSES_ICONS_PATH .. "Mage"},
+    { "Moine", CLASSES_ICONS_PATH .. "Monk"},
+    { "Paladin", CLASSES_ICONS_PATH .. "Paladin"},
+    { "Prêtre", CLASSES_ICONS_PATH .. "Priest"},
+    { "Voleur", CLASSES_ICONS_PATH .. "Rogue"}
 }
 
 local isGuideSelected = false
@@ -405,7 +407,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     local iconWidth = 30
     local iconHeight = 30
     isGuideSelected = true
-    print(id)
+
     -- hide all the homepage elements --
     LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Hide()
     -- show the scroll frame --
@@ -428,10 +430,9 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         if thumbnailCategory == "glossary" then
             LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(QUESTIONMARK_PATH)
         elseif thumbnailCategory == "class" then
-            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(classes[id][ARRAY_SECOND_COL])
+            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(classes[id][ICON_COL])
         else
-            --iconWidth = 30
-            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(dungeons[id][ARRAY_SECOND_COL])
+            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(dungeons[id][DUNGEON_THUMBNAIL_COL])
         end
         LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetSize(iconWidth, 30)
     end
@@ -621,7 +622,7 @@ function LCDWOptionsFrame.backgroundContainerFrame.dropDown:SetDungeonValue(arg1
     UIDropDownMenu_SetText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, "Donjon : " .. arg2)
     CloseDropDownMenus()
     LCDWOptionsFrame.backgroundContainerFrame:resetAll()
-    LCDWFrame.backgroundContainerFrame:showGuide(true, dungeons[dungeonSelected][ARRAY_FIRST_COL], dungeonSelected, "dungeon", "pve")
+    LCDWFrame.backgroundContainerFrame:showGuide(true, dungeons[dungeonSelected][NAME_COL], dungeonSelected, "dungeon", "pve")
 end
 -- function executed when a class list item is selected --
 function LCDWOptionsFrame.backgroundContainerFrame.dropDown:SetClassValue(arg1, arg2)
@@ -632,7 +633,7 @@ function LCDWOptionsFrame.backgroundContainerFrame.dropDown:SetClassValue(arg1, 
     UIDropDownMenu_SetText(LCDWOptionsFrame.backgroundContainerFrame.dropDown, "Classe : " .. arg2)
     CloseDropDownMenus()
     LCDWOptionsFrame.backgroundContainerFrame:resetAll()
-    LCDWFrame.backgroundContainerFrame:showGuide(true, classes[classSelected][ARRAY_FIRST_COL], classSelected, "class", "pvp")
+    LCDWFrame.backgroundContainerFrame:showGuide(true, classes[classSelected][NAME_COL], classSelected, "class", "pvp")
 end
 -- function executed when the glossary is selected --
 function LCDWOptionsFrame.backgroundContainerFrame.dropDown:goToGlossary(arg1)
@@ -687,7 +688,7 @@ local function generateDungeonsFrames()
         end
 
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
-            bgFile = dungeons[dungeonsK][ARRAY_SECOND_COL],
+            bgFile = dungeons[dungeonsK][ICON_COL],
         })
 
 
@@ -702,7 +703,7 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:GetPushedTexture():SetTexCoord(0, 0.34, 0.332, 0.425)
 
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetScript("OnClick", function(self, button)
-            LCDWFrame.backgroundContainerFrame:showGuide(true, dungeons[dungeonsK][ARRAY_FIRST_COL], dungeonsK, "dungeon", "pve")
+            LCDWFrame.backgroundContainerFrame:showGuide(true, dungeons[dungeonsK][NAME_COL], dungeonsK, "dungeon", "pve")
         end)
 
         -- dungeons title --
@@ -713,7 +714,7 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetWidth(110)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetHeight(55)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK].border, "CENTER")
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetText(dungeons[dungeonsK][ARRAY_FIRST_COL])
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetText(dungeons[dungeonsK][NAME_COL])
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetJustifyH("CENTER")
     end
 end
@@ -738,12 +739,12 @@ local function generateClassesFrames()
         end
 
         classesFrames["classeFrame" .. classesK]:SetBackdrop({
-            bgFile = classes[classesK][ARRAY_SECOND_COL],
+            bgFile = classes[classesK][ICON_COL],
             insets = { left = 5, right = 5, top = 5, bottom = 5 }
         })
 
         classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function(self, button)
-            LCDWFrame.backgroundContainerFrame:showGuide(true, classes[classesK][ARRAY_FIRST_COL], classesK, "class", "pvp")
+            LCDWFrame.backgroundContainerFrame:showGuide(true, classes[classesK][NAME_COL], classesK, "class", "pvp")
         end)
     end
 end
