@@ -48,6 +48,10 @@ local textureShown = {}
 local dungeonsFrames = {}
 local classesFrames = {}
 
+local pveGuidesTextures = {}
+local pvpGuidesTextures = {}
+local glossaryTextures = {}
+
 local dungeonSelected = nil
 local classSelected = nil
 
@@ -84,6 +88,35 @@ local dropDownLvlOneMenu = {
     "Guides PVE",
     "Guides PVP",
     "Glossaire",
+}
+
+-- folders data --
+local foldersItemsNb = {
+    pve = {
+        d1 = 3,
+        d2 = 3,
+        d3 = 3,
+        d4 = 3,
+        d5 = 3,
+        d6 = 3,
+        d7 = 3,
+        d8 = 3,
+    },
+    pvp = {
+        c1 = 3,
+        c2 = 3,
+        c3 = 3,
+        c4 = 3,
+        c5 = 3,
+        c6 = 3,
+        c7 = 3,
+        c8 = 3,
+        c9 = 3,
+        c10 = 3,
+        c11 = 3,
+        c12 = 3,
+    },
+    glossary = 4
 }
 
 -- namespace's functions --
@@ -350,7 +383,7 @@ createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContain
 -- glossary frame --
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetSize(110, 30)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetPoint("RIGHT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "RIGHT", 0, -90)
+LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "BOTTOMRIGHT", 0, 20)
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
@@ -372,7 +405,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     local iconWidth = 30
     local iconHeight = 30
     isGuideSelected = true
-
+    print(id)
     -- hide all the homepage elements --
     LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Hide()
     -- show the scroll frame --
@@ -410,16 +443,8 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight() - 100)
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "BOTTOM")
     -- core image --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetSize(600, 600)
-    if guideType == "pvp" then
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetTexture(PVP_FOLDER_PATH .. id)
-    elseif guideType == "pve" then
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetTexture(PVE_FOLDER_PATH .. id)
-    else
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame.guide:SetTexture(GLOSSARY_FOLDER_PATH .. "glossary")
-    end
+    LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
+
     isGuideTextureCreated = true
     -- set the scroll child to be able to scroll --
     LCDWFrame.backgroundContainerFrame.scrollFrame:SetScrollChild(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame)
@@ -427,6 +452,45 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     -- scrollbar element size --
     LCDWFrame.backgroundContainerFrame.scrollFrame.ScrollBar:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame.scrollFrame, "TOPRIGHT", -12, -15)
     LCDWFrame.backgroundContainerFrame.scrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame.scrollFrame, "BOTTOMRIGHT", -7, 18)
+end
+
+function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
+    if guideType == "pve" then
+        for i = 1, foldersItemsNb[guideType]["d" .. id] do
+            pveGuidesTextures["pveTexture" .. i] = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            if i == 1 then
+                pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
+            else
+                pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", pveGuidesTextures["pveTexture" .. i - 1], "BOTTOM", 0, -20)
+            end
+            pveGuidesTextures["pveTexture" .. i]:SetSize(600, 600)
+            pveGuidesTextures["pveTexture" .. i]:SetTexture(PVE_FOLDER_PATH .. "d" .. id .. "\\" .. i)
+        end
+    elseif guideType == "pvp" then
+        for i = 1, foldersItemsNb[guideType]["c" .. id] do
+            pvpGuidesTextures["pvpTexture" .. i] = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            -- first texture at the top of the guide parent frame --
+            if i == 1 then
+                pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
+            -- and the rest under 20 px from one another --
+            else
+                pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", pvpGuidesTextures["pvpTexture" .. i - 1], "BOTTOM", 0, -20)
+            end
+            pvpGuidesTextures["pvpTexture" .. i]:SetSize(600, 600)
+            pvpGuidesTextures["pvpTexture" .. i]:SetTexture(PVP_FOLDER_PATH .. "c" .. id .. "\\" .. i)
+        end
+    else
+        for i = 1, foldersItemsNb[guideType] do
+            glossaryTextures["glossaryTexture" .. i] = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            if i == 1 then
+                glossaryTextures["glossaryTexture" .. i]:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
+            else
+                glossaryTextures["glossaryTexture" .. i]:SetPoint("TOP", glossaryTextures["glossaryTexture" .. i - 1], "BOTTOM", 0, -20)
+            end
+            glossaryTextures["glossaryTexture" .. i]:SetSize(600, 600)
+            glossaryTextures["glossaryTexture" .. i]:SetTexture(GLOSSARY_FOLDER_PATH .. "glossary" .. i)
+        end
+    end
 end
 ----------------------------------------------------------
 ----///////////// END MAIN FRAME (Général) /////////////--
