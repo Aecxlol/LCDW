@@ -1,7 +1,7 @@
-## Interface: 80300
+## Interface: 90002
 ## Title: Le codex de Willios
 ## Author: Aecx & Willios
-## Version: 0.1 - Alpha
+## Version: 0.6 - Alpha
 ## Notes: Version(0.4 - Alpha) A simple addon which allows you to check every dungeons' guides
 ## SavedVariables: LCDWDB
 ## OptionalDeps: Ace3

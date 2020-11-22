@@ -10,7 +10,7 @@ local UIElements = addonNamespace.UIElements
 
 
 local customAddonName = "Le codex de Willios"
-local addonVersion = "0.4 Alpha"
+local addonVersion = "0.6 Alpha"
 
 local LCDWOptionsFrame = nil
 
@@ -31,7 +31,7 @@ local QUESTIONMARK_PATH = "Interface\\Calendar\\EventNotification"
 local PVP_ICON = "Interface\\Calendar\\UI-Calendar-Event-PVP"
 local ARRAY_FIRST_COL = 1
 local ARRAY_SECOND_COL = 2
-local CURRENT_BUILD, _, _, _ = GetBuildInfo()
+local VERSION, BUID, DATE, TOC_VERSION = GetBuildInfo()
 
 local GREEN = "|cff00ff00"
 local YELLOW = "|cffffff00"
