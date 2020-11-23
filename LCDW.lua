@@ -1,6 +1,10 @@
 ----------------------------------------------------------
 ----/////////////////////// VARS ///////////////////////--
 ----------------------------------------------------------
+-- parler de resize sur la longueur voir ne pas le mettre
+-- voir pour augmenter la frame des guides
+-- voir pour peut être supprimer la frame options et mettre le bouton accueil sur la page du chargement de guide
+-- voir pour photoshoper toutes les pages pour les mettre sur la hauteur et faire plusieurs page de 1024*1024
 local name, addonNamespace = ...
 addonNamespace.Helpers = {}
 addonNamespace.UIElements = {}
@@ -31,6 +35,7 @@ local QUESTIONMARK_PATH = "Interface\\Calendar\\EventNotification"
 local PVP_ICON = "Interface\\Calendar\\UI-Calendar-Event-PVP"
 local PVE_ICON = "Interface\\LFGFRAME\\UI-LFG-ICON-HEROIC"
 local DUNGEON_THUMBNAIL_PATH = "Interface\\LFGFRAME\\LFGIcon-"
+local SOCIAL_NETWORK_FOLDER_PATH = "Interface\\AddOns\\LCDW\\misc\\social-networks\\"
 local NAME_COL = 1
 local ICON_COL = 2
 local DUNGEON_THUMBNAIL_COL = 3
@@ -43,7 +48,7 @@ local BLUE = "|cff0198e1"
 local ORANGE = "|cffff9933"
 local WHITE = "|cffffffff"
 
-local SOCIAL_NETWORK_TEXT = BLUE .. "Pour me suivre|r : twitchIcon /williosz twitterIcon @williosx discordIcon /SmZfhAG"
+local SOCIAL_NETWORK_TEXT = "Pour me suivre : "
 local CREDITS_TEST = "Made by Aecx & Willios - v." .. addonVersion
 
 local textures = {}
@@ -270,10 +275,10 @@ LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_
 LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
 -- title container --
 LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
-LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(FRAME_TITLE_CONTAINER_WIDTH, FRAME_TITLE_CONTAINER_HEIGHT)
 LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, 0)
 -- title --
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, "ItemTextFontNormal", false, false, "CENTER", "CENTER", 0, 0, "Général", 255, 255, 255)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, "ItemTextFontNormal", false, false, "CENTER", "CENTER", 0, 0, "Le codex de Willios", 255, 255, 255, true)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 30, FRAME_TITLE_CONTAINER_HEIGHT)
 -- scroll frame --
 LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil, LCDWFrame.backgroundContainerFrame, "UIPanelScrollFrameTemplate")
 -- scrollable zone size --
@@ -344,7 +349,54 @@ LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
 -- social networks text --
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.content, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "CENTER", "CENTER", 0, 0, SOCIAL_NETWORK_TEXT)
+local leftSpace = 130
+
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_TEXT, nil, nil, nil, true)
+
+leftSpace = leftSpace + titleWidth
+
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitch = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:SetSize(15, 15)
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "twitch")
+
+leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:GetWidth() + 3
+
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/williosz", nil, nil, nil, true)
+
+leftSpace = leftSpace + titleWidth + 10
+
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitter = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:SetSize(18, 18)
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
+LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "twitter")
+
+leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:GetWidth()
+
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "@williosx", nil, nil, nil, true)
+
+leftSpace = leftSpace + titleWidth + 10
+
+LCDWFrame.backgroundContainerFrame.socialNetworks.discord = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
+LCDWFrame.backgroundContainerFrame.socialNetworks.discord:SetSize(15, 15)
+LCDWFrame.backgroundContainerFrame.socialNetworks.discord:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
+LCDWFrame.backgroundContainerFrame.socialNetworks.discord:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "discord")
+
+leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.discord:GetWidth() + 5
+
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/SmZfhAG", nil, nil, nil, true)
+
+leftSpace = leftSpace + titleWidth + 10
+
+LCDWFrame.backgroundContainerFrame.socialNetworks.website = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
+LCDWFrame.backgroundContainerFrame.socialNetworks.website:SetSize(15, 15)
+LCDWFrame.backgroundContainerFrame.socialNetworks.website:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
+LCDWFrame.backgroundContainerFrame.socialNetworks.website:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "op")
+
+leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.website:GetWidth() + 5
+
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "bazardewillios.fr", nil, nil, nil, true)
+
 --------------------------------
 ------// third main frame //----
 --------------------------------
