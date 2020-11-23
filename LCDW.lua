@@ -91,6 +91,7 @@ local classes = {
 local isGuideSelected = false
 local isGuideTextureCreated = false
 local titleWidth
+local textureWidth
 
 local dropDownLvlOneMenu = {
     "Guides PVE",
@@ -163,6 +164,16 @@ function UIElements:CreateFontString(frameName, frameToAttach, font, width, heig
     end
 
     frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
+end
+
+function UIElements:CreateTexture(textureName, frameToAttach, width, height, point, relativePoint, ofsx, ofsy, texture, getWidth)
+    textureName = frameToAttach:CreateTexture(nil, "ARTWORK")
+    textureName:SetSize(width, height)
+    textureName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
+    textureName:SetTexture(texture)
+    if getWidth then
+        textureWidth = textureName:GetWidth()
+    end
 end
 
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
@@ -355,45 +366,33 @@ UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.te
 
 leftSpace = leftSpace + titleWidth
 
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitch = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:SetSize(15, 15)
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "twitch")
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitch, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitch", true)
 
-leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.twitch:GetWidth() + 3
+leftSpace = leftSpace + textureWidth + 3
 
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/williosz", nil, nil, nil, true)
 
 leftSpace = leftSpace + titleWidth + 10
 
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitter = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:SetSize(18, 18)
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
-LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "twitter")
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitter, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitter", true)
 
-leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.twitter:GetWidth()
+leftSpace = leftSpace + textureWidth
 
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "@williosx", nil, nil, nil, true)
 
 leftSpace = leftSpace + titleWidth + 10
 
-LCDWFrame.backgroundContainerFrame.socialNetworks.discord = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
-LCDWFrame.backgroundContainerFrame.socialNetworks.discord:SetSize(15, 15)
-LCDWFrame.backgroundContainerFrame.socialNetworks.discord:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
-LCDWFrame.backgroundContainerFrame.socialNetworks.discord:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "discord")
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.discord, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "discord", true)
 
-leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.discord:GetWidth() + 5
+leftSpace = leftSpace + textureWidth + 5
 
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/SmZfhAG", nil, nil, nil, true)
 
 leftSpace = leftSpace + titleWidth + 10
 
-LCDWFrame.backgroundContainerFrame.socialNetworks.website = LCDWFrame.backgroundContainerFrame.socialNetworks:CreateTexture(nil, "ARTWORK")
-LCDWFrame.backgroundContainerFrame.socialNetworks.website:SetSize(15, 15)
-LCDWFrame.backgroundContainerFrame.socialNetworks.website:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.socialNetworks, "LEFT", leftSpace, 0)
-LCDWFrame.backgroundContainerFrame.socialNetworks.website:SetTexture(SOCIAL_NETWORK_FOLDER_PATH .. "op")
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.website, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "op", true)
 
-leftSpace = leftSpace + LCDWFrame.backgroundContainerFrame.socialNetworks.website:GetWidth() + 5
+leftSpace = leftSpace + textureWidth + 5
 
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "bazardewillios.fr", nil, nil, nil, true)
 
