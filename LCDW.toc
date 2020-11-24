@@ -1,8 +1,8 @@
 ## Interface: 90002
-## Title: Le codex de Willios
+## Title: |cff0198e1Le codex de Willios|r - Version(0.8 - Alpha)
 ## Author: Aecx & Willios
-## Version: 0.6 - Alpha
-## Notes: Version(0.4 - Alpha) A simple addon which allows you to check every dungeons' guides
+## Version: 0.8
+## Notes: Addon qui vous permet de consulter très simplement des guides PVE et PVP écrits par moi-même
 ## SavedVariables: LCDWDB
 ## OptionalDeps: Ace3
 ## X-Embeds: Ace3
