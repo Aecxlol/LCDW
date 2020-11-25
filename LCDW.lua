@@ -447,10 +447,16 @@ LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "LEFT", 10, 0)
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetTexture(QUESTIONMARK_PATH)
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.title, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "GameFontHighLight", false, false, "LEFT", "LEFT", 40, 0, "Glossaire")
+
+
+local function openContextMenu()
+    print("lol")
+end
+
+
 --------------------------------
 --// third main frame prime //--
 --------------------------------
----@todo faire une frame qui englobe le titre et l'icone
 -- this function creates the frame displayed when a dungeon is selected
 function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailCategory, guideType)
     local iconWidth = 30
@@ -518,8 +524,34 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     end
     -- title --
     UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.title, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer, "GameFontHighlightLarge", false, false, "LEFT", "LEFT", iconWidth + 20, 0, name, nil, nil, nil, true)
+    -- open context menu icon --
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer, BackdropTemplateMixin and "BackdropTemplate")
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetSize(35, 35)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer, "LEFT", titleWidth + iconWidth + 20, -1)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetBackdrop({
+        bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
+        insets = { left = 4, right = 4, top = 4, bottom = 4 }
+    })
+    -- open context menu icon hover --
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:CreateTexture(nil, "BACKGROUND")
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAllPoints(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(0)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnEnter", function()
+        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(1)
+    end);
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnLeave", function()
+        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(0)
+    end);
+    -- click handler --
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnClick", function()
+        openContextMenu()
+    end)
+
+    local arrowIconWidth = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:GetWidth()
+    -- title container size --
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 30 + arrowIconWidth, 50)
     -- guide frame --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 30, 50)
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.scrollFrame)
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight() - 100)
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "BOTTOM")
