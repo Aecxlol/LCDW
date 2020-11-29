@@ -8,7 +8,6 @@ addonNamespace.UIElements = {}
 local Helpers = addonNamespace.Helpers
 local UIElements = addonNamespace.UIElements
 
-
 local customAddonName = "Le codex de Willios"
 local addonVersion = "0.6 Alpha"
 
@@ -60,32 +59,33 @@ local dungeonSelected = nil
 local classSelected = nil
 
 local dungeons = {
-    { "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "NecroticWake", DUNGEON_THUMBNAIL_PATH .. "NecroticWake"},
-    { "Malepeste", DUNGEONS_ICONS_PATH .. "Plaguefall", DUNGEON_THUMBNAIL_PATH .. "Plaguefall"},
-    { "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "MistsofTirnaScithe", DUNGEON_THUMBNAIL_PATH .. "MistsofTirnaScithe"},
-    { "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "HallsofAtonement", DUNGEON_THUMBNAIL_PATH .. "HallsofAtonement"},
-    { "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "SpiresofAscension", DUNGEON_THUMBNAIL_PATH .. "SpiresofAscension"},
-    { "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "TheaterofPain", DUNGEON_THUMBNAIL_PATH .. "TheaterofPain"},
-    { "L'Autre côté", DUNGEONS_ICONS_PATH .. "TheOtherSide", DUNGEON_THUMBNAIL_PATH .. "TheOtherSide"},
-    { "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "SanguineDepths", DUNGEON_THUMBNAIL_PATH .. "SanguineDepths"}
+    { "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "NecroticWake", DUNGEON_THUMBNAIL_PATH .. "NecroticWake" },
+    { "Malepeste", DUNGEONS_ICONS_PATH .. "Plaguefall", DUNGEON_THUMBNAIL_PATH .. "Plaguefall" },
+    { "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "MistsofTirnaScithe", DUNGEON_THUMBNAIL_PATH .. "MistsofTirnaScithe" },
+    { "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "HallsofAtonement", DUNGEON_THUMBNAIL_PATH .. "HallsofAtonement" },
+    { "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "SpiresofAscension", DUNGEON_THUMBNAIL_PATH .. "SpiresofAscension" },
+    { "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "TheaterofPain", DUNGEON_THUMBNAIL_PATH .. "TheaterofPain" },
+    { "L'Autre côté", DUNGEONS_ICONS_PATH .. "TheOtherSide", DUNGEON_THUMBNAIL_PATH .. "TheOtherSide" },
+    { "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "SanguineDepths", DUNGEON_THUMBNAIL_PATH .. "SanguineDepths" }
 }
 local classes = {
-    { "Chaman", CLASSES_ICONS_PATH .. "Shaman"},
-    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter"},
-    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter"},
-    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight"},
-    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock"},
-    { "Druide", CLASSES_ICONS_PATH .. "Druid"},
-    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior"},
-    { "Mage", CLASSES_ICONS_PATH .. "Mage"},
-    { "Moine", CLASSES_ICONS_PATH .. "Monk"},
-    { "Paladin", CLASSES_ICONS_PATH .. "Paladin"},
-    { "Prêtre", CLASSES_ICONS_PATH .. "Priest"},
-    { "Voleur", CLASSES_ICONS_PATH .. "Rogue"}
+    { "Chaman", CLASSES_ICONS_PATH .. "Shaman" },
+    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter" },
+    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter" },
+    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight" },
+    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock" },
+    { "Druide", CLASSES_ICONS_PATH .. "Druid" },
+    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior" },
+    { "Mage", CLASSES_ICONS_PATH .. "Mage" },
+    { "Moine", CLASSES_ICONS_PATH .. "Monk" },
+    { "Paladin", CLASSES_ICONS_PATH .. "Paladin" },
+    { "Prêtre", CLASSES_ICONS_PATH .. "Priest" },
+    { "Voleur", CLASSES_ICONS_PATH .. "Rogue" }
 }
 
 local isGuideSelected = false
 local isGuideTextureCreated = false
+local isContextMenuOpen = false
 local titleWidth
 local textureWidth
 
@@ -248,25 +248,25 @@ local function createBorder(frameToAttach, isACorner, borderSide, frameName, poi
     end
 end
 -- corner border textures --
-createBorder(LCDWFrame,true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
-createBorder(LCDWFrame,true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
-createBorder(LCDWFrame,true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
-createBorder(LCDWFrame,true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -7)
+createBorder(LCDWFrame, true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
+createBorder(LCDWFrame, true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
+createBorder(LCDWFrame, true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
+createBorder(LCDWFrame, true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -7)
 -- side border textures --
 -- LEFT --
-createBorder(LCDWFrame,false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
-createBorder(LCDWFrame,false, "left", LCDWFrame.leftBorderTwo, "LEFT", "LEFT", -130, 124)
+createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
+createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorderTwo, "LEFT", "LEFT", -130, 124)
 -- TOP --
-createBorder(LCDWFrame,false, "top", LCDWFrame.topBorder, "TOP", "TOP", -135, 6)
-createBorder(LCDWFrame,false, "top", LCDWFrame.topBorderTwo, "TOP", "TOP", 121, 6)
-createBorder(LCDWFrame,false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorder, "TOP", "TOP", -135, 6)
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderTwo, "TOP", "TOP", 121, 6)
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
 -- RIGHT --
-createBorder(LCDWFrame,false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 129, 30)
-createBorder(LCDWFrame,false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 129, -125)
+createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 129, 30)
+createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 129, -125)
 -- BOTTOM --
-createBorder(LCDWFrame,false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -6)
-createBorder(LCDWFrame,false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -6)
-createBorder(LCDWFrame,false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -6)
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -6)
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -6)
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -6)
 --------------------------------
 -----//  second main frame //---
 --------------------------------
@@ -359,39 +359,22 @@ LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
 local leftSpace = 5
 
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_TEXT, nil, nil, nil, true)
-
 leftSpace = leftSpace + titleWidth
-
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitch, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitch", true)
-
 leftSpace = leftSpace + textureWidth + 3
-
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/williosz", nil, nil, nil, true)
-
 leftSpace = leftSpace + titleWidth + 10
-
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitter, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitter", true)
-
 leftSpace = leftSpace + textureWidth
-
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "@williosx", nil, nil, nil, true)
-
 leftSpace = leftSpace + titleWidth + 10
-
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.discord, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "discord", true)
-
 leftSpace = leftSpace + textureWidth + 5
-
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/SmZfhAG", nil, nil, nil, true)
-
 leftSpace = leftSpace + titleWidth + 10
-
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.website, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "op", true)
-
 leftSpace = leftSpace + textureWidth + 5
-
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "bazardewillios.fr", nil, nil, nil, true)
-
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text5, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "RIGHT", "RIGHT", -5, 0, CREDITS_TEST)
 --------------------------------
 ------// third main frame //----
@@ -434,12 +417,12 @@ createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContain
 -- glossary frame --
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetSize(110, 30)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "BOTTOMRIGHT", 0, 20)
+LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetPoint("TOPRIGHT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPRIGHT", 0, -75)
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
 
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetScript("OnClick", function ()
+LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetScript("OnClick", function()
     LCDWFrame.backgroundContainerFrame:showGuide(true, "Glossaire", nil, "glossary", "glossary")
 end)
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon = LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:CreateTexture(nil, "ARTWORK")
@@ -447,16 +430,28 @@ LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "LEFT", 10, 0)
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetTexture(QUESTIONMARK_PATH)
 UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.title, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "GameFontHighLight", false, false, "LEFT", "LEFT", 40, 0, "Glossaire")
-
-
-local function openContextMenu()
-    print("lol")
-end
-
-
 --------------------------------
 --// third main frame prime //--
 --------------------------------
+local function openContextMenu(pageNumber)
+    local openContextMenuButton = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton
+    openContextMenuButton.dropDown = CreateFrame("Frame", "GlossaryMenu", openContextMenuButton, "UIDropDownMenuTemplate")
+
+    UIDropDownMenu_Initialize(openContextMenuButton.dropDown, function(self, level, menuList)
+        local info = UIDropDownMenu_CreateInfo()
+
+        -- first lvl menu --
+        if (level or 1) == 1 then
+            for i = 1, pageNumber do
+                info.text, info.checked = "Page " .. i, false
+                info.hasArrow = false
+                UIDropDownMenu_AddButton(info)
+            end
+        end
+    end, "MENU")
+    ToggleDropDownMenu(1, nil, openContextMenuButton.dropDown, openContextMenuButton, 3, 5)
+end
+
 -- this function creates the frame displayed when a dungeon is selected
 function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailCategory, guideType)
     local iconWidth = 30
@@ -545,7 +540,13 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     end);
     -- click handler --
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnClick", function()
-        openContextMenu()
+        if guideType == "pve" then
+            openContextMenu(foldersItemsNb[guideType]["d" .. id])
+        elseif guideType == "pvp" then
+            openContextMenu(foldersItemsNb[guideType]["c" .. id])
+        else
+            openContextMenu(foldersItemsNb[guideType])
+        end
     end)
 
     local arrowIconWidth = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:GetWidth()
@@ -585,7 +586,7 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
             -- first texture at the top of the guide parent frame --
             if i == 1 then
                 pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
-            -- and the rest under 20 px from one another --
+                -- and the rest under 20 px from one another --
             else
                 pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", pvpGuidesTextures["pvpTexture" .. i - 1], "BOTTOM", 0, -20)
             end
@@ -802,7 +803,6 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
             bgFile = dungeons[dungeonsK][ICON_COL],
         })
-
 
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
         -- divide the frameWidth and frameHeight by the coef associated to keep the same size ratio as the parent frame
