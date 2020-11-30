@@ -292,6 +292,9 @@ LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil,
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame, "TOPLEFT", 4, -75)
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame, "BOTTOMRIGHT", -3, 30)
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetClipsChildren(true)
+--LCDWFrame.backgroundContainerFrame.scrollFrame:SetScript("OnMouseWheel", function ()
+--    print("cc")
+--end)
 LCDWFrame.backgroundContainerFrame.scrollFrame:Hide()
 -- close button --
 LCDWFrame.backgroundContainerFrame.CloseButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame, "UIPanelCloseButton")
@@ -433,6 +436,10 @@ UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.allElementsContai
 --------------------------------
 --// third main frame prime //--
 --------------------------------
+--local function scrollTo(pageNumber)
+--    local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
+--    scrollFrame:SetVerticalScroll(620)
+--end
 local function openContextMenu(pageNumber)
     local openContextMenuButton = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton
     openContextMenuButton.dropDown = CreateFrame("Frame", "GlossaryMenu", openContextMenuButton, "UIDropDownMenuTemplate")
@@ -442,11 +449,34 @@ local function openContextMenu(pageNumber)
 
         -- first lvl menu --
         if (level or 1) == 1 then
+            info.isTitle = 1
+            info.text = "Sommaire"
+            info.notCheckable = 1
+            UIDropDownMenu_AddButton(info, level)
+
+            info.disabled = nil
+            info.isTitle = nil
+
             for i = 1, pageNumber do
+                info.func = function()
+                    local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
+                    scrollFrame:SetVerticalScroll((i - 1) * 620)
+                end
                 info.text, info.checked = "Page " .. i, false
                 info.hasArrow = false
-                UIDropDownMenu_AddButton(info)
+                info.notCheckable = 1
+                UIDropDownMenu_AddButton(info, level)
             end
+
+            -- Close menu item
+            info.hasArrow     = nil
+            info.value        = nil
+            info.notCheckable = 1
+            info.text         = CLOSE
+            info.func         = function()
+                CloseDropDownMenus()
+            end
+            UIDropDownMenu_AddButton(info, level)
         end
     end, "MENU")
     ToggleDropDownMenu(1, nil, openContextMenuButton.dropDown, openContextMenuButton, 3, 5)
