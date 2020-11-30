@@ -18,6 +18,8 @@ local MAIN_FRAME_HEIGHT = 500
 local OPTIONS_FRAME_WIDTH = 250
 local FRAME_TITLE_CONTAINER_WIDTH = 100
 local FRAME_TITLE_CONTAINER_HEIGHT = 20
+local GUIDE_WIDTH = 600
+local GUIDE_HEIGHT = 600
 local FOLDER_GUIDES_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local PVE_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local PVP_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pvp\\"
@@ -436,10 +438,6 @@ UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.allElementsContai
 --------------------------------
 --// third main frame prime //--
 --------------------------------
---local function scrollTo(pageNumber)
---    local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
---    scrollFrame:SetVerticalScroll(620)
---end
 local function openContextMenu(pageNumber)
     local openContextMenuButton = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton
     openContextMenuButton.dropDown = CreateFrame("Frame", "GlossaryMenu", openContextMenuButton, "UIDropDownMenuTemplate")
@@ -460,7 +458,7 @@ local function openContextMenu(pageNumber)
             for i = 1, pageNumber do
                 info.func = function()
                     local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
-                    scrollFrame:SetVerticalScroll((i - 1) * 620)
+                    scrollFrame:SetVerticalScroll((i - 1) * GUIDE_HEIGHT + 20)
                 end
                 info.text, info.checked = "Page " .. i, false
                 info.hasArrow = false
@@ -607,7 +605,7 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
             else
                 pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", pveGuidesTextures["pveTexture" .. i - 1], "BOTTOM", 0, -20)
             end
-            pveGuidesTextures["pveTexture" .. i]:SetSize(600, 600)
+            pveGuidesTextures["pveTexture" .. i]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
             pveGuidesTextures["pveTexture" .. i]:SetTexture(PVE_FOLDER_PATH .. "d" .. id .. "\\" .. i)
         end
     elseif guideType == "pvp" then
@@ -620,7 +618,7 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
             else
                 pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", pvpGuidesTextures["pvpTexture" .. i - 1], "BOTTOM", 0, -20)
             end
-            pvpGuidesTextures["pvpTexture" .. i]:SetSize(600, 600)
+            pvpGuidesTextures["pvpTexture" .. i]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
             pvpGuidesTextures["pvpTexture" .. i]:SetTexture(PVP_FOLDER_PATH .. "c" .. id .. "\\" .. i)
         end
     else
@@ -631,7 +629,7 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
             else
                 glossaryTextures["glossaryTexture" .. i]:SetPoint("TOP", glossaryTextures["glossaryTexture" .. i - 1], "BOTTOM", 0, -20)
             end
-            glossaryTextures["glossaryTexture" .. i]:SetSize(600, 600)
+            glossaryTextures["glossaryTexture" .. i]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
             glossaryTextures["glossaryTexture" .. i]:SetTexture(GLOSSARY_FOLDER_PATH .. "glossary" .. i)
         end
     end
