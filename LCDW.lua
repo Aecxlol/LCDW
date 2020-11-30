@@ -207,8 +207,7 @@ f:SetScript("OnEvent", onEvent)
 ----------------------------------------------------------
 ----/////////////// MAIN FRAME (Général) ///////////////--
 ----------------------------------------------------------
---local LCDWFrame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-local LCDWFrame = CreateFrame("Frame", nil, UIParent)
+local LCDWFrame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame:Hide()
 LCDWFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:SetPoint("CENTER", 0, 0)
@@ -221,6 +220,11 @@ LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:RegisterForDrag("LeftButton")
 LCDWFrame:SetScript("OnDragStart", LCDWFrame.StartMoving)
 LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
+--LCDWFrame:SetBackdrop({
+--    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+--    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 0, edgeSize = 0,
+--    insets = { left = 30, right = 30, top = 30, bottom = 30 }
+--})
 
 local function createBorder(frameToAttach, isACorner, borderSide, frameName, point, relativePoint, ofsx, ofsy)
 
@@ -273,15 +277,16 @@ createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEF
 -----//  second main frame //---
 --------------------------------
 -- background container frame --
-LCDWFrame.backgroundContainerFrame = CreateFrame("Frame", nil, LCDWFrame)
+LCDWFrame.backgroundContainerFrame = CreateFrame("Frame", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
-LCDWFrame.backgroundContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
+LCDWFrame.backgroundContainerFrame:SetAllPoints()
 -- background texture --
 LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
 LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
-LCDWFrame.backgroundContainerFrame.mainBackground:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame, "TOPLEFT")
+LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
 LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
+
 -- title container --
 LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
 LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, 0)
@@ -294,9 +299,6 @@ LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil,
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame, "TOPLEFT", 4, -75)
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame, "BOTTOMRIGHT", -3, 30)
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetClipsChildren(true)
---LCDWFrame.backgroundContainerFrame.scrollFrame:SetScript("OnMouseWheel", function ()
---    print("cc")
---end)
 LCDWFrame.backgroundContainerFrame.scrollFrame:Hide()
 -- close button --
 LCDWFrame.backgroundContainerFrame.CloseButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame, "UIPanelCloseButton")
@@ -458,7 +460,8 @@ local function openContextMenu(pageNumber)
             for i = 1, pageNumber do
                 info.func = function()
                     local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
-                    scrollFrame:SetVerticalScroll((i - 1) * GUIDE_HEIGHT + 20)
+                    scrollFrame:SetVerticalScroll((i - 1) * (GUIDE_HEIGHT + 20))
+                    isContextMenuOpen = false
                 end
                 info.text, info.checked = "Page " .. i, false
                 info.hasArrow = false
@@ -467,12 +470,13 @@ local function openContextMenu(pageNumber)
             end
 
             -- Close menu item
-            info.hasArrow     = nil
-            info.value        = nil
+            info.hasArrow = nil
+            info.value = nil
             info.notCheckable = 1
-            info.text         = CLOSE
-            info.func         = function()
+            info.text = CLOSE
+            info.func = function()
                 CloseDropDownMenus()
+                isContextMenuOpen = false
             end
             UIDropDownMenu_AddButton(info, level)
         end
@@ -484,7 +488,13 @@ end
 function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailCategory, guideType)
     local iconWidth = 30
     local iconHeight = 30
+    local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
     isGuideSelected = true
+
+    -- everytime a guide is loaded, reset the scroll --
+    if scrollFrame:GetVerticalScroll() > 0 then
+        scrollFrame:SetVerticalScroll(0)
+    end
 
     -- hide all the homepage elements --
     LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Hide()
@@ -494,7 +504,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame)
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "CENTER")
-    -- reset function --
+    -- reset function which does hide everyframe but the homepage frame --
     function LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:resetAll()
         -- hide the guide texture
         if isGuideTextureCreated then
@@ -568,18 +578,24 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     end);
     -- click handler --
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnClick", function()
-        if guideType == "pve" then
-            openContextMenu(foldersItemsNb[guideType]["d" .. id])
-        elseif guideType == "pvp" then
-            openContextMenu(foldersItemsNb[guideType]["c" .. id])
+        if isContextMenuOpen then
+            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.dropDown:Hide()
+            isContextMenuOpen = false
         else
-            openContextMenu(foldersItemsNb[guideType])
+            isContextMenuOpen = true
+            if guideType == "pve" then
+                openContextMenu(foldersItemsNb[guideType]["d" .. id])
+            elseif guideType == "pvp" then
+                openContextMenu(foldersItemsNb[guideType]["c" .. id])
+            else
+                openContextMenu(foldersItemsNb[guideType])
+            end
         end
     end)
 
     local arrowIconWidth = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:GetWidth()
     -- title container size --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 30 + arrowIconWidth, 50)
+    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 25 + arrowIconWidth, 50)
     -- guide frame --
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.scrollFrame)
     LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight() - 100)
