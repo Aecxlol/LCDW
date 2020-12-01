@@ -11,12 +11,13 @@ local UIElements = addonNamespace.UIElements
 local customAddonName = "Le codex de Willios"
 local addonVersion = "0.6 Alpha"
 
-local MAIN_FRAME_WITH = 715
-local MAIN_FRAME_HEIGHT = 500
+local INITIAL_RATIO = 1.43016759777
+local MAIN_FRAME_WITH = 1024
+local MAIN_FRAME_HEIGHT = MAIN_FRAME_WITH / INITIAL_RATIO
 local FRAME_TITLE_CONTAINER_WIDTH = 100
-local FRAME_TITLE_CONTAINER_HEIGHT = 20
-local GUIDE_WIDTH = 650
-local GUIDE_HEIGHT = 650
+local FRAME_TITLE_CONTAINER_HEIGHT = 30
+local GUIDE_WIDTH = 850
+local GUIDE_HEIGHT = 850
 local PVE_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local PVP_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pvp\\"
 local GLOSSARY_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\glossary\\"
@@ -191,7 +192,6 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", onEvent)
-
 ----------------------------------------------------------
 ----/////////////// MAIN FRAME (Général) ///////////////--
 ----------------------------------------------------------
@@ -284,8 +284,8 @@ LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 30, 
 -- scroll frame --
 LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil, LCDWFrame.backgroundContainerFrame, "UIPanelScrollFrameTemplate")
 -- scrollable zone size --
-LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame, "TOPLEFT", 4, -75)
-LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame, "BOTTOMRIGHT", -3, 30)
+LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame, "TOPLEFT", 4, -105)
+LCDWFrame.backgroundContainerFrame.scrollFrame:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame, "BOTTOMRIGHT", -3, 35)
 LCDWFrame.backgroundContainerFrame.scrollFrame:SetClipsChildren(true)
 LCDWFrame.backgroundContainerFrame.scrollFrame:Hide()
 -- close button --
@@ -296,7 +296,7 @@ LCDWFrame.backgroundContainerFrame.CloseButton:SetScript("OnClick", function(sel
 end)
 -- social networks container --
 LCDWFrame.backgroundContainerFrame.socialNetworks = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-LCDWFrame.backgroundContainerFrame.socialNetworks:SetSize(LCDWFrame:GetWidth(), 20)
+LCDWFrame.backgroundContainerFrame.socialNetworks:SetSize(LCDWFrame:GetWidth(), 29)
 LCDWFrame.backgroundContainerFrame.socialNetworks:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame, "BOTTOM", 0, 0)
 LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
@@ -304,24 +304,24 @@ LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
 -- social networks text --
 local leftSpace = 5
 
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_TEXT, nil, nil, nil, true)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_TEXT, nil, nil, nil, true)
 leftSpace = leftSpace + titleWidth
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitch, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitch", true)
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitch, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitch", true)
 leftSpace = leftSpace + textureWidth + 3
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/williosz", nil, nil, nil, true)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "/williosz", nil, nil, nil, true)
 leftSpace = leftSpace + titleWidth + 10
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitter, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitter", true)
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitter, LCDWFrame.backgroundContainerFrame.socialNetworks, 21, 21, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitter", true)
 leftSpace = leftSpace + textureWidth
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "@williosx", nil, nil, nil, true)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "@williosx", nil, nil, nil, true)
 leftSpace = leftSpace + titleWidth + 10
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.discord, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "discord", true)
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.discord, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "discord", true)
 leftSpace = leftSpace + textureWidth + 5
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "/SmZfhAG", nil, nil, nil, true)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "/SmZfhAG", nil, nil, nil, true)
 leftSpace = leftSpace + titleWidth + 10
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.website, LCDWFrame.backgroundContainerFrame.socialNetworks, 15, 15, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "op", true)
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.website, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "op", true)
 leftSpace = leftSpace + textureWidth + 5
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "LEFT", "LEFT", leftSpace, 0, "bazardewillios.fr", nil, nil, nil, true)
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text5, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlightSmall", false, false, "RIGHT", "RIGHT", -5, 0, CREDITS_TEST)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "bazardewillios.fr", nil, nil, nil, true)
+UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text5, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "RIGHT", "RIGHT", -5, 0, CREDITS_TEST)
 --------------------------------
 ------// third main frame //----
 --------------------------------
@@ -343,7 +343,7 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     end
     -- dungeons section name container --
     frameName = CreateFrame("Frame", nil, frameToAttach, BackdropTemplateMixin and "BackdropTemplate")
-    frameName:SetSize(160, 30)
+    frameName:SetSize(225, 44)
     frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
     frameName:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
@@ -358,8 +358,8 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     -- dungeons section name --
     UIElements:CreateFontString(frameName.sectionTitle, frameName, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, title)
 end
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 40, -93, "Guides PVE", PVE_ICON, 25, 25, 17, -5)
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 40, -76, "Guides PVP", PVP_ICON, 17, 17, 17, 0)
+createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 42, -93, "Guides des donjons", PVE_ICON, 25, 25, 17, -5)
+createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 42, -76, "Guides des classes", PVP_ICON, 17, 17, 17, 0)
 -- glossary frame --
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetSize(110, 30)
@@ -593,13 +593,12 @@ end
 local function generateDungeonsFrames()
 
     local FRAME_WIDTH = 220
-    local FRAME_HEIGHT = 110
-    local SPACE_BETWEEN_ITEMS = 30
+    local FRAME_HEIGHT = 120
+    local SPACE_BETWEEN_ITEMS = 20
     local ROW_MAX_DUNGEONS_ITEMS = 4
-    local WIDTH_COEF = 1.4814814814814814814814814814815
-    local HEIGHT_COEF = 1.369863013698630136986301369863
-    local firstRowOfsy = -177
-    local secondRowOfsy = firstRowOfsy - 90
+    local FIRST_ROW_OFSY = -220
+    local SECOND_ROW_OFSY = FIRST_ROW_OFSY - 138
+    local FIRST_LEFT_SPACE = 40
 
     local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
 
@@ -614,18 +613,19 @@ local function generateDungeonsFrames()
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", 40 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), secondRowOfsy)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), SECOND_ROW_OFSY)
         else
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", 40 + ((FRAME_WIDTH / 1.7 * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), firstRowOfsy)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY)
         end
 
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetBackdrop({
             bgFile = dungeons[dungeonsK][ICON_COL],
+            insets = { left = 0, right = -105, top = 0, bottom = -40 }
         })
 
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
         -- divide the frameWidth and frameHeight by the coef associated to keep the same size ratio as the parent frame
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(FRAME_WIDTH / WIDTH_COEF, FRAME_HEIGHT / HEIGHT_COEF)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetNormalTexture(buttonTexture)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetHighlightTexture(buttonTexture)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPushedTexture(buttonTexture)
@@ -639,10 +639,10 @@ local function generateDungeonsFrames()
 
         -- dungeons title --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title = dungeonsFrames["dungeonFrame" .. dungeonsK].border:CreateFontString(nil, "OVERLAY")
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetFont("Fonts\\MORPHEUS.TTF", 15, "OUTLINE")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetFont("Fonts\\MORPHEUS.TTF", 20, "OUTLINE")
         --dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(0.95, 0.78, 0, 1)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(Helpers:hexadecimalToBlizzardColor(249), Helpers:hexadecimalToBlizzardColor(204), Helpers:hexadecimalToBlizzardColor(0), 1)
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetWidth(110)
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetWidth(130)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetHeight(55)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetPoint("CENTER", dungeonsFrames["dungeonFrame" .. dungeonsK].border, "CENTER")
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetText(dungeons[dungeonsK][NAME_COL])
@@ -652,10 +652,13 @@ end
 -- display all the classes frames --
 local function generateClassesFrames()
 
-    local FRAME_WIDTH = 48
-    local FRAME_HEIGHT = 48
-    local SPACE_BETWEEN_ITEMS = 30
+    local FRAME_WIDTH = 54
+    local FRAME_HEIGHT = 54
+    local SPACE_BETWEEN_ITEMS = 60
     local ROW_MAX_CLASSES_ITEMS = 6
+    local FIRST_ROW_OFSY = -175
+    local SECOND_ROW_OFSY = FIRST_ROW_OFSY - 90
+    local FIRST_LEFT_SPACE = 200
 
     for classesK, classesV in ipairs(classes) do
 
@@ -664,14 +667,13 @@ local function generateClassesFrames()
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if classesK > ROW_MAX_CLASSES_ITEMS then
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", 139 + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), -185)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), SECOND_ROW_OFSY)
         else
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", 139 + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), -125)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), FIRST_ROW_OFSY)
         end
 
         classesFrames["classeFrame" .. classesK]:SetBackdrop({
             bgFile = classes[classesK][ICON_COL],
-            insets = { left = 5, right = 5, top = 5, bottom = 5 }
         })
 
         classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function(self, button)
