@@ -208,59 +208,62 @@ LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:RegisterForDrag("LeftButton")
 LCDWFrame:SetScript("OnDragStart", LCDWFrame.StartMoving)
 LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
---LCDWFrame:SetBackdrop({
---    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
---    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 0, edgeSize = 0,
---    insets = { left = 30, right = 30, top = 30, bottom = 30 }
---})
+-- edge --
+LCDWFrame.edge = CreateFrame("Frame", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
+LCDWFrame.edge:SetSize(LCDWFrame:GetWidth() + 5, LCDWFrame:GetHeight() + 5)
+LCDWFrame.edge:SetPoint("CENTER", LCDWFrame, "CENTER")
+LCDWFrame.edge:SetBackdrop({
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 16, edgeSize = 16
+})
 
-local function createBorder(frameToAttach, isACorner, borderSide, frameName, point, relativePoint, ofsx, ofsy)
 
-    local width = (isACorner) and 100 or 256
-    local height = 7
-    local frameToAttach = frameToAttach
-
-    local coord = {
-        right = (isACorner) and 0.565 or 1,
-        top = (isACorner) and 0.5 or 0.467,
-        bottom = (isACorner) and 0.545 or 0.5
-    }
-    local borderSideTextureAngle = {
-        top = Helpers:degreesToRadians(-180),
-        left = Helpers:degreesToRadians(-90),
-        right = Helpers:degreesToRadians(90),
-    }
-
-    frameName = frameToAttach:CreateTexture(nil, "BACKGROUND")
-    frameName:SetTexture("Interface\\Calendar\\CALENDARFRAME_TOPANDBOTTOM")
-    frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
-    frameName:SetSize(width, height)
-    frameName:SetTexCoord(0, coord["right"], coord["top"], coord["bottom"])
-
-    if borderSide ~= "bottom" then
-        frameName:SetRotation(borderSideTextureAngle[borderSide])
-    end
-end
+--local function createBorder(frameToAttach, isACorner, borderSide, frameName, point, relativePoint, ofsx, ofsy)
+--
+--    local width = (isACorner) and 100 or 256
+--    local height = 7
+--    local frameToAttach = frameToAttach
+--
+--    local coord = {
+--        right = (isACorner) and 0.565 or 1,
+--        top = (isACorner) and 0.5 or 0.467,
+--        bottom = (isACorner) and 0.545 or 0.5
+--    }
+--    local borderSideTextureAngle = {
+--        top = Helpers:degreesToRadians(-180),
+--        left = Helpers:degreesToRadians(-90),
+--        right = Helpers:degreesToRadians(90),
+--    }
+--
+--    frameName = frameToAttach:CreateTexture(nil, "BACKGROUND")
+--    frameName:SetTexture("Interface\\Calendar\\CALENDARFRAME_TOPANDBOTTOM")
+--    frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
+--    frameName:SetSize(width, height)
+--    frameName:SetTexCoord(0, coord["right"], coord["top"], coord["bottom"])
+--
+--    if borderSide ~= "bottom" then
+--        frameName:SetRotation(borderSideTextureAngle[borderSide])
+--    end
+--end
 -- corner border textures --
-createBorder(LCDWFrame, true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
-createBorder(LCDWFrame, true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
-createBorder(LCDWFrame, true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
-createBorder(LCDWFrame, true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -7)
--- side border textures --
--- LEFT --
-createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
-createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorderTwo, "LEFT", "LEFT", -130, 124)
--- TOP --
-createBorder(LCDWFrame, false, "top", LCDWFrame.topBorder, "TOP", "TOP", -135, 6)
-createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderTwo, "TOP", "TOP", 121, 6)
-createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
--- RIGHT --
-createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 129, 30)
-createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 129, -125)
--- BOTTOM --
-createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -6)
-createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -6)
-createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -6)
+--createBorder(LCDWFrame, true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
+--createBorder(LCDWFrame, true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
+--createBorder(LCDWFrame, true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
+--createBorder(LCDWFrame, true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -7)
+---- side border textures --
+---- LEFT --
+--createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
+--createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorderTwo, "LEFT", "LEFT", -130, 124)
+---- TOP --
+--createBorder(LCDWFrame, false, "top", LCDWFrame.topBorder, "TOP", "TOP", -135, 6)
+--createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderTwo, "TOP", "TOP", 121, 6)
+--createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
+---- RIGHT --
+--createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 129, 30)
+--createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 129, -125)
+---- BOTTOM --
+--createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -6)
+--createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -6)
+--createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -6)
 --------------------------------
 -----//  second main frame //---
 --------------------------------
@@ -296,8 +299,8 @@ LCDWFrame.backgroundContainerFrame.CloseButton:SetScript("OnClick", function(sel
 end)
 -- social networks container --
 LCDWFrame.backgroundContainerFrame.socialNetworks = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-LCDWFrame.backgroundContainerFrame.socialNetworks:SetSize(LCDWFrame:GetWidth(), 29)
-LCDWFrame.backgroundContainerFrame.socialNetworks:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame, "BOTTOM", 0, 0)
+LCDWFrame.backgroundContainerFrame.socialNetworks:SetSize(LCDWFrame:GetWidth() - 5, 29)
+LCDWFrame.backgroundContainerFrame.socialNetworks:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame, "BOTTOM", 0, 4)
 LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
@@ -343,20 +346,22 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     end
     -- dungeons section name container --
     frameName = CreateFrame("Frame", nil, frameToAttach, BackdropTemplateMixin and "BackdropTemplate")
-    frameName:SetSize(225, 44)
+
     frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
     frameName:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
     })
-    -- arrow on the left of the container --
-    frameName.arrowTitle = CreateFrame("Frame", nil, frameName, BackdropTemplateMixin and "BackdropTemplate")
-    frameName.arrowTitle:SetSize(iconWidth and iconWidth or 0, iconHeight and iconHeight or 0)
-    frameName.arrowTitle:SetPoint("LEFT", frameName, "LEFT", iconOfsx and iconOfsx or 0, iconOfsy and iconOfsy or 0)
-    frameName.arrowTitle:SetBackdrop({
+    -- icon on the left of the container --
+    frameName.icon = CreateFrame("Frame", nil, frameName, BackdropTemplateMixin and "BackdropTemplate")
+    frameName.icon:SetSize(iconWidth and iconWidth or 0, iconHeight and iconHeight or 0)
+    frameName.icon:SetPoint("LEFT", frameName, "LEFT", iconOfsx and iconOfsx or 0, iconOfsy and iconOfsy or 0)
+    frameName.icon:SetBackdrop({
         bgFile = titleIcon
     })
     -- dungeons section name --
-    UIElements:CreateFontString(frameName.sectionTitle, frameName, "GameFontHighLight", false, false, "CENTER", "CENTER", 0, 0, title)
+    UIElements:CreateFontString(frameName.sectionTitle, frameName.icon, "GameFontHighLight", false, false, "LEFT", "RIGHT", 0, 0, title, nil, nil, nil, true)
+    frameName:SetSize(iconWidth + titleWidth + ofsx, 44)
+    print(iconWidth)
 end
 createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 42, -93, "Guides des donjons", PVE_ICON, 25, 25, 17, -5)
 createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 42, -76, "Guides des classes", PVP_ICON, 17, 17, 17, 0)
