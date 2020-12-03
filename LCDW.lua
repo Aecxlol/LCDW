@@ -15,7 +15,7 @@ local INITIAL_RATIO = 1.43016759777
 local MAIN_FRAME_WITH = 1024
 local MAIN_FRAME_HEIGHT = MAIN_FRAME_WITH / INITIAL_RATIO
 local FRAME_TITLE_CONTAINER_WIDTH = 100
-local FRAME_TITLE_CONTAINER_HEIGHT = 30
+local FRAME_TITLE_CONTAINER_HEIGHT = 40
 local GUIDE_WIDTH = 850
 local GUIDE_HEIGHT = 850
 local PVE_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
@@ -42,8 +42,11 @@ local BLUE = "|cff0198e1"
 local ORANGE = "|cffff9933"
 local WHITE = "|cffffffff"
 
+local FRIZQT_FONT = "Fonts\\FRIZQT__.TTF"
+local MORPHEUS_FONT = "Fonts\\MORPHEUS.TTF"
+
 local SOCIAL_NETWORK_TEXT = "Pour me suivre : "
-local CREDITS_TEST = "Made by Aecx & Willios"
+local CREDITS_TEXT = "Made by Aecx & Willios"
 
 local textureShown = {}
 local dungeonsFrames = {}
@@ -163,6 +166,23 @@ function UIElements:CreateFontString(frameName, frameToAttach, font, width, heig
     frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
 end
 
+function UIElements:CreateFontString2(frameName, FrameToAttach, font, fontSize, flags, text, point, relativePoint, ofsx, ofsy, r, g, b, getWidth)
+    local alpha = 1
+    r = not r and 255 or r
+    g = not g and 255 or g
+    b = not b and 255 or b
+
+    frameName = FrameToAttach:CreateFontString(nil, "OVERLAY")
+    frameName:SetFont(font and font or FRIZQT_FONT, fontSize, flags)
+    frameName:SetText(text)
+    frameName:SetPoint(point, FrameToAttach, relativePoint, ofsx, ofsy)
+    frameName:SetTextColor(Helpers:hexadecimalToBlizzardColor(r), Helpers:hexadecimalToBlizzardColor(g), Helpers:hexadecimalToBlizzardColor(b), alpha)
+
+    if getWidth then
+        titleWidth = frameName:GetWidth()
+    end
+end
+
 function UIElements:CreateTexture(textureName, frameToAttach, width, height, point, relativePoint, ofsx, ofsy, texture, getWidth)
     textureName = frameToAttach:CreateTexture(nil, "ARTWORK")
     textureName:SetSize(width, height)
@@ -277,13 +297,13 @@ LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNT
 LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
 LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
-
 -- title container --
 LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
 LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, 0)
 -- title --
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, "ItemTextFontNormal", false, false, "CENTER", "CENTER", 0, 0, "Le codex de Willios", 255, 255, 255, true)
-LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 30, FRAME_TITLE_CONTAINER_HEIGHT)
+--UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, "ItemTextFontNormal", false, false, "CENTER", "CENTER", 0, 0, "Le codex de Willios", 255, 255, 255, true)
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, MORPHEUS_FONT, 28, false, "Le codex de Willios", "CENTER", "CENTER", 0, 0, 255, 255, 255, true)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 100, FRAME_TITLE_CONTAINER_HEIGHT)
 -- scroll frame --
 LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil, LCDWFrame.backgroundContainerFrame, "UIPanelScrollFrameTemplate")
 -- scrollable zone size --
@@ -305,26 +325,27 @@ LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
 -- social networks text --
-local leftSpace = 5
+local LEFT_SPACE = 7
+local BANDEAU_FONT_SIZE = 14
 
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_TEXT, nil, nil, nil, true)
-leftSpace = leftSpace + titleWidth
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitch, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitch", true)
-leftSpace = leftSpace + textureWidth + 3
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "/williosz", nil, nil, nil, true)
-leftSpace = leftSpace + titleWidth + 10
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitter, LCDWFrame.backgroundContainerFrame.socialNetworks, 21, 21, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitter", true)
-leftSpace = leftSpace + textureWidth
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "@williosx", nil, nil, nil, true)
-leftSpace = leftSpace + titleWidth + 10
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.discord, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "discord", true)
-leftSpace = leftSpace + textureWidth + 5
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "/SmZfhAG", nil, nil, nil, true)
-leftSpace = leftSpace + titleWidth + 10
-UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.website, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", leftSpace, 0, SOCIAL_NETWORK_FOLDER_PATH .. "op", true)
-leftSpace = leftSpace + textureWidth + 5
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "LEFT", "LEFT", leftSpace, 0, "bazardewillios.fr", nil, nil, nil, true)
-UIElements:CreateFontString(LCDWFrame.backgroundContainerFrame.socialNetworks.text5, LCDWFrame.backgroundContainerFrame.socialNetworks, "GameFontHighlight", false, false, "RIGHT", "RIGHT", -5, 0, CREDITS_TEST)
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, SOCIAL_NETWORK_TEXT, "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 3
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitch, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitch", true)
+LEFT_SPACE = LEFT_SPACE + textureWidth + 3
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "/williosz", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 10
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitter, LCDWFrame.backgroundContainerFrame.socialNetworks, 21, 21, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitter", true)
+LEFT_SPACE = LEFT_SPACE + textureWidth
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "@williosx", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 10
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.discord, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "discord", true)
+LEFT_SPACE = LEFT_SPACE + textureWidth + 5
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "/SmZfhAG", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 10
+UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.website, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "op", true)
+LEFT_SPACE = LEFT_SPACE + textureWidth + 5
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "bazardewillios.fr", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text5, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, CREDITS_TEXT, "RIGHT", "RIGHT", -7, 0)
 --------------------------------
 ------// third main frame //----
 --------------------------------
@@ -644,7 +665,7 @@ local function generateDungeonsFrames()
 
         -- dungeons title --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title = dungeonsFrames["dungeonFrame" .. dungeonsK].border:CreateFontString(nil, "OVERLAY")
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetFont("Fonts\\MORPHEUS.TTF", 20, "OUTLINE")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetFont(MORPHEUS_FONT, 20, "OUTLINE")
         --dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(0.95, 0.78, 0, 1)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(Helpers:hexadecimalToBlizzardColor(249), Helpers:hexadecimalToBlizzardColor(204), Helpers:hexadecimalToBlizzardColor(0), 1)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetWidth(130)
