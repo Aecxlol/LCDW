@@ -18,12 +18,13 @@ local FRAME_TITLE_CONTAINER_WIDTH = 100
 local FRAME_TITLE_CONTAINER_HEIGHT = 40
 local GUIDE_WIDTH = 850
 local GUIDE_HEIGHT = 850
+local ICONS_PATH = "Interface\\ICONS\\"
 local PVE_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
 local PVP_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pvp\\"
 local GLOSSARY_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\glossary\\"
 local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
 local DUNGEONS_ICONS_PATH = "Interface\\ENCOUNTERJOURNAL\\UI-EJ-DUNGEONBUTTON-"
-local CLASSES_ICONS_PATH = "Interface\\ICONS\\ClassIcon_"
+local CLASSES_ICONS_PATH = ICONS_PATH .. "ClassIcon_"
 local ARROW_TITLE_SECTION = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
 local QUESTIONMARK_PATH = "Interface\\Calendar\\EventNotification"
 local PVP_ICON = "Interface\\Calendar\\UI-Calendar-Event-PVP"
@@ -66,19 +67,20 @@ local dungeons = {
     { "L'Autre côté", DUNGEONS_ICONS_PATH .. "TheOtherSide", DUNGEON_THUMBNAIL_PATH .. "TheOtherSide" },
     { "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "SanguineDepths", DUNGEON_THUMBNAIL_PATH .. "SanguineDepths" }
 }
+
 local classes = {
-    { "Chaman", CLASSES_ICONS_PATH .. "Shaman" },
-    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter" },
-    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter" },
-    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight" },
-    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock" },
-    { "Druide", CLASSES_ICONS_PATH .. "Druid" },
-    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior" },
-    { "Mage", CLASSES_ICONS_PATH .. "Mage" },
-    { "Moine", CLASSES_ICONS_PATH .. "Monk" },
-    { "Paladin", CLASSES_ICONS_PATH .. "Paladin" },
-    { "Prêtre", CLASSES_ICONS_PATH .. "Priest" },
-    { "Voleur", CLASSES_ICONS_PATH .. "Rogue" }
+    { "Chaman", CLASSES_ICONS_PATH .. "Shaman", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Druide", CLASSES_ICONS_PATH .. "Druid", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Mage", CLASSES_ICONS_PATH .. "Mage", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Moine", CLASSES_ICONS_PATH .. "Monk", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Paladin", CLASSES_ICONS_PATH .. "Paladin", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"} },
+    { "Prêtre", CLASSES_ICONS_PATH .. "Priest", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
+    { "Voleur", CLASSES_ICONS_PATH .. "Rogue", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  }
 }
 
 local isGuideSelected = false
@@ -118,8 +120,6 @@ local foldersItemsNb = {
     },
     glossary = 6
 }
-
-local notAvailableFrame = {}
 
 local LCDW = LibStub("AceAddon-3.0"):NewAddon("LCDW", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
@@ -204,60 +204,62 @@ LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:RegisterForDrag("LeftButton")
 LCDWFrame:SetScript("OnDragStart", LCDWFrame.StartMoving)
 LCDWFrame:SetScript("OnDragStop", LCDWFrame.StopMovingOrSizing)
--- edge --
-LCDWFrame.edge = CreateFrame("Frame", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
-LCDWFrame.edge:SetSize(LCDWFrame:GetWidth() + 5, LCDWFrame:GetHeight() + 5)
-LCDWFrame.edge:SetPoint("CENTER", LCDWFrame, "CENTER")
-LCDWFrame.edge:SetBackdrop({
-    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 16, edgeSize = 16
-})
---local function createBorder(frameToAttach, isACorner, borderSide, frameName, point, relativePoint, ofsx, ofsy)
---
---    local width = (isACorner) and 100 or 256
---    local height = 7
---    local frameToAttach = frameToAttach
---
---    local coord = {
---        right = (isACorner) and 0.565 or 1,
---        top = (isACorner) and 0.5 or 0.467,
---        bottom = (isACorner) and 0.545 or 0.5
---    }
---    local borderSideTextureAngle = {
---        top = Helpers:degreesToRadians(-180),
---        left = Helpers:degreesToRadians(-90),
---        right = Helpers:degreesToRadians(90),
---    }
---
---    frameName = frameToAttach:CreateTexture(nil, "BACKGROUND")
---    frameName:SetTexture("Interface\\Calendar\\CALENDARFRAME_TOPANDBOTTOM")
---    frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
---    frameName:SetSize(width, height)
---    frameName:SetTexCoord(0, coord["right"], coord["top"], coord["bottom"])
---
---    if borderSide ~= "bottom" then
---        frameName:SetRotation(borderSideTextureAngle[borderSide])
---    end
---end
+
+local function createBorder(frameToAttach, isACorner, borderSide, frameName, point, relativePoint, ofsx, ofsy)
+
+    local width = (isACorner) and 100 or 256
+    local height = 7
+    local frameToAttach = frameToAttach
+
+    local coord = {
+        right = (isACorner) and 0.565 or 1,
+        top = (isACorner) and 0.5 or 0.467,
+        bottom = (isACorner) and 0.545 or 0.5
+    }
+    local borderSideTextureAngle = {
+        top = Helpers:degreesToRadians(-180),
+        left = Helpers:degreesToRadians(-90),
+        right = Helpers:degreesToRadians(90),
+    }
+
+    frameName = frameToAttach:CreateTexture(nil, "BACKGROUND")
+    frameName:SetTexture("Interface\\Calendar\\CALENDARFRAME_TOPANDBOTTOM")
+    frameName:SetPoint(point, frameToAttach, relativePoint, ofsx, ofsy)
+    frameName:SetSize(width, height)
+    frameName:SetTexCoord(0, coord["right"], coord["top"], coord["bottom"])
+
+    if borderSide ~= "bottom" then
+        frameName:SetRotation(borderSideTextureAngle[borderSide])
+    end
+end
 -- corner border textures --
---createBorder(LCDWFrame, true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
---createBorder(LCDWFrame, true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
---createBorder(LCDWFrame, true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
---createBorder(LCDWFrame, true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -7)
----- side border textures --
----- LEFT --
---createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
---createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorderTwo, "LEFT", "LEFT", -130, 124)
----- TOP --
---createBorder(LCDWFrame, false, "top", LCDWFrame.topBorder, "TOP", "TOP", -135, 6)
---createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderTwo, "TOP", "TOP", 121, 6)
---createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
----- RIGHT --
---createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 129, 30)
---createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 129, -125)
----- BOTTOM --
---createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -6)
---createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -6)
---createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -6)
+createBorder(LCDWFrame, true, "left", LCDWFrame.leftBottomBorderCorner, "BOTTOMLEFT", "BOTTOMLEFT", -53, 40)
+createBorder(LCDWFrame, true, "top", LCDWFrame.topLeftBorderCorner, "TOPLEFT", "TOPLEFT", -5, 7)
+createBorder(LCDWFrame, true, "right", LCDWFrame.rightTopBorderCorner, "TOPRIGHT", "TOPRIGHT", 52.5, -40)
+createBorder(LCDWFrame, true, "bottom", LCDWFrame.bottomRightBorderCorner, "BOTTOMRIGHT", "BOTTOMRIGHT", 5, -7)
+-- side border textures --
+-- LEFT --
+createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorder, "LEFT", "LEFT", -130, -30)
+createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorderTwo, "LEFT", "LEFT", -130, 124)
+createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorderThree, "LEFT", "LEFT", -130, 230)
+createBorder(LCDWFrame, false, "left", LCDWFrame.leftBorderFour, "LEFT", "LEFT", -130, -137)
+-- TOP --
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorder, "TOP", "TOP", -135, 6)
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderTwo, "TOP", "TOP", 121, 6)
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderThree, "TOP", "TOP", 230, 6)
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderFour, "TOP", "TOP", -290, 6)
+createBorder(LCDWFrame, false, "top", LCDWFrame.topBorderFive, "TOP", "TOP", 385, 6)
+-- RIGHT --
+createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorder, "RIGHT", "RIGHT", 130, 30)
+createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 130, -125)
+createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 130, -230)
+createBorder(LCDWFrame, false, "right", LCDWFrame.rightBorderTwo, "RIGHT", "RIGHT", 130, 137)
+-- BOTTOM --
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorder, "BOTTOMLEFT", "BOTTOMLEFT", 0, -6)
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderTwo, "BOTTOMLEFT", "BOTTOMLEFT", 256, -6)
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderThree, "BOTTOMLEFT", "BOTTOMLEFT", 380, -6)
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderFour, "BOTTOMLEFT", "BOTTOMLEFT", 635, -6)
+createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderFour, "BOTTOMLEFT", "BOTTOMLEFT", 685, -6)
 --------------------------------
 -----//  second main frame //---
 --------------------------------
@@ -435,6 +437,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     local iconWidth = 30
     local iconHeight = 30
     local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
+    local titleAndGuideContainerFrame = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame
     isGuideSelected = true
 
     -- everytime a guide is loaded, reset the scroll --
@@ -447,16 +450,35 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     -- show the scroll frame --
     LCDWFrame.backgroundContainerFrame.scrollFrame:Show()
     -- parent frame that appears after selecting a guide, it contains the title and the guide selected --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "CENTER")
+    titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame)
+    titleAndGuideContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
+    titleAndGuideContainerFrame:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "CENTER")
+    -- classes specs parent frame --
+    if guideType == "pvp" then
+        titleAndGuideContainerFrame.specsParentFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+        titleAndGuideContainerFrame.specsParentFrame:SetSize(350, 50)
+        titleAndGuideContainerFrame.specsParentFrame:SetPoint("TOP", titleAndGuideContainerFrame, "TOP", 0, -28)
+        titleAndGuideContainerFrame.specsParentFrame:SetBackdrop({
+            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
+        })
+        -- from 1 to the number of the specs items --
+        -- the digit 3 represents the specs array --
+        for k, v in ipairs(classes[id][3]) do
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame = CreateFrame("BUTTON", nil, titleAndGuideContainerFrame.specsParentFrame, BackdropTemplateMixin and "BackdropTemplate")
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(30, 30)
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", k * 60, 0)
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetBackdrop({
+                bgFile = classes[id][3][k]
+            })
+        end
+    end
     -- reset function which does hide everyframe but the homepage frame --
-    function LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:resetAll()
+    function titleAndGuideContainerFrame:resetAll()
         isContextMenuOpen = false
         -- hide the guide texture
         if isGuideTextureCreated then
-            if LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:IsShown() then
-                LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:Hide()
+            if titleAndGuideContainerFrame.guideParentFrame:IsShown() then
+                titleAndGuideContainerFrame.guideParentFrame:Hide()
             end
         end
         -- hide the scroll frame --
@@ -465,8 +487,8 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         end
         -- hide guide currently displayed --
         if isGuideSelected then
-            if LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:IsShown() then
-                LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:Hide()
+            if titleAndGuideContainerFrame:IsShown() then
+                titleAndGuideContainerFrame:Hide()
                 isGuideSelected = false
             end
         end
@@ -476,57 +498,57 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         end
     end
     -- reset button --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.resetButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "UIPanelButtonTemplate")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.resetButton:SetSize(130, 40)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.resetButton:SetPoint("TOPRIGHT", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "TOPRIGHT", -80, -18)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.resetButton:SetText("Accueil")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.resetButton:SetScript("OnClick", function()
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame:resetAll()
+    titleAndGuideContainerFrame.resetButton = CreateFrame("Button", nil, titleAndGuideContainerFrame, "UIPanelButtonTemplate")
+    titleAndGuideContainerFrame.resetButton:SetSize(130, 40)
+    titleAndGuideContainerFrame.resetButton:SetPoint("TOPRIGHT", titleAndGuideContainerFrame, "TOPRIGHT", -80, -18)
+    titleAndGuideContainerFrame.resetButton:SetText("Accueil")
+    titleAndGuideContainerFrame.resetButton:SetScript("OnClick", function()
+        titleAndGuideContainerFrame:resetAll()
     end)
     -- title and icon container --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "TOPLEFT", 2, -3)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:SetBackdrop({
+    titleAndGuideContainerFrame.titleContainer = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+    titleAndGuideContainerFrame.titleContainer:SetPoint("TOPLEFT", titleAndGuideContainerFrame, "TOPLEFT", 2, -3)
+    titleAndGuideContainerFrame.titleContainer:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
     })
     -- icon --
     if icon then
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:CreateTexture(nil, "ARTWORK")
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer, "LEFT", 10, 0)
+        titleAndGuideContainerFrame.titleContainer.icon = titleAndGuideContainerFrame.titleContainer:CreateTexture(nil, "ARTWORK")
+        titleAndGuideContainerFrame.titleContainer.icon:SetPoint("LEFT", titleAndGuideContainerFrame.titleContainer, "LEFT", 10, 0)
         if thumbnailCategory == "glossary" then
-            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(QUESTIONMARK_PATH)
+            titleAndGuideContainerFrame.titleContainer.icon:SetTexture(QUESTIONMARK_PATH)
         elseif thumbnailCategory == "class" then
-            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(classes[id][ICON_COL])
+            titleAndGuideContainerFrame.titleContainer.icon:SetTexture(classes[id][ICON_COL])
         else
-            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetTexture(dungeons[id][DUNGEON_THUMBNAIL_COL])
+            titleAndGuideContainerFrame.titleContainer.icon:SetTexture(dungeons[id][DUNGEON_THUMBNAIL_COL])
         end
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.icon:SetSize(iconWidth, 30)
+        titleAndGuideContainerFrame.titleContainer.icon:SetSize(iconWidth, 30)
     end
     -- title --
-    UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.title, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer, nil, 23, nil, name, "LEFT", "LEFT", iconWidth + 20, 0, nil, nil, nil, true)
+    UIElements:CreateFontString2(titleAndGuideContainerFrame.titleContainer.title, titleAndGuideContainerFrame.titleContainer, nil, 23, nil, name, "LEFT", "LEFT", iconWidth + 20, 0, nil, nil, nil, true)
     -- open context menu icon --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer, BackdropTemplateMixin and "BackdropTemplate")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetSize(35, 35)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer, "LEFT", titleWidth + iconWidth + 20, -1)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetBackdrop({
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton = CreateFrame("Button", nil, titleAndGuideContainerFrame.titleContainer, BackdropTemplateMixin and "BackdropTemplate")
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetSize(35, 35)
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetPoint("LEFT", titleAndGuideContainerFrame.titleContainer, "LEFT", titleWidth + iconWidth + 20, -1)
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetBackdrop({
         bgFile = "Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up",
         insets = { left = 4, right = 4, top = 4, bottom = 4 }
     })
     -- open context menu icon hover --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:CreateTexture(nil, "BACKGROUND")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAllPoints(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(0)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnEnter", function()
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(1)
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover = titleAndGuideContainerFrame.titleContainer.openContextMenuButton:CreateTexture(nil, "BACKGROUND")
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetTexture("Interface\\Buttons\\CheckButtonGlow")
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAllPoints(titleAndGuideContainerFrame.titleContainer.openContextMenuButton)
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(0)
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnEnter", function()
+        titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(1)
     end);
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnLeave", function()
-        LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(0)
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnLeave", function()
+        titleAndGuideContainerFrame.titleContainer.openContextMenuButton.Hover:SetAlpha(0)
     end);
     -- click handler --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnClick", function()
+    titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetScript("OnClick", function()
         if isContextMenuOpen then
-            LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton.dropDown:Hide()
+            titleAndGuideContainerFrame.titleContainer.openContextMenuButton.dropDown:Hide()
             isContextMenuOpen = false
         else
             isContextMenuOpen = true
@@ -540,31 +562,31 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         end
     end)
 
-    local arrowIconWidth = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton:GetWidth()
+    local arrowIconWidth = titleAndGuideContainerFrame.titleContainer.openContextMenuButton:GetWidth()
     -- title container size --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 25 + arrowIconWidth, 50)
+    titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 25 + arrowIconWidth, 50)
     -- guide frame --
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.scrollFrame)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight() - 100)
-    LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame, "BOTTOM")
+    titleAndGuideContainerFrame.guideParentFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.scrollFrame)
+    titleAndGuideContainerFrame.guideParentFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight() - 100)
+    titleAndGuideContainerFrame.guideParentFrame:SetPoint("BOTTOM", titleAndGuideContainerFrame, "BOTTOM")
     -- core image --
-    LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
+    LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id, titleAndGuideContainerFrame)
 
     isGuideTextureCreated = true
     -- set the scroll child to be able to scroll --
-    LCDWFrame.backgroundContainerFrame.scrollFrame:SetScrollChild(LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame)
+    LCDWFrame.backgroundContainerFrame.scrollFrame:SetScrollChild(titleAndGuideContainerFrame.guideParentFrame)
     LCDWFrame.backgroundContainerFrame.scrollFrame.ScrollBar:ClearAllPoints()
     -- scrollbar element size --
     LCDWFrame.backgroundContainerFrame.scrollFrame.ScrollBar:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame.scrollFrame, "TOPRIGHT", -12, -15)
     LCDWFrame.backgroundContainerFrame.scrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", LCDWFrame.backgroundContainerFrame.scrollFrame, "BOTTOMRIGHT", -7, 18)
 end
 
-function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
+function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id, frame)
     if guideType == "pve" then
         for i = 1, foldersItemsNb[guideType][id]["d" .. id] do
-            pveGuidesTextures["pveTexture" .. i] = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            pveGuidesTextures["pveTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
             if i == 1 then
-                pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
+                pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
             else
                 pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", pveGuidesTextures["pveTexture" .. i - 1], "BOTTOM", 0, -20)
             end
@@ -573,10 +595,10 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
         end
     elseif guideType == "pvp" then
         for i = 1, foldersItemsNb[guideType]["c" .. id] do
-            pvpGuidesTextures["pvpTexture" .. i] = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            pvpGuidesTextures["pvpTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
             -- first texture at the top of the guide parent frame --
             if i == 1 then
-                pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
+                pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
                 -- and the rest under 20 px from one another --
             else
                 pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", pvpGuidesTextures["pvpTexture" .. i - 1], "BOTTOM", 0, -20)
@@ -586,9 +608,9 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id)
         end
     else
         for i = 1, foldersItemsNb[guideType] do
-            glossaryTextures["glossaryTexture" .. i] = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            glossaryTextures["glossaryTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
             if i == 1 then
-                glossaryTextures["glossaryTexture" .. i]:SetPoint("TOP", LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.guideParentFrame, "TOP")
+                glossaryTextures["glossaryTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
             else
                 glossaryTextures["glossaryTexture" .. i]:SetPoint("TOP", glossaryTextures["glossaryTexture" .. i - 1], "BOTTOM", 0, -20)
             end
@@ -618,7 +640,7 @@ local function generateDungeonsFrames()
 
         -- not available frame --
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetFrameStrata("TOOLTIP")
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
@@ -637,7 +659,7 @@ local function generateDungeonsFrames()
         else
             dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY)
             if not foldersItemsNb["pve"][dungeonsK]["isAvailable"] then
-                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + 1 + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY - 1)
+                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY)
             end
         end
 
@@ -668,7 +690,6 @@ local function generateDungeonsFrames()
         -- dungeons title --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title = dungeonsFrames["dungeonFrame" .. dungeonsK].border:CreateFontString(nil, "OVERLAY")
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetFont(MORPHEUS_FONT, 20, "OUTLINE")
-        --dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(0.95, 0.78, 0, 1)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(Helpers:hexadecimalToBlizzardColor(249), Helpers:hexadecimalToBlizzardColor(204), Helpers:hexadecimalToBlizzardColor(0), 1)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetWidth(130)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetHeight(55)
