@@ -317,7 +317,6 @@ LCDWFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:SetPoint("CENTER", 0, 0)
 LCDWFrame:SetMovable(true)
 LCDWFrame:SetClampedToScreen(true)
-LCDWFrame:SetFrameStrata("DIALOG")
 LCDWFrame:SetResizable(true)
 LCDWFrame:EnableMouse(true)
 LCDWFrame:SetMinResize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
@@ -764,7 +763,7 @@ local function generateDungeonsFrames()
         -- not available frame --
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetFrameStrata("TOOLTIP")
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetFrameStrata("HIGH")
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
         })
