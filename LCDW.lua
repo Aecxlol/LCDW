@@ -58,29 +58,149 @@ local pvpGuidesTextures = {}
 local glossaryTextures = {}
 
 local dungeons = {
-    { "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "NecroticWake", DUNGEON_THUMBNAIL_PATH .. "NecroticWake" },
-    { "Malepeste", DUNGEONS_ICONS_PATH .. "Plaguefall", DUNGEON_THUMBNAIL_PATH .. "Plaguefall" },
-    { "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "MistsofTirnaScithe", DUNGEON_THUMBNAIL_PATH .. "MistsofTirnaScithe" },
-    { "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "HallsofAtonement", DUNGEON_THUMBNAIL_PATH .. "HallsofAtonement" },
-    { "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "SpiresofAscension", DUNGEON_THUMBNAIL_PATH .. "SpiresofAscension" },
-    { "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "TheaterofPain", DUNGEON_THUMBNAIL_PATH .. "TheaterofPain" },
-    { "L'Autre côté", DUNGEONS_ICONS_PATH .. "TheOtherSide", DUNGEON_THUMBNAIL_PATH .. "TheOtherSide" },
-    { "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "SanguineDepths", DUNGEON_THUMBNAIL_PATH .. "SanguineDepths" }
+    {
+        "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "NecroticWake",
+        DUNGEON_THUMBNAIL_PATH .. "NecroticWake"
+    },
+    {
+        "Malepeste", DUNGEONS_ICONS_PATH .. "Plaguefall",
+        DUNGEON_THUMBNAIL_PATH .. "Plaguefall"
+    },
+    {
+        "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "MistsofTirnaScithe",
+        DUNGEON_THUMBNAIL_PATH .. "MistsofTirnaScithe"
+    },
+    {
+        "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "HallsofAtonement",
+        DUNGEON_THUMBNAIL_PATH .. "HallsofAtonement"
+    },
+    {
+        "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "SpiresofAscension",
+        DUNGEON_THUMBNAIL_PATH .. "SpiresofAscension"
+    },
+    {
+        "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "TheaterofPain",
+        DUNGEON_THUMBNAIL_PATH .. "TheaterofPain"
+    },
+    {
+        "L'Autre côté", DUNGEONS_ICONS_PATH .. "TheOtherSide",
+        DUNGEON_THUMBNAIL_PATH .. "TheOtherSide"
+    },
+    {
+        "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "SanguineDepths",
+        DUNGEON_THUMBNAIL_PATH .. "SanguineDepths"
+    }
 }
 
 local classes = {
-    { "Chaman", CLASSES_ICONS_PATH .. "Shaman", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Chasseur", CLASSES_ICONS_PATH .. "Hunter", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Chasseur de Démon", CLASSES_ICONS_PATH .. "DemonHunter", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Chevalier de la Mort", CLASSES_ICONS_PATH .. "DeathKnight", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Démoniste", CLASSES_ICONS_PATH .. "Warlock", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Druide", CLASSES_ICONS_PATH .. "Druid", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Guerrier", CLASSES_ICONS_PATH .. "Warrior", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Mage", CLASSES_ICONS_PATH .. "Mage", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Moine", CLASSES_ICONS_PATH .. "Monk", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Paladin", CLASSES_ICONS_PATH .. "Paladin", {{ICONS_PATH .. "PALADIN_HOLY", "Sacré"}, {ICONS_PATH .. "Paladin_Protection", "Protection"}, {ICONS_PATH .. "Paladin_Retribution", "Vindicte"}} },
-    { "Prêtre", CLASSES_ICONS_PATH .. "Priest", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Voleur", CLASSES_ICONS_PATH .. "Rogue", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  }
+    {
+        "Chaman",
+        CLASSES_ICONS_PATH .. "Shaman",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Élémentaire"},
+            {ICONS_PATH .. "Paladin_Protection", "Amélioration"},
+            {ICONS_PATH .. "Paladin_Retribution", "Restauration"}
+        }
+    },
+    {
+        "Chasseur",
+        CLASSES_ICONS_PATH .. "Hunter",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Précision"},
+            {ICONS_PATH .. "Paladin_Protection", "Maîtrise des bêtes"},
+            {ICONS_PATH .. "Paladin_Retribution", "Survie"}
+        }
+    },
+    {
+        "Chasseur de Démon",
+        CLASSES_ICONS_PATH .. "DemonHunter",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Vengeance"},
+            {ICONS_PATH .. "Paladin_Protection", "Dévastation"}
+        }
+    },
+    {
+        "Chevalier de la Mort",
+        CLASSES_ICONS_PATH .. "DeathKnight",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Impie"},
+            {ICONS_PATH .. "Paladin_Protection", "Givre"},
+            {ICONS_PATH .. "Paladin_Retribution", "Sang"}
+        }
+    },
+    {
+        "Démoniste",
+        CLASSES_ICONS_PATH .. "Warlock",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Démonologie"},
+            {ICONS_PATH .. "Paladin_Protection", "Affliction"},
+            {ICONS_PATH .. "Paladin_Retribution", "Destruction"}
+        }
+    },
+    {
+        "Druide",
+        CLASSES_ICONS_PATH .. "Druid",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Farouche"},
+            {ICONS_PATH .. "Paladin_Protection", "Équilibre"},
+            {ICONS_PATH .. "Paladin_Retribution", "Gardien"},
+            {ICONS_PATH .. "Paladin_Retribution", "Restauration"}
+        }
+    },
+    {
+        "Guerrier",
+        CLASSES_ICONS_PATH .. "Warrior",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Armes"},
+            {ICONS_PATH .. "Paladin_Protection", "Fureur"},
+            {ICONS_PATH .. "Paladin_Retribution", "Protection"}
+        }
+    },
+    {
+        "Mage",
+        CLASSES_ICONS_PATH .. "Mage",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Arcanes"},
+            {ICONS_PATH .. "Paladin_Protection", "Feu"},
+            {ICONS_PATH .. "Paladin_Retribution", "Givre"}
+        }
+    },
+    {
+        "Moine",
+        CLASSES_ICONS_PATH .. "Monk",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Maître brasseur"},
+            {ICONS_PATH .. "Paladin_Protection", "Marche-vent"},
+            {ICONS_PATH .. "Paladin_Retribution", "Tisse-brume"}
+        }
+    },
+    {
+        "Paladin",
+        CLASSES_ICONS_PATH .. "Paladin",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Sacré"},
+            {ICONS_PATH .. "Paladin_Protection", "Protection"},
+            {ICONS_PATH .. "Paladin_Retribution", "Vindicte"}
+        }
+    },
+    {
+        "Prêtre",
+        CLASSES_ICONS_PATH .. "Priest",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Discipline"},
+            {ICONS_PATH .. "Paladin_Protection", "Ombre"},
+            {ICONS_PATH .. "Paladin_Retribution", "Sacré"}
+        }
+    },
+    {
+        "Voleur",
+        CLASSES_ICONS_PATH .. "Rogue",
+        {
+            {ICONS_PATH .. "PALADIN_HOLY", "Assassinat"},
+            {ICONS_PATH .. "Paladin_Protection", "Hors-la-loi"},
+            {ICONS_PATH .. "Paladin_Retribution", "Finesse"}
+        }
+    }
 }
 print(#classes[10][3])
 local isGuideSelected = false
@@ -471,7 +591,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
                 bgFile = classes[id][3][k][1]
             })
             -- specs names --
-            UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.specsFrame.specsName, titleAndGuideContainerFrame.specsParentFrame.specsFrame, nil, 14, nil, classes[id][3][k][2], "TOP", "BOTTOM", 0, -2)
+            UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.specsFrame.specsName, titleAndGuideContainerFrame.specsParentFrame.specsFrame, nil, 11, nil, classes[id][3][k][2], "TOP", "BOTTOM", 0, -2)
         end
     end
     -- reset function which does hide everyframe but the homepage frame --
