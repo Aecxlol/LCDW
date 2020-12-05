@@ -501,8 +501,8 @@ UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.allElementsConta
 --------------------------------
 --// third main frame prime //--
 --------------------------------
-local function openContextMenu(pageNumber)
-    local openContextMenuButton = LCDWFrame.backgroundContainerFrame.titleAndGuideContainerFrame.titleContainer.openContextMenuButton
+local function openContextMenu(pageNumber, parentFrame)
+    local openContextMenuButton = parentFrame.titleContainer.openContextMenuButton
     openContextMenuButton.dropDown = CreateFrame("Frame", "GlossaryMenu", openContextMenuButton, "UIDropDownMenuTemplate")
 
     UIDropDownMenu_Initialize(openContextMenuButton.dropDown, function(self, level, menuList)
@@ -571,9 +571,9 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         titleAndGuideContainerFrame.specsParentFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         titleAndGuideContainerFrame.specsParentFrame:SetSize(350, 70)
         titleAndGuideContainerFrame.specsParentFrame:SetPoint("TOP", titleAndGuideContainerFrame, "TOP", 0, -28)
-        titleAndGuideContainerFrame.specsParentFrame:SetBackdrop({
-            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
-        })
+        --titleAndGuideContainerFrame.specsParentFrame:SetBackdrop({
+        --    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
+        --})
         local parentWidth = titleAndGuideContainerFrame.specsParentFrame:GetWidth()
         -- frame title --
         UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.title, titleAndGuideContainerFrame.specsParentFrame, nil, 15, nil, "Spécialisation", "TOP", "TOP", 0, -5, 252, 186, 3)
@@ -675,11 +675,11 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         else
             isContextMenuOpen = true
             if guideType == "pve" then
-                openContextMenu(foldersItemsNb[guideType]["d" .. id])
+                openContextMenu(foldersItemsNb[guideType]["d" .. id], titleAndGuideContainerFrame)
             elseif guideType == "pvp" then
-                openContextMenu(foldersItemsNb[guideType]["c" .. id])
+                openContextMenu(foldersItemsNb[guideType]["c" .. id], titleAndGuideContainerFrame)
             else
-                openContextMenu(foldersItemsNb[guideType])
+                openContextMenu(foldersItemsNb[guideType], titleAndGuideContainerFrame)
             end
         end
     end)
