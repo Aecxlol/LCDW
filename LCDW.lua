@@ -202,7 +202,7 @@ local classes = {
         }
     }
 }
-print(#classes[10][3])
+
 local isGuideSelected = false
 local isGuideTextureCreated = false
 local isContextMenuOpen = false
@@ -648,7 +648,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         else
             isContextMenuOpen = true
             if guideType == "pve" then
-                openContextMenu(foldersItemsNb[guideType]["d" .. id], titleAndGuideContainerFrame)
+                openContextMenu(foldersItemsNb[guideType][id]["d" .. id], titleAndGuideContainerFrame)
             elseif guideType == "pvp" then
                 openContextMenu(foldersItemsNb[guideType]["c" .. id], titleAndGuideContainerFrame)
             else
