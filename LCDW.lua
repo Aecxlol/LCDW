@@ -78,11 +78,11 @@ local classes = {
     { "Guerrier", CLASSES_ICONS_PATH .. "Warrior", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
     { "Mage", CLASSES_ICONS_PATH .. "Mage", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
     { "Moine", CLASSES_ICONS_PATH .. "Monk", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
-    { "Paladin", CLASSES_ICONS_PATH .. "Paladin", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"} },
+    { "Paladin", CLASSES_ICONS_PATH .. "Paladin", {{ICONS_PATH .. "PALADIN_HOLY", "Sacré"}, {ICONS_PATH .. "Paladin_Protection", "Protection"}, {ICONS_PATH .. "Paladin_Retribution", "Vindicte"}} },
     { "Prêtre", CLASSES_ICONS_PATH .. "Priest", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  },
     { "Voleur", CLASSES_ICONS_PATH .. "Rogue", {ICONS_PATH .. "PALADIN_HOLY", ICONS_PATH .. "Paladin_Protection", ICONS_PATH .. "Paladin_Retribution"}  }
 }
-
+print(#classes[10][3])
 local isGuideSelected = false
 local isGuideTextureCreated = false
 local isContextMenuOpen = false
@@ -294,8 +294,8 @@ LCDWFrame.backgroundContainerFrame.CloseButton:SetScript("OnClick", function(sel
 end)
 -- social networks container --
 LCDWFrame.backgroundContainerFrame.socialNetworks = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-LCDWFrame.backgroundContainerFrame.socialNetworks:SetSize(LCDWFrame:GetWidth() - 5, 29)
-LCDWFrame.backgroundContainerFrame.socialNetworks:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame, "BOTTOM", 0, 4)
+LCDWFrame.backgroundContainerFrame.socialNetworks:SetSize(LCDWFrame:GetWidth() - 3, 29)
+LCDWFrame.backgroundContainerFrame.socialNetworks:SetPoint("BOTTOM", LCDWFrame.backgroundContainerFrame, "BOTTOM", 0, 2)
 LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 })
@@ -357,7 +357,6 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     -- dungeons section name --
     UIElements:CreateFontString2(frameName.sectionTitle, frameName.icon, nil, 18, nil, title, "LEFT", "RIGHT", 10, 0, nil, nil, nil, true)
     frameName:SetSize(iconWidth + titleWidth + ofsx, 44)
-    print(iconWidth)
 end
 createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 42, -128, "Guides des donjons", PVE_ICON, 25, 25, 17, 0)
 createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 42, -103, "Guides des classes", PVP_ICON, 17, 17, 17, 0)
@@ -371,12 +370,6 @@ LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetBa
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetScript("OnClick", function()
     LCDWFrame.backgroundContainerFrame:showGuide(true, "Glossaire", nil, "glossary", "glossary")
 end)
---LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.blackSquare = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, BackdropTemplateMixin and "BackdropTemplate")
---LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.blackSquare:SetSize(45, 45)
---LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.blackSquare:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "TOPLEFT", 10, -10)
---LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.blackSquare:SetBackdrop({
---    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
---})
 
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon = LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:CreateTexture(nil, "ARTWORK")
 LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetSize(45, 45)
@@ -456,20 +449,29 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     -- classes specs parent frame --
     if guideType == "pvp" then
         titleAndGuideContainerFrame.specsParentFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-        titleAndGuideContainerFrame.specsParentFrame:SetSize(350, 50)
+        titleAndGuideContainerFrame.specsParentFrame:SetSize(350, 70)
         titleAndGuideContainerFrame.specsParentFrame:SetPoint("TOP", titleAndGuideContainerFrame, "TOP", 0, -28)
         titleAndGuideContainerFrame.specsParentFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
         })
+        local parentWidth = titleAndGuideContainerFrame.specsParentFrame:GetWidth()
+        -- frame title --
+        UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.title, titleAndGuideContainerFrame.specsParentFrame, nil, 15, nil, "Spécialisation", "TOP", "TOP", 0, -5, 252, 186, 3)
         -- from 1 to the number of the specs items --
         -- the digit 3 represents the specs array --
         for k, v in ipairs(classes[id][3]) do
+            -- specs icons --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame = CreateFrame("BUTTON", nil, titleAndGuideContainerFrame.specsParentFrame, BackdropTemplateMixin and "BackdropTemplate")
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(30, 30)
-            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", k * 60, 0)
+            local specFrameWidth = titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetWidth()
+            -- ofsx : parent frame width minus the number of spec frame times the spec frame width divided by the number of spec frame plus one (because there will be 4 spaces for 3 spec frames --
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetBackdrop({
-                bgFile = classes[id][3][k]
+                -- the digit 1 represents the path icon --
+                bgFile = classes[id][3][k][1]
             })
+            -- specs names --
+            UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.specsFrame.specsName, titleAndGuideContainerFrame.specsParentFrame.specsFrame, nil, 14, nil, classes[id][3][k][2], "TOP", "BOTTOM", 0, -2)
         end
     end
     -- reset function which does hide everyframe but the homepage frame --
