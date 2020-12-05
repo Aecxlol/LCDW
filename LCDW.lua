@@ -398,7 +398,7 @@ LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", ni
 LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, 0)
 -- title --
 UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, MORPHEUS_FONT, 23, false, "Le codex de Willios", "CENTER", "CENTER", 0, 0, 255, 255, 255, true)
-LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 80, FRAME_TITLE_CONTAINER_HEIGHT)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 50, FRAME_TITLE_CONTAINER_HEIGHT)
 -- scroll frame --
 LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil, LCDWFrame.backgroundContainerFrame, "UIPanelScrollFrameTemplate")
 -- scrollable zone size --
@@ -566,34 +566,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     titleAndGuideContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame)
     titleAndGuideContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
     titleAndGuideContainerFrame:SetPoint("CENTER", LCDWFrame.backgroundContainerFrame, "CENTER")
-    -- classes specs parent frame --
-    if guideType == "pvp" then
-        titleAndGuideContainerFrame.specsParentFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-        titleAndGuideContainerFrame.specsParentFrame:SetSize(350, 70)
-        titleAndGuideContainerFrame.specsParentFrame:SetPoint("TOP", titleAndGuideContainerFrame, "TOP", 0, -28)
-        --titleAndGuideContainerFrame.specsParentFrame:SetBackdrop({
-        --    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
-        --})
-        local parentWidth = titleAndGuideContainerFrame.specsParentFrame:GetWidth()
-        -- frame title --
-        UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.title, titleAndGuideContainerFrame.specsParentFrame, nil, 15, nil, "Spécialisation", "TOP", "TOP", 0, -5, 252, 186, 3)
-        -- from 1 to the number of the specs items --
-        -- the digit 3 represents the specs array --
-        for k, v in ipairs(classes[id][3]) do
-            -- specs icons --
-            titleAndGuideContainerFrame.specsParentFrame.specsFrame = CreateFrame("BUTTON", nil, titleAndGuideContainerFrame.specsParentFrame, BackdropTemplateMixin and "BackdropTemplate")
-            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(30, 30)
-            local specFrameWidth = titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetWidth()
-            -- ofsx : parent frame width minus the number of spec frame times the spec frame width divided by the number of spec frame plus one (because there will be 4 spaces for 3 spec frames --
-            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
-            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetBackdrop({
-                -- the digit 1 represents the path icon --
-                bgFile = classes[id][3][k][1]
-            })
-            -- specs names --
-            UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.specsFrame.specsName, titleAndGuideContainerFrame.specsParentFrame.specsFrame, nil, 11, nil, classes[id][3][k][2], "TOP", "BOTTOM", 0, -2)
-        end
-    end
+
     -- reset function which does hide everyframe but the homepage frame --
     function titleAndGuideContainerFrame:resetAll()
         isContextMenuOpen = false
@@ -622,17 +595,17 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     -- reset button --
     titleAndGuideContainerFrame.resetButton = CreateFrame("Button", nil, titleAndGuideContainerFrame, "UIPanelButtonTemplate")
     titleAndGuideContainerFrame.resetButton:SetSize(130, 40)
-    titleAndGuideContainerFrame.resetButton:SetPoint("TOPRIGHT", titleAndGuideContainerFrame, "TOPRIGHT", -80, -18)
+    titleAndGuideContainerFrame.resetButton:SetPoint("TOP", titleAndGuideContainerFrame, "TOP", 0, -30)
     titleAndGuideContainerFrame.resetButton:SetText("Accueil")
     titleAndGuideContainerFrame.resetButton:SetScript("OnClick", function()
         titleAndGuideContainerFrame:resetAll()
     end)
     -- title and icon container --
     titleAndGuideContainerFrame.titleContainer = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-    titleAndGuideContainerFrame.titleContainer:SetPoint("TOPLEFT", titleAndGuideContainerFrame, "TOPLEFT", 2, -3)
-    titleAndGuideContainerFrame.titleContainer:SetBackdrop({
-        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
-    })
+    titleAndGuideContainerFrame.titleContainer:SetPoint("TOPLEFT", titleAndGuideContainerFrame, "TOPLEFT", 90, -15)
+    --titleAndGuideContainerFrame.titleContainer:SetBackdrop({
+    --    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+    --})
     -- icon --
     if icon then
         titleAndGuideContainerFrame.titleContainer.icon = titleAndGuideContainerFrame.titleContainer:CreateTexture(nil, "ARTWORK")
@@ -687,6 +660,34 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     local arrowIconWidth = titleAndGuideContainerFrame.titleContainer.openContextMenuButton:GetWidth()
     -- title container size --
     titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 25 + arrowIconWidth, 50)
+    -- classes specs parent frame --
+    if guideType == "pvp" then
+        titleAndGuideContainerFrame.specsParentFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+        titleAndGuideContainerFrame.specsParentFrame:SetSize(320, 70)
+        titleAndGuideContainerFrame.specsParentFrame:SetPoint("TOPRIGHT", titleAndGuideContainerFrame, "TOPRIGHT", -50, 0)
+        --titleAndGuideContainerFrame.specsParentFrame:SetBackdrop({
+        --    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
+        --})
+        local parentWidth = titleAndGuideContainerFrame.specsParentFrame:GetWidth()
+        -- frame title --
+        UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.title, titleAndGuideContainerFrame.specsParentFrame, nil, 15, nil, "Spécialisation", "TOP", "TOP", 0, -5, 252, 186, 3)
+        -- from 1 to the number of the specs items --
+        -- the digit 3 represents the specs array --
+        for k, v in ipairs(classes[id][3]) do
+            -- specs icons --
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame = CreateFrame("BUTTON", nil, titleAndGuideContainerFrame.specsParentFrame, BackdropTemplateMixin and "BackdropTemplate")
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(30, 30)
+            local specFrameWidth = titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetWidth()
+            -- ofsx : parent frame width minus the number of spec frame times the spec frame width divided by the number of spec frame plus one (because there will be 4 spaces for 3 spec frames --
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetBackdrop({
+                -- the digit 1 represents the path icon --
+                bgFile = classes[id][3][k][1]
+            })
+            -- specs names --
+            UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.specsFrame.specsName, titleAndGuideContainerFrame.specsParentFrame.specsFrame, nil, 11, nil, classes[id][3][k][2], "TOP", "BOTTOM", 0, -2)
+        end
+    end
     -- guide frame --
     titleAndGuideContainerFrame.guideParentFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.scrollFrame)
     titleAndGuideContainerFrame.guideParentFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight() - 100)
