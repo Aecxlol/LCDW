@@ -594,15 +594,15 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     end
     -- reset button --
     titleAndGuideContainerFrame.resetButton = CreateFrame("Button", nil, titleAndGuideContainerFrame, "UIPanelButtonTemplate")
-    titleAndGuideContainerFrame.resetButton:SetSize(130, 40)
-    titleAndGuideContainerFrame.resetButton:SetPoint("TOP", titleAndGuideContainerFrame, "TOP", 0, -30)
+    titleAndGuideContainerFrame.resetButton:SetSize(110, 35)
+    titleAndGuideContainerFrame.resetButton:SetPoint("TOP", titleAndGuideContainerFrame, "TOP", 0, -33)
     titleAndGuideContainerFrame.resetButton:SetText("Accueil")
     titleAndGuideContainerFrame.resetButton:SetScript("OnClick", function()
         titleAndGuideContainerFrame:resetAll()
     end)
     -- title and icon container --
     titleAndGuideContainerFrame.titleContainer = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-    titleAndGuideContainerFrame.titleContainer:SetPoint("TOPLEFT", titleAndGuideContainerFrame, "TOPLEFT", 90, -15)
+    titleAndGuideContainerFrame.titleContainer:SetPoint("TOPLEFT", titleAndGuideContainerFrame, "TOPLEFT", 80, -15)
     --titleAndGuideContainerFrame.titleContainer:SetBackdrop({
     --    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
     --})
@@ -620,7 +620,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         titleAndGuideContainerFrame.titleContainer.icon:SetSize(iconWidth, 30)
     end
     -- title --
-    UIElements:CreateFontString2(titleAndGuideContainerFrame.titleContainer.title, titleAndGuideContainerFrame.titleContainer, nil, 23, nil, name, "LEFT", "LEFT", iconWidth + 20, 0, nil, nil, nil, true)
+    UIElements:CreateFontString2(titleAndGuideContainerFrame.titleContainer.title, titleAndGuideContainerFrame.titleContainer, nil, 21, nil, name, "LEFT", "LEFT", iconWidth + 20, 0, nil, nil, nil, true)
     -- open context menu icon --
     titleAndGuideContainerFrame.titleContainer.openContextMenuButton = CreateFrame("Button", nil, titleAndGuideContainerFrame.titleContainer, BackdropTemplateMixin and "BackdropTemplate")
     titleAndGuideContainerFrame.titleContainer.openContextMenuButton:SetSize(35, 35)
