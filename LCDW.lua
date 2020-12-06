@@ -241,8 +241,8 @@ local foldersItemsNb = {
             c1 = 3,
             atleastOneGuideSpecAvailable = true,
             {
-                spec1 = false,
-                spec2 = false,
+                spec1 = true,
+                spec2 = true,
                 spec3 = false
             }
         },
@@ -711,9 +711,6 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     -- title and icon container --
     titleAndGuideContainerFrame.titleContainer = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
     titleAndGuideContainerFrame.titleContainer:SetPoint("TOPLEFT", titleAndGuideContainerFrame, "TOPLEFT", 80, -15)
-    --titleAndGuideContainerFrame.titleContainer:SetBackdrop({
-    --    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
-    --})
     -- icon --
     if icon then
         titleAndGuideContainerFrame.titleContainer.icon = titleAndGuideContainerFrame.titleContainer:CreateTexture(nil, "ARTWORK")
@@ -787,11 +784,21 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             -- specs icons --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame = CreateFrame("BUTTON", nil, titleAndGuideContainerFrame.specsParentFrame, BackdropTemplateMixin and "BackdropTemplate")
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(30, 30)
+
             local specFrameWidth = titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetWidth()
             local specFrameHeight = titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetHeight()
 
+            -- not available frames --
+            titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame.specsParentFrame.specsFrame, BackdropTemplateMixin and "BackdropTemplate")
+            titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetSize(specFrameWidth + 2, specFrameHeight + 2)
+            titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetBackdrop({
+                bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
+            })
             -- ofsx : parent frame width minus the number of spec frame times the spec frame width divided by the number of spec frame plus one (because there will be 4 spaces for 3 spec frames --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
+            if not foldersItemsNb[guideType][k][1]["spec" .. k] then
+                titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
+            end
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(specFrameWidth, specFrameHeight)
             -- the digit 1 represents the path icon --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetNormalTexture(classes[id][3][k][1])
@@ -952,7 +959,7 @@ local function generateClassesFrames()
 
         -- not available frame --
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, classesFrames["classeFrame" .. classesK], BackdropTemplateMixin and "BackdropTemplate")
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 3, FRAME_HEIGHT + 4)
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
         })
@@ -964,12 +971,12 @@ local function generateClassesFrames()
         if classesK > ROW_MAX_CLASSES_ITEMS then
             classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), SECOND_ROW_OFSY)
             if not foldersItemsNb["pvp"][classesK]["atleastOneGuideSpecAvailable"] then
-                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), SECOND_ROW_OFSY)
+                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))) - 2, SECOND_ROW_OFSY + 1)
             end
         else
             classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), FIRST_ROW_OFSY)
             if not foldersItemsNb["pvp"][classesK]["atleastOneGuideSpecAvailable"] then
-                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), FIRST_ROW_OFSY)
+                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))) - 2, FIRST_ROW_OFSY + 1)
             end
         end
 
