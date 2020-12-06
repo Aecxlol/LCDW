@@ -316,6 +316,7 @@ LCDWFrame:Hide()
 LCDWFrame:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
 LCDWFrame:SetPoint("CENTER", 0, 0)
 LCDWFrame:SetMovable(true)
+LCDWFrame:SetFrameStrata("DIALOG")
 LCDWFrame:SetClampedToScreen(true)
 LCDWFrame:SetResizable(true)
 LCDWFrame:EnableMouse(true)
@@ -761,9 +762,8 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 
         -- not available frame --
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, dungeonsFrames["dungeonFrame" .. dungeonsK], BackdropTemplateMixin and "BackdropTemplate")
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetFrameStrata("HIGH")
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
         })
@@ -810,7 +810,7 @@ local function generateDungeonsFrames()
         end)
 
         -- dungeons title --
-        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title = dungeonsFrames["dungeonFrame" .. dungeonsK].border:CreateFontString(nil, "OVERLAY")
+        dungeonsFrames["dungeonFrame" .. dungeonsK].border.title = dungeonsFrames["dungeonFrame" .. dungeonsK]:CreateFontString(nil, "OVERLAY")
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetFont(MORPHEUS_FONT, 20, "OUTLINE")
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetTextColor(Helpers:hexadecimalToBlizzardColor(249), Helpers:hexadecimalToBlizzardColor(204), Helpers:hexadecimalToBlizzardColor(0), 1)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border.title:SetWidth(130)
