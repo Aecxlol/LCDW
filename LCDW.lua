@@ -260,7 +260,7 @@ local foldersItemsNb = {
     pveD = {
         {
             d1 = 3,
-            isAvailable = true
+            isAvailable = false
         },
         {
             d2 = 3,
@@ -652,12 +652,22 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     local _val1 = (ofsx ~= 0) and ofsx or 45
     frameName:SetSize(iconWidth + titleWidth + _val1, 44)
 end
+local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
+local guideTypeSectionTitleWidth = 230
+local guideTypeSectionTitleHeight = 45
+
+-- dungeon btn --
 allElementsContainerFrame.dungeonsBtn = CreateFrame("BUTTON", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-allElementsContainerFrame.dungeonsBtn:SetSize(220, 60)
-allElementsContainerFrame.dungeonsBtn:SetPoint("TOP", allElementsContainerFrame, "TOP", -140, -95)
+allElementsContainerFrame.dungeonsBtn:SetSize(guideTypeSectionTitleWidth, guideTypeSectionTitleHeight)
+allElementsContainerFrame.dungeonsBtn:SetPoint("TOP", allElementsContainerFrame, "TOP", -130, -80)
 allElementsContainerFrame.dungeonsBtn:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+    insets = { left = 4, right = 0, top = 4, bottom = 0 }
 })
+allElementsContainerFrame.dungeonsBtn:SetHighlightTexture(buttonTexture)
+allElementsContainerFrame.dungeonsBtn:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
+allElementsContainerFrame.dungeonsBtn:SetNormalTexture(buttonTexture)
+allElementsContainerFrame.dungeonsBtn:GetNormalTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
 allElementsContainerFrame.dungeonsBtn:SetScript("OnClick", function ()
     -- hide the parent raids frame --
     if allElementsContainerFrame.raidsFramesContainer:IsShown() then
@@ -667,14 +677,27 @@ allElementsContainerFrame.dungeonsBtn:SetScript("OnClick", function ()
     if not allElementsContainerFrame.dungeonsFramesContainer:IsShown() then
         allElementsContainerFrame.dungeonsFramesContainer:Show()
     end
+    if allElementsContainerFrame.raidsBtn:GetNormalTexture() then
+        if allElementsContainerFrame.raidsBtn:GetNormalTexture():IsShown() then
+            allElementsContainerFrame.raidsBtn:GetNormalTexture():Hide()
+        end
+    end
+    if not allElementsContainerFrame.dungeonsBtn:GetNormalTexture():IsShown() then
+        allElementsContainerFrame.dungeonsBtn:SetNormalTexture(buttonTexture)
+        allElementsContainerFrame.dungeonsBtn:GetNormalTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
+    end
 end)
-
+UIElements:CreateFontString2(allElementsContainerFrame.dungeonsBtn.title, allElementsContainerFrame.dungeonsBtn, nil, 18, nil, "Guides des donjons", "CENTER", "CENTER", 0, 0)
+-- raids btn --
 allElementsContainerFrame.raidsBtn = CreateFrame("BUTTON", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-allElementsContainerFrame.raidsBtn:SetSize(220, 60)
-allElementsContainerFrame.raidsBtn:SetPoint("TOP", allElementsContainerFrame, "TOP", 140, -95)
+allElementsContainerFrame.raidsBtn:SetSize(guideTypeSectionTitleWidth, guideTypeSectionTitleHeight)
+allElementsContainerFrame.raidsBtn:SetPoint("TOP", allElementsContainerFrame, "TOP", 120, -80)
 allElementsContainerFrame.raidsBtn:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+    insets = { left = 4, right = 0, top = 4, bottom = 0 }
 })
+allElementsContainerFrame.raidsBtn:SetHighlightTexture(buttonTexture)
+allElementsContainerFrame.raidsBtn:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
 allElementsContainerFrame.raidsBtn:SetScript("OnClick", function ()
     -- hide the parent dungeons frame --
     if allElementsContainerFrame.dungeonsFramesContainer:IsShown() then
@@ -684,13 +707,19 @@ allElementsContainerFrame.raidsBtn:SetScript("OnClick", function ()
     if not allElementsContainerFrame.raidsFramesContainer:IsShown() then
         allElementsContainerFrame.raidsFramesContainer:Show()
     end
+    if allElementsContainerFrame.dungeonsBtn:GetNormalTexture():IsShown() then
+        allElementsContainerFrame.dungeonsBtn:GetNormalTexture():Hide()
+    end
+    allElementsContainerFrame.raidsBtn:SetNormalTexture(buttonTexture)
+    allElementsContainerFrame.raidsBtn:GetNormalTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
 end)
---createSectionNameContainer(allElementsContainerFrame.dungeonsSectionNameContainer, allElementsContainerFrame, "LEFT", "TOPLEFT", 42, -128, "Guides des donjons", PVE_ICON, 25, 25, 17, 0)
+UIElements:CreateFontString2(allElementsContainerFrame.raidsBtn.title, allElementsContainerFrame.raidsBtn, nil, 18, nil, "Guides des raids", "CENTER", "CENTER", 0, 0)
+
 createSectionNameContainer(allElementsContainerFrame.classesSectionNameContainer, allElementsContainerFrame, "CENTER", "CENTER", 0, -103, "Guides des classes", PVP_ICON, 17, 17, 17, 0)
 -- glossary frame --
 allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
 allElementsContainerFrame.glossaryFrame:SetSize(320, 80)
-allElementsContainerFrame.glossaryFrame:SetPoint("TOPRIGHT", allElementsContainerFrame, "TOPRIGHT", 100, -95)
+allElementsContainerFrame.glossaryFrame:SetPoint("TOPLEFT", allElementsContainerFrame, "TOPLEFT", 35, -10)
 allElementsContainerFrame.glossaryFrame:SetBackdrop({
     bgFile = "Interface\\ENCOUNTERJOURNAL\\loottab-item-background",
 })
@@ -1162,9 +1191,9 @@ local function generateRaidsFrames()
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         raidsFrames["raidFrame" .. raidsK]:SetPoint("TOPLEFT", allElementsContainerFrame.raidsFramesContainer, "TOPLEFT", 40, 0)
-        --if not foldersItemsNb["pveR"][raidsK]["isAvailable"] then
-        --    allElementsContainerFrame.raidsFramesContainer.notAvailableFrame:SetPoint("TOPLEFT", allElementsContainerFrame.raidsFramesContainer, "TOPLEFT", 40, 0)
-        --end
+        if not foldersItemsNb["pveR"][raidsK]["isAvailable"] then
+            allElementsContainerFrame.raidsFramesContainer.notAvailableFrame:SetPoint("TOPLEFT", allElementsContainerFrame.raidsFramesContainer, "TOPLEFT", 40, 0)
+        end
 
         raidsFrames["raidFrame" .. raidsK]:SetBackdrop({
             bgFile = raids[raidsK][ICON_COL],
