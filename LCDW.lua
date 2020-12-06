@@ -97,108 +97,108 @@ local classes = {
         "Chaman",
         CLASSES_ICONS_PATH .. "Shaman",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Élémentaire"},
-            {ICONS_PATH .. "Paladin_Protection", "Amélioration"},
-            {ICONS_PATH .. "Paladin_Retribution", "Restauration"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Élémentaire" },
+            { ICONS_PATH .. "Paladin_Protection", "Amélioration" },
+            { ICONS_PATH .. "Paladin_Retribution", "Restauration" }
         }
     },
     {
         "Chasseur",
         CLASSES_ICONS_PATH .. "Hunter",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Précision"},
-            {ICONS_PATH .. "Paladin_Protection", "Maîtrise des bêtes"},
-            {ICONS_PATH .. "Paladin_Retribution", "Survie"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Précision" },
+            { ICONS_PATH .. "Paladin_Protection", "Maîtrise des bêtes" },
+            { ICONS_PATH .. "Paladin_Retribution", "Survie" }
         }
     },
     {
         "Chasseur de Démon",
         CLASSES_ICONS_PATH .. "DemonHunter",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Vengeance"},
-            {ICONS_PATH .. "Paladin_Protection", "Dévastation"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Vengeance" },
+            { ICONS_PATH .. "Paladin_Protection", "Dévastation" }
         }
     },
     {
         "Chevalier de la Mort",
         CLASSES_ICONS_PATH .. "DeathKnight",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Impie"},
-            {ICONS_PATH .. "Paladin_Protection", "Givre"},
-            {ICONS_PATH .. "Paladin_Retribution", "Sang"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Impie" },
+            { ICONS_PATH .. "Paladin_Protection", "Givre" },
+            { ICONS_PATH .. "Paladin_Retribution", "Sang" }
         }
     },
     {
         "Démoniste",
         CLASSES_ICONS_PATH .. "Warlock",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Démonologie"},
-            {ICONS_PATH .. "Paladin_Protection", "Affliction"},
-            {ICONS_PATH .. "Paladin_Retribution", "Destruction"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Démonologie" },
+            { ICONS_PATH .. "Paladin_Protection", "Affliction" },
+            { ICONS_PATH .. "Paladin_Retribution", "Destruction" }
         }
     },
     {
         "Druide",
         CLASSES_ICONS_PATH .. "Druid",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Farouche"},
-            {ICONS_PATH .. "Paladin_Protection", "Équilibre"},
-            {ICONS_PATH .. "Paladin_Retribution", "Gardien"},
-            {ICONS_PATH .. "Paladin_Retribution", "Restauration"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Farouche" },
+            { ICONS_PATH .. "Paladin_Protection", "Équilibre" },
+            { ICONS_PATH .. "Paladin_Retribution", "Gardien" },
+            { ICONS_PATH .. "Paladin_Retribution", "Restauration" }
         }
     },
     {
         "Guerrier",
         CLASSES_ICONS_PATH .. "Warrior",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Armes"},
-            {ICONS_PATH .. "Paladin_Protection", "Fureur"},
-            {ICONS_PATH .. "Paladin_Retribution", "Protection"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Armes" },
+            { ICONS_PATH .. "Paladin_Protection", "Fureur" },
+            { ICONS_PATH .. "Paladin_Retribution", "Protection" }
         }
     },
     {
         "Mage",
         CLASSES_ICONS_PATH .. "Mage",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Arcanes"},
-            {ICONS_PATH .. "Paladin_Protection", "Feu"},
-            {ICONS_PATH .. "Paladin_Retribution", "Givre"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Arcanes" },
+            { ICONS_PATH .. "Paladin_Protection", "Feu" },
+            { ICONS_PATH .. "Paladin_Retribution", "Givre" }
         }
     },
     {
         "Moine",
         CLASSES_ICONS_PATH .. "Monk",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Maître brasseur"},
-            {ICONS_PATH .. "Paladin_Protection", "Marche-vent"},
-            {ICONS_PATH .. "Paladin_Retribution", "Tisse-brume"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Maître brasseur" },
+            { ICONS_PATH .. "Paladin_Protection", "Marche-vent" },
+            { ICONS_PATH .. "Paladin_Retribution", "Tisse-brume" }
         }
     },
     {
         "Paladin",
         CLASSES_ICONS_PATH .. "Paladin",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Sacré"},
-            {ICONS_PATH .. "Paladin_Protection", "Protection"},
-            {ICONS_PATH .. "Paladin_Retribution", "Vindicte"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Sacré" },
+            { ICONS_PATH .. "Paladin_Protection", "Protection" },
+            { ICONS_PATH .. "Paladin_Retribution", "Vindicte" }
         }
     },
     {
         "Prêtre",
         CLASSES_ICONS_PATH .. "Priest",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Discipline"},
-            {ICONS_PATH .. "Paladin_Protection", "Ombre"},
-            {ICONS_PATH .. "Paladin_Retribution", "Sacré"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Discipline" },
+            { ICONS_PATH .. "Paladin_Protection", "Ombre" },
+            { ICONS_PATH .. "Paladin_Retribution", "Sacré" }
         }
     },
     {
         "Voleur",
         CLASSES_ICONS_PATH .. "Rogue",
         {
-            {ICONS_PATH .. "PALADIN_HOLY", "Assassinat"},
-            {ICONS_PATH .. "Paladin_Protection", "Hors-la-loi"},
-            {ICONS_PATH .. "Paladin_Retribution", "Finesse"}
+            { ICONS_PATH .. "PALADIN_HOLY", "Assassinat" },
+            { ICONS_PATH .. "Paladin_Protection", "Hors-la-loi" },
+            { ICONS_PATH .. "Paladin_Retribution", "Finesse" }
         }
     }
 }
@@ -213,30 +213,138 @@ local textureWidth
 -- this var represents the guides tree structure --
 -- d1 = 3 means that the dungeon one is 3 pages long --
 -- the boolean right after the comma means if the guide is available or not --
+-- c1 -> chaman
+-- c2 -> Chasseur
+-- c3 -> Chasseur de Démon
+-- c4 -> Chevalier de la Mort
+-- c5 -> Démoniste
+-- c6 -> Druide
+-- c7 -> Guerrier
+-- c8 -> Mage
+-- c9 -> Moine
+-- c10 -> Paladin
+-- c11 -> Prêtre
+-- c12 -> Voleur
 local foldersItemsNb = {
     pve = {
-        {d1 = 3, isAvailable = true},
-        {d2 = 3, isAvailable = true},
-        {d3 = 3, isAvailable = false},
-        {d4 = 3, isAvailable = true},
-        {d5 = 3, isAvailable = false},
-        {d6 = 3, isAvailable = true},
-        {d7 = 3, isAvailable = false},
-        {d8 = 3, isAvailable = true}
+        { d1 = 3, isAvailable = false },
+        { d2 = 3, isAvailable = false },
+        { d3 = 3, isAvailable = false },
+        { d4 = 3, isAvailable = false },
+        { d5 = 3, isAvailable = false },
+        { d6 = 3, isAvailable = false },
+        { d7 = 3, isAvailable = false },
+        { d8 = 3, isAvailable = false }
     },
     pvp = {
-        c1 = 3,
-        c2 = 3,
-        c3 = 3,
-        c4 = 3,
-        c5 = 3,
-        c6 = 3,
-        c7 = 3,
-        c8 = 3,
-        c9 = 3,
-        c10 = 3,
-        c11 = 3,
-        c12 = 3,
+        {
+            c1 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c2 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c3 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false
+            }
+        },
+        {
+            c4 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c5 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c6 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false,
+                spec4 = false
+            }
+        },
+        {
+            c7 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c8 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c9 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c10 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c11 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
+        {
+            c12 = 3,
+            atleastOneGuideSpecAvailable = false,
+            {
+                spec1 = false,
+                spec2 = false,
+                spec3 = false
+            }
+        },
     },
     glossary = 6
 }
@@ -662,6 +770,8 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     titleAndGuideContainerFrame.titleContainer:SetSize(titleWidth + iconWidth + 25 + arrowIconWidth, 50)
     -- classes specs parent frame --
     if guideType == "pvp" then
+        local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
+
         titleAndGuideContainerFrame.specsParentFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         titleAndGuideContainerFrame.specsParentFrame:SetSize(320, 70)
         titleAndGuideContainerFrame.specsParentFrame:SetPoint("TOPRIGHT", titleAndGuideContainerFrame, "TOPRIGHT", -50, 0)
@@ -678,12 +788,15 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             titleAndGuideContainerFrame.specsParentFrame.specsFrame = CreateFrame("BUTTON", nil, titleAndGuideContainerFrame.specsParentFrame, BackdropTemplateMixin and "BackdropTemplate")
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(30, 30)
             local specFrameWidth = titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetWidth()
+            local specFrameHeight = titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetHeight()
+
             -- ofsx : parent frame width minus the number of spec frame times the spec frame width divided by the number of spec frame plus one (because there will be 4 spaces for 3 spec frames --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
-            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetBackdrop({
-                -- the digit 1 represents the path icon --
-                bgFile = classes[id][3][k][1]
-            })
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(specFrameWidth, specFrameHeight)
+            -- the digit 1 represents the path icon --
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetNormalTexture(classes[id][3][k][1])
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetHighlightTexture(buttonTexture)
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
             -- specs names --
             UIElements:CreateFontString2(titleAndGuideContainerFrame.specsParentFrame.specsFrame.specsName, titleAndGuideContainerFrame.specsParentFrame.specsFrame, nil, 11, nil, classes[id][3][k][2], "TOP", "BOTTOM", 0, -2)
         end
@@ -717,7 +830,7 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id, frame)
             pveGuidesTextures["pveTexture" .. i]:SetTexture(PVE_FOLDER_PATH .. "d" .. id .. "\\" .. i)
         end
     elseif guideType == "pvp" then
-        for i = 1, foldersItemsNb[guideType]["c" .. id] do
+        for i = 1, foldersItemsNb[guideType][id]["c" .. id] do
             pvpGuidesTextures["pvpTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
             -- first texture at the top of the guide parent frame --
             if i == 1 then
@@ -767,9 +880,9 @@ local function generateDungeonsFrames()
         LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
         })
-        UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame.text, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame, nil, 18,nil, "Non disponible", "CENTER", "CENTER", 0, 0)
+        UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame.text, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame, nil, 18, nil, "Non disponible", "CENTER", "CENTER", 0, 0)
 
-        -- dungeons thumbnails borders and click hander --
+        -- dungeons thumbnails borders --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border = CreateFrame("Button", nil, dungeonsFrames["dungeonFrame" .. dungeonsK])
 
         -- If 4 dungeons frame are displayed then ddd a new line --
@@ -790,13 +903,12 @@ local function generateDungeonsFrames()
             insets = { left = 0, right = -105, top = 0, bottom = -40 }
         })
 
-        -- to unable to click on the not available frame --
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetScript("OnEnter", function ()
+        -- to not be able to click on the not available frame --
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetScript("OnEnter", function()
             return
         end)
 
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetPoint("TOPLEFT", dungeonsFrames["dungeonFrame" .. dungeonsK], "TOPLEFT", 0, 0)
-        -- divide the frameWidth and frameHeight by the coef associated to keep the same size ratio as the parent frame
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetNormalTexture(buttonTexture)
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetHighlightTexture(buttonTexture)
@@ -831,25 +943,57 @@ local function generateClassesFrames()
     local SECOND_ROW_OFSY = FIRST_ROW_OFSY - 90
     local FIRST_LEFT_SPACE = 200
 
+    local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
+
     for classesK, classesV in ipairs(classes) do
 
         classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         classesFrames["classeFrame" .. classesK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 
+        -- not available frame --
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, classesFrames["classeFrame" .. classesK], BackdropTemplateMixin and "BackdropTemplate")
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
+            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
+        })
+
+        -- dungeons thumbnails borders --
+        classesFrames["classeFrame" .. classesK].border = CreateFrame("Button", nil, classesFrames["classeFrame" .. classesK])
+
         -- If 4 dungeons frame are displayed then ddd a new line --
         if classesK > ROW_MAX_CLASSES_ITEMS then
             classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), SECOND_ROW_OFSY)
+            if not foldersItemsNb["pvp"][classesK]["atleastOneGuideSpecAvailable"] then
+                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), SECOND_ROW_OFSY)
+            end
         else
             classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), FIRST_ROW_OFSY)
+            if not foldersItemsNb["pvp"][classesK]["atleastOneGuideSpecAvailable"] then
+                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), FIRST_ROW_OFSY)
+            end
         end
 
         classesFrames["classeFrame" .. classesK]:SetBackdrop({
             bgFile = classes[classesK][ICON_COL],
         })
 
-        classesFrames["classeFrame" .. classesK]:SetScript("OnClick", function(self, button)
+        -- to not be able to click on the not available frame --
+        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetScript("OnEnter", function()
+            return
+        end)
+
+        classesFrames["classeFrame" .. classesK].border:SetPoint("TOPLEFT", classesFrames["classeFrame" .. classesK], "TOPLEFT", -2, 2.5)
+        classesFrames["classeFrame" .. classesK].border:SetSize(FRAME_WIDTH + 1.5, FRAME_HEIGHT + 3)
+        classesFrames["classeFrame" .. classesK].border:SetNormalTexture(buttonTexture)
+        classesFrames["classeFrame" .. classesK].border:SetHighlightTexture(buttonTexture)
+        classesFrames["classeFrame" .. classesK].border:SetPushedTexture(buttonTexture)
+        classesFrames["classeFrame" .. classesK].border:GetNormalTexture():SetTexCoord(0, 0.34, 0.428, 0.522)
+        classesFrames["classeFrame" .. classesK].border:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
+        classesFrames["classeFrame" .. classesK].border:GetPushedTexture():SetTexCoord(0, 0.34, 0.332, 0.425)
+        classesFrames["classeFrame" .. classesK].border:SetScript("OnClick", function(self, button)
             LCDWFrame.backgroundContainerFrame:showGuide(true, classes[classesK][NAME_COL], classesK, "class", "pvp")
         end)
+
     end
 end
 
