@@ -20,6 +20,8 @@ local GUIDE_WIDTH = 850
 local GUIDE_HEIGHT = 850
 local ICONS_PATH = "Interface\\ICONS\\"
 local PVE_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pve\\"
+local DUNGEONS_FOLDER_PATH = PVE_FOLDER_PATH .. "dungeons\\"
+local RAIDS_FOLDER_PATH = PVE_FOLDER_PATH .. "raids\\"
 local PVP_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pvp\\"
 local GLOSSARY_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\glossary\\"
 local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
@@ -51,44 +53,63 @@ local CREDITS_TEXT = "Made by Aecx & Willios"
 
 local textureShown = {}
 local dungeonsFrames = {}
+local raidsFrames = {}
 local classesFrames = {}
 
-local pveGuidesTextures = {}
+local pveDGuidesTextures = {}
+local pveRGuidesTextures = {}
 local pvpGuidesTextures = {}
 local glossaryTextures = {}
 
 local dungeons = {
     {
-        "Sillage nécrotique", DUNGEONS_ICONS_PATH .. "NecroticWake",
+        "Sillage nécrotique",
+        DUNGEONS_ICONS_PATH .. "NecroticWake",
         DUNGEON_THUMBNAIL_PATH .. "NecroticWake"
     },
     {
-        "Malepeste", DUNGEONS_ICONS_PATH .. "Plaguefall",
+        "Malepeste",
+        DUNGEONS_ICONS_PATH .. "Plaguefall",
         DUNGEON_THUMBNAIL_PATH .. "Plaguefall"
     },
     {
-        "Brumes de Tirna Scrithe", DUNGEONS_ICONS_PATH .. "MistsofTirnaScithe",
+        "Brumes de Tirna Scrithe",
+        DUNGEONS_ICONS_PATH .. "MistsofTirnaScithe",
         DUNGEON_THUMBNAIL_PATH .. "MistsofTirnaScithe"
     },
     {
-        "Salles de l'Expiation", DUNGEONS_ICONS_PATH .. "HallsofAtonement",
+        "Salles de l'Expiation",
+        DUNGEONS_ICONS_PATH .. "HallsofAtonement",
         DUNGEON_THUMBNAIL_PATH .. "HallsofAtonement"
     },
     {
-        "Flèches de l'Ascension", DUNGEONS_ICONS_PATH .. "SpiresofAscension",
+        "Flèches de l'Ascension",
+        DUNGEONS_ICONS_PATH .. "SpiresofAscension",
         DUNGEON_THUMBNAIL_PATH .. "SpiresofAscension"
     },
     {
-        "Théâtre de la Souffrance", DUNGEONS_ICONS_PATH .. "TheaterofPain",
+        "Théâtre de la Souffrance",
+        DUNGEONS_ICONS_PATH .. "TheaterofPain",
         DUNGEON_THUMBNAIL_PATH .. "TheaterofPain"
     },
     {
-        "L'Autre côté", DUNGEONS_ICONS_PATH .. "TheOtherSide",
+        "L'Autre côté",
+        DUNGEONS_ICONS_PATH .. "TheOtherSide",
         DUNGEON_THUMBNAIL_PATH .. "TheOtherSide"
     },
     {
-        "Profondeurs Sanguines", DUNGEONS_ICONS_PATH .. "SanguineDepths",
+        "Profondeurs Sanguines",
+        DUNGEONS_ICONS_PATH .. "SanguineDepths",
         DUNGEON_THUMBNAIL_PATH .. "SanguineDepths"
+    }
+}
+
+local raids = {
+    {
+        "Château Nathria",
+        DUNGEONS_ICONS_PATH .. "CastleNathria",
+        DUNGEON_THUMBNAIL_PATH .. "CastleNathria"
+
     }
 }
 
@@ -236,10 +257,10 @@ local textureWidth
 -- c11 -> Prêtre
 -- c12 -> Voleur
 local foldersItemsNb = {
-    pve = {
+    pveD = {
         {
             d1 = 3,
-            isAvailable = false
+            isAvailable = true
         },
         {
             d2 = 3,
@@ -270,10 +291,18 @@ local foldersItemsNb = {
             isAvailable = false
         }
     },
+
+    pveR = {
+        {
+            r1 = 3,
+            isAvailable = false
+        }
+    },
+
     pvp = {
         {
             c1 = 3,
-            atleastOneGuideSpecAvailable = true,
+            atleastOneGuideSpecAvailable = false,
             {
                 spec1 = true,
                 spec2 = true,
@@ -326,10 +355,10 @@ local foldersItemsNb = {
             }
         },
         {
-            c7 = 3,
-            atleastOneGuideSpecAvailable = false,
+            c7 = 6,
+            atleastOneGuideSpecAvailable = true,
             {
-                spec1 = false,
+                spec1 = true,
                 spec2 = false,
                 spec3 = false
             }
@@ -588,9 +617,11 @@ UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.t
 --------------------------------
 -- this frame contains all the dungeons and classes thumbnails + the frames titles (guides pve / pvp) --
 -- it will be easier to hide all elements when a dungeons is selected --
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame = CreateFrame("Frame", nil, LCDWFrame)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
+local allElementsContainerFrame = LCDWFrame.backgroundContainerFrame.allElementsContainerFrame
+
+allElementsContainerFrame = CreateFrame("Frame", nil, LCDWFrame)
+allElementsContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
+allElementsContainerFrame:SetPoint("CENTER", LCDWFrame, "CENTER")
 -- create a section name container --
 local function createSectionNameContainer(frameName, frameToAttach, point, relativePoint, ofsx, ofsy, title, icon, iconWidth, iconHeight, iconOfsx, iconOfsy)
     local titleIcon
@@ -618,26 +649,60 @@ local function createSectionNameContainer(frameName, frameToAttach, point, relat
     })
     -- dungeons section name --
     UIElements:CreateFontString2(frameName.sectionTitle, frameName.icon, nil, 18, nil, title, "LEFT", "RIGHT", 10, 0, nil, nil, nil, true)
-    frameName:SetSize(iconWidth + titleWidth + ofsx, 44)
+    local _val1 = (ofsx ~= 0) and ofsx or 45
+    frameName:SetSize(iconWidth + titleWidth + _val1, 44)
 end
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.dungeonsSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "TOPLEFT", 42, -128, "Guides des donjons", PVE_ICON, 25, 25, 17, 0)
-createSectionNameContainer(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.classesSectionNameContainer, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", "LEFT", 42, -103, "Guides des classes", PVP_ICON, 17, 17, 17, 0)
+allElementsContainerFrame.dungeonsBtn = CreateFrame("BUTTON", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+allElementsContainerFrame.dungeonsBtn:SetSize(220, 60)
+allElementsContainerFrame.dungeonsBtn:SetPoint("TOP", allElementsContainerFrame, "TOP", -140, -95)
+allElementsContainerFrame.dungeonsBtn:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+})
+allElementsContainerFrame.dungeonsBtn:SetScript("OnClick", function ()
+    -- hide the parent raids frame --
+    if allElementsContainerFrame.raidsFramesContainer:IsShown() then
+        allElementsContainerFrame.raidsFramesContainer:Hide()
+    end
+    -- show the parent dungeons frame --
+    if not allElementsContainerFrame.dungeonsFramesContainer:IsShown() then
+        allElementsContainerFrame.dungeonsFramesContainer:Show()
+    end
+end)
+
+allElementsContainerFrame.raidsBtn = CreateFrame("BUTTON", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+allElementsContainerFrame.raidsBtn:SetSize(220, 60)
+allElementsContainerFrame.raidsBtn:SetPoint("TOP", allElementsContainerFrame, "TOP", 140, -95)
+allElementsContainerFrame.raidsBtn:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+})
+allElementsContainerFrame.raidsBtn:SetScript("OnClick", function ()
+    -- hide the parent dungeons frame --
+    if allElementsContainerFrame.dungeonsFramesContainer:IsShown() then
+        allElementsContainerFrame.dungeonsFramesContainer:Hide()
+    end
+    -- show the parent raids frame --
+    if not allElementsContainerFrame.raidsFramesContainer:IsShown() then
+        allElementsContainerFrame.raidsFramesContainer:Show()
+    end
+end)
+--createSectionNameContainer(allElementsContainerFrame.dungeonsSectionNameContainer, allElementsContainerFrame, "LEFT", "TOPLEFT", 42, -128, "Guides des donjons", PVE_ICON, 25, 25, 17, 0)
+createSectionNameContainer(allElementsContainerFrame.classesSectionNameContainer, allElementsContainerFrame, "CENTER", "CENTER", 0, -103, "Guides des classes", PVP_ICON, 17, 17, 17, 0)
 -- glossary frame --
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetSize(320, 80)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetPoint("TOPRIGHT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPRIGHT", 100, -95)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetBackdrop({
+allElementsContainerFrame.glossaryFrame = CreateFrame("BUTTON", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+allElementsContainerFrame.glossaryFrame:SetSize(320, 80)
+allElementsContainerFrame.glossaryFrame:SetPoint("TOPRIGHT", allElementsContainerFrame, "TOPRIGHT", 100, -95)
+allElementsContainerFrame.glossaryFrame:SetBackdrop({
     bgFile = "Interface\\ENCOUNTERJOURNAL\\loottab-item-background",
 })
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:SetScript("OnClick", function()
+allElementsContainerFrame.glossaryFrame:SetScript("OnClick", function()
     LCDWFrame.backgroundContainerFrame:showGuide(true, "Glossaire", nil, "glossary", "glossary")
 end)
 
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon = LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame:CreateTexture(nil, "ARTWORK")
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetSize(45, 45)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetPoint("TOPLEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, "TOPLEFT", 13, -8)
-LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.icon:SetTexture(QUESTIONMARK_PATH)
-UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame.title, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.glossaryFrame, nil, 18, nil, "Glossaire", "TOPLEFT", "TOPLEFT", 80, -20)
+allElementsContainerFrame.glossaryFrame.icon = allElementsContainerFrame.glossaryFrame:CreateTexture(nil, "ARTWORK")
+allElementsContainerFrame.glossaryFrame.icon:SetSize(45, 45)
+allElementsContainerFrame.glossaryFrame.icon:SetPoint("TOPLEFT", allElementsContainerFrame.glossaryFrame, "TOPLEFT", 13, -8)
+allElementsContainerFrame.glossaryFrame.icon:SetTexture(QUESTIONMARK_PATH)
+UIElements:CreateFontString2(allElementsContainerFrame.glossaryFrame.title, allElementsContainerFrame.glossaryFrame, nil, 18, nil, "Glossaire", "TOPLEFT", "TOPLEFT", 80, -20)
 
 
 --------------------------------
@@ -701,7 +766,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     end
 
     -- hide all the homepage elements --
-    LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Hide()
+    allElementsContainerFrame:Hide()
     -- show the scroll frame --
     LCDWFrame.backgroundContainerFrame.scrollFrame:Show()
     -- parent frame that appears after selecting a guide, it contains the title and the guide selected --
@@ -730,8 +795,8 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             end
         end
         -- show the homepage --
-        if not LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:IsShown() then
-            LCDWFrame.backgroundContainerFrame.allElementsContainerFrame:Show()
+        if not allElementsContainerFrame:IsShown() then
+            allElementsContainerFrame:Show()
         end
     end
     -- reset button --
@@ -753,6 +818,8 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             titleAndGuideContainerFrame.titleContainer.icon:SetTexture(QUESTIONMARK_PATH)
         elseif thumbnailCategory == "class" then
             titleAndGuideContainerFrame.titleContainer.icon:SetTexture(classes[id][ICON_COL])
+        elseif thumbnailCategory == "raid" then
+            titleAndGuideContainerFrame.titleContainer.icon:SetTexture(raids[id][ICON_COL])
         else
             titleAndGuideContainerFrame.titleContainer.icon:SetTexture(dungeons[id][DUNGEON_THUMBNAIL_COL])
         end
@@ -786,8 +853,10 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             isContextMenuOpen = false
         else
             isContextMenuOpen = true
-            if guideType == "pve" then
+            if guideType == "pveD" then
                 openContextMenu(foldersItemsNb[guideType][id]["d" .. id], titleAndGuideContainerFrame)
+            elseif guideType == "pveR" then
+                openContextMenu(foldersItemsNb[guideType][id]["r" .. id], titleAndGuideContainerFrame)
             elseif guideType == "pvp" then
                 openContextMenu(foldersItemsNb[guideType][id]["c" .. id], titleAndGuideContainerFrame)
             else
@@ -862,16 +931,29 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
 end
 
 function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id, frame)
-    if guideType == "pve" then
+    if guideType == "pveD" then
         for i = 1, foldersItemsNb[guideType][id]["d" .. id] do
-            pveGuidesTextures["pveTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            pveDGuidesTextures["pveTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
             if i == 1 then
-                pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
+                pveDGuidesTextures["pveTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
             else
-                pveGuidesTextures["pveTexture" .. i]:SetPoint("TOP", pveGuidesTextures["pveTexture" .. i - 1], "BOTTOM", 0, -20)
+                pveDGuidesTextures["pveTexture" .. i]:SetPoint("TOP", pveDGuidesTextures["pveTexture" .. i - 1], "BOTTOM", 0, -20)
             end
-            pveGuidesTextures["pveTexture" .. i]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
-            pveGuidesTextures["pveTexture" .. i]:SetTexture(PVE_FOLDER_PATH .. "d" .. id .. "\\" .. i)
+            pveDGuidesTextures["pveTexture" .. i]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
+            pveDGuidesTextures["pveTexture" .. i]:SetTexture(DUNGEONS_FOLDER_PATH .. "d" .. id .. "\\" .. i)
+        end
+    elseif guideType == "pveR" then
+        for i = 1, foldersItemsNb[guideType][id]["r" .. id] do
+            pveRGuidesTextures["pvpTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+            -- first texture at the top of the guide parent frame --
+            if i == 1 then
+                pveRGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
+                -- and the rest under 20 px from one another --
+            else
+                pveRGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", pveRGuidesTextures["pvpTexture" .. i - 1], "BOTTOM", 0, -20)
+            end
+            pveRGuidesTextures["pvpTexture" .. i]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
+            pveRGuidesTextures["pvpTexture" .. i]:SetTexture(RAIDS_FOLDER_PATH .. "r" .. id .. "\\" .. i)
         end
     elseif guideType == "pvp" then
         for i = 1, foldersItemsNb[guideType][id]["c" .. id] do
@@ -906,39 +988,43 @@ local function generateDungeonsFrames()
     local FRAME_HEIGHT = 120
     local SPACE_BETWEEN_ITEMS = 20
     local ROW_MAX_DUNGEONS_ITEMS = 4
-    local FIRST_ROW_OFSY = -220
+    local FIRST_ROW_OFSY = 0
     local SECOND_ROW_OFSY = FIRST_ROW_OFSY - 138
     local FIRST_LEFT_SPACE = 40
 
     local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
 
+    allElementsContainerFrame.dungeonsFramesContainer = CreateFrame("Frame", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+    allElementsContainerFrame.dungeonsFramesContainer:SetSize(LCDWFrame:GetWidth(), 260)
+    allElementsContainerFrame.dungeonsFramesContainer:SetPoint("TOP", allElementsContainerFrame, "TOP", 0, -150)
+
     for dungeonsK, dungeonV in ipairs(dungeons) do
 
         -- dungeons thumbnail --
-        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+        dungeonsFrames["dungeonFrame" .. dungeonsK] = CreateFrame("Frame", nil, allElementsContainerFrame.dungeonsFramesContainer, BackdropTemplateMixin and "BackdropTemplate")
         dungeonsFrames["dungeonFrame" .. dungeonsK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 
         -- not available frame --
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, dungeonsFrames["dungeonFrame" .. dungeonsK], BackdropTemplateMixin and "BackdropTemplate")
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
+        allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame = CreateFrame("Frame", nil, dungeonsFrames["dungeonFrame" .. dungeonsK], BackdropTemplateMixin and "BackdropTemplate")
+        allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
+        allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
         })
-        UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame.text, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame, nil, 18, nil, "Non disponible", "CENTER", "CENTER", 0, 0)
+        UIElements:CreateFontString2(allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame.text, allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame, nil, 18, nil, "Non disponible", "CENTER", "CENTER", 0, 0)
 
         -- dungeons thumbnails borders --
         dungeonsFrames["dungeonFrame" .. dungeonsK].border = CreateFrame("Button", nil, dungeonsFrames["dungeonFrame" .. dungeonsK])
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if dungeonsK > ROW_MAX_DUNGEONS_ITEMS then
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), SECOND_ROW_OFSY)
-            if not foldersItemsNb["pve"][dungeonsK]["isAvailable"] then
-                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), SECOND_ROW_OFSY)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("TOPLEFT", allElementsContainerFrame.dungeonsFramesContainer, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), SECOND_ROW_OFSY)
+            if not foldersItemsNb["pveD"][dungeonsK]["isAvailable"] then
+                allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame:SetPoint("TOPLEFT", allElementsContainerFrame.dungeonsFramesContainer, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 5)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 5))), SECOND_ROW_OFSY)
             end
         else
-            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY)
-            if not foldersItemsNb["pve"][dungeonsK]["isAvailable"] then
-                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY)
+            dungeonsFrames["dungeonFrame" .. dungeonsK]:SetPoint("TOPLEFT", allElementsContainerFrame.dungeonsFramesContainer, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY)
+            if not foldersItemsNb["pveD"][dungeonsK]["isAvailable"] then
+                allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame:SetPoint("TOPLEFT", allElementsContainerFrame.dungeonsFramesContainer, "TOPLEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (dungeonsK - 1)) + (SPACE_BETWEEN_ITEMS * (dungeonsK - 1))), FIRST_ROW_OFSY)
             end
         end
 
@@ -948,7 +1034,7 @@ local function generateDungeonsFrames()
         })
 
         -- to not be able to click on the not available frame --
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetScript("OnEnter", function()
+        allElementsContainerFrame.dungeonsFramesContainer.notAvailableFrame:SetScript("OnEnter", function()
             return
         end)
 
@@ -962,7 +1048,7 @@ local function generateDungeonsFrames()
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:GetPushedTexture():SetTexCoord(0, 0.34, 0.332, 0.425)
 
         dungeonsFrames["dungeonFrame" .. dungeonsK].border:SetScript("OnClick", function(self, button)
-            LCDWFrame.backgroundContainerFrame:showGuide(true, dungeons[dungeonsK][NAME_COL], dungeonsK, "dungeon", "pve")
+            LCDWFrame.backgroundContainerFrame:showGuide(true, dungeons[dungeonsK][NAME_COL], dungeonsK, "dungeon", "pveD")
         end)
 
         -- dungeons title --
@@ -991,13 +1077,13 @@ local function generateClassesFrames()
 
     for classesK, classesV in ipairs(classes) do
 
-        classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+        classesFrames["classeFrame" .. classesK] = CreateFrame("Button", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         classesFrames["classeFrame" .. classesK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 
         -- not available frame --
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, classesFrames["classeFrame" .. classesK], BackdropTemplateMixin and "BackdropTemplate")
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 3, FRAME_HEIGHT + 4)
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetBackdrop({
+        allElementsContainerFrame.notAvailableFrame = CreateFrame("Frame", nil, classesFrames["classeFrame" .. classesK], BackdropTemplateMixin and "BackdropTemplate")
+        allElementsContainerFrame.notAvailableFrame:SetSize(FRAME_WIDTH + 3, FRAME_HEIGHT + 4)
+        allElementsContainerFrame.notAvailableFrame:SetBackdrop({
             bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
         })
 
@@ -1006,14 +1092,14 @@ local function generateClassesFrames()
 
         -- If 4 dungeons frame are displayed then ddd a new line --
         if classesK > ROW_MAX_CLASSES_ITEMS then
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), SECOND_ROW_OFSY)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))), SECOND_ROW_OFSY)
             if not foldersItemsNb["pvp"][classesK]["atleastOneGuideSpecAvailable"] then
-                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))) - 2, SECOND_ROW_OFSY + 1)
+                allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 7)) + (SPACE_BETWEEN_ITEMS * (classesK - 7))) - 2, SECOND_ROW_OFSY + 1)
             end
         else
-            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), FIRST_ROW_OFSY)
+            classesFrames["classeFrame" .. classesK]:SetPoint("LEFT", allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))), FIRST_ROW_OFSY)
             if not foldersItemsNb["pvp"][classesK]["atleastOneGuideSpecAvailable"] then
-                LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", LCDWFrame.backgroundContainerFrame.allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))) - 2, FIRST_ROW_OFSY + 1)
+                allElementsContainerFrame.notAvailableFrame:SetPoint("LEFT", allElementsContainerFrame, "LEFT", FIRST_LEFT_SPACE + ((FRAME_WIDTH * (classesK - 1)) + (SPACE_BETWEEN_ITEMS * (classesK - 1))) - 2, FIRST_ROW_OFSY + 1)
             end
         end
 
@@ -1022,7 +1108,7 @@ local function generateClassesFrames()
         })
 
         -- to not be able to click on the not available frame --
-        LCDWFrame.backgroundContainerFrame.allElementsContainerFrame.notAvailableFrame:SetScript("OnEnter", function()
+        allElementsContainerFrame.notAvailableFrame:SetScript("OnEnter", function()
             return
         end)
 
@@ -1041,8 +1127,83 @@ local function generateClassesFrames()
     end
 end
 
+local function generateRaidsFrames()
+    local FRAME_WIDTH = 220
+    local FRAME_HEIGHT = 120
+    local SPACE_BETWEEN_ITEMS = 20
+    local ROW_MAX_DUNGEONS_ITEMS = 4
+    local FIRST_ROW_OFSY = 0
+    local SECOND_ROW_OFSY = FIRST_ROW_OFSY - 138
+    local FIRST_LEFT_SPACE = 40
+
+    local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
+
+    allElementsContainerFrame.raidsFramesContainer = CreateFrame("Frame", nil, allElementsContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+    allElementsContainerFrame.raidsFramesContainer:SetSize(LCDWFrame:GetWidth(), 150)
+    allElementsContainerFrame.raidsFramesContainer:SetPoint("TOP", allElementsContainerFrame, "TOP", 0, -150)
+    allElementsContainerFrame.raidsFramesContainer:Hide()
+
+    for raidsK, raidsV in ipairs(raids) do
+
+        -- dungeons thumbnail --
+        raidsFrames["raidFrame" .. raidsK] = CreateFrame("Frame", nil, allElementsContainerFrame.raidsFramesContainer, BackdropTemplateMixin and "BackdropTemplate")
+        raidsFrames["raidFrame" .. raidsK]:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
+
+        -- not available frame --
+        allElementsContainerFrame.raidsFramesContainer.notAvailableFrame = CreateFrame("Frame", nil, raidsFrames["raidFrame" .. raidsK], BackdropTemplateMixin and "BackdropTemplate")
+        allElementsContainerFrame.raidsFramesContainer.notAvailableFrame:SetSize(FRAME_WIDTH + 2, FRAME_HEIGHT + 2)
+        allElementsContainerFrame.raidsFramesContainer.notAvailableFrame:SetBackdrop({
+            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
+        })
+        UIElements:CreateFontString2(allElementsContainerFrame.raidsFramesContainer.notAvailableFrame.text, allElementsContainerFrame.raidsFramesContainer.notAvailableFrame, nil, 18, nil, "Non disponible", "CENTER", "CENTER", 0, 0)
+
+        -- dungeons thumbnails borders --
+        raidsFrames["raidFrame" .. raidsK].border = CreateFrame("Button", nil, raidsFrames["raidFrame" .. raidsK])
+
+        -- If 4 dungeons frame are displayed then ddd a new line --
+        raidsFrames["raidFrame" .. raidsK]:SetPoint("TOPLEFT", allElementsContainerFrame.raidsFramesContainer, "TOPLEFT", 40, 0)
+        --if not foldersItemsNb["pveR"][raidsK]["isAvailable"] then
+        --    allElementsContainerFrame.raidsFramesContainer.notAvailableFrame:SetPoint("TOPLEFT", allElementsContainerFrame.raidsFramesContainer, "TOPLEFT", 40, 0)
+        --end
+
+        raidsFrames["raidFrame" .. raidsK]:SetBackdrop({
+            bgFile = raids[raidsK][ICON_COL],
+            insets = { left = 0, right = -105, top = 0, bottom = -40 }
+        })
+
+        -- to not be able to click on the not available frame --
+        allElementsContainerFrame.raidsFramesContainer.notAvailableFrame:SetScript("OnEnter", function()
+            return
+        end)
+
+        raidsFrames["raidFrame" .. raidsK].border:SetPoint("TOPLEFT", raidsFrames["raidFrame" .. raidsK], "TOPLEFT", 0, 0)
+        raidsFrames["raidFrame" .. raidsK].border:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
+        raidsFrames["raidFrame" .. raidsK].border:SetNormalTexture(buttonTexture)
+        raidsFrames["raidFrame" .. raidsK].border:SetHighlightTexture(buttonTexture)
+        raidsFrames["raidFrame" .. raidsK].border:SetPushedTexture(buttonTexture)
+        raidsFrames["raidFrame" .. raidsK].border:GetNormalTexture():SetTexCoord(0, 0.34, 0.428, 0.522)
+        raidsFrames["raidFrame" .. raidsK].border:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
+        raidsFrames["raidFrame" .. raidsK].border:GetPushedTexture():SetTexCoord(0, 0.34, 0.332, 0.425)
+
+        raidsFrames["raidFrame" .. raidsK].border:SetScript("OnClick", function(self, button)
+            LCDWFrame.backgroundContainerFrame:showGuide(true, raids[raidsK][NAME_COL], raidsK, "raid", "pveR")
+        end)
+
+        -- dungeons title --
+        raidsFrames["raidFrame" .. raidsK].border.title = raidsFrames["raidFrame" .. raidsK]:CreateFontString(nil, "OVERLAY")
+        raidsFrames["raidFrame" .. raidsK].border.title:SetFont(MORPHEUS_FONT, 20, "OUTLINE")
+        raidsFrames["raidFrame" .. raidsK].border.title:SetTextColor(Helpers:hexadecimalToBlizzardColor(249), Helpers:hexadecimalToBlizzardColor(204), Helpers:hexadecimalToBlizzardColor(0), 1)
+        raidsFrames["raidFrame" .. raidsK].border.title:SetWidth(130)
+        raidsFrames["raidFrame" .. raidsK].border.title:SetHeight(55)
+        raidsFrames["raidFrame" .. raidsK].border.title:SetPoint("CENTER", raidsFrames["raidFrame" .. raidsK].border, "CENTER")
+        raidsFrames["raidFrame" .. raidsK].border.title:SetText(raids[raidsK][NAME_COL])
+        raidsFrames["raidFrame" .. raidsK].border.title:SetJustifyH("CENTER")
+    end
+end
+
 generateDungeonsFrames()
 generateClassesFrames()
+generateRaidsFrames()
 ----------------------------------------------------------
 ----///////////// END MAIN FRAME (Général) /////////////--
 ----------------------------------------------------------
