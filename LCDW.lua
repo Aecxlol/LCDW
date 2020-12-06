@@ -834,6 +834,9 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
                 titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
             end
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(specFrameWidth, specFrameHeight)
+            titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetScript("OnEnter", function ()
+                return
+            end)
             -- the digit 1 represents the path icon --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetNormalTexture(classes[id][3][k][1])
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetHighlightTexture(buttonTexture)
