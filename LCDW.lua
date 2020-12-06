@@ -239,7 +239,7 @@ local foldersItemsNb = {
     pvp = {
         {
             c1 = 3,
-            atleastOneGuideSpecAvailable = false,
+            atleastOneGuideSpecAvailable = true,
             {
                 spec1 = false,
                 spec2 = false,
@@ -758,7 +758,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             if guideType == "pve" then
                 openContextMenu(foldersItemsNb[guideType][id]["d" .. id], titleAndGuideContainerFrame)
             elseif guideType == "pvp" then
-                openContextMenu(foldersItemsNb[guideType]["c" .. id], titleAndGuideContainerFrame)
+                openContextMenu(foldersItemsNb[guideType][id]["c" .. id], titleAndGuideContainerFrame)
             else
                 openContextMenu(foldersItemsNb[guideType], titleAndGuideContainerFrame)
             end
