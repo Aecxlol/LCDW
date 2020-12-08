@@ -33,6 +33,7 @@ local PVP_ICON = "Interface\\Calendar\\UI-Calendar-Event-PVP"
 local PVE_ICON = "Interface\\LFGFRAME\\UI-LFR-PORTRAIT"
 local DUNGEON_THUMBNAIL_PATH = "Interface\\LFGFRAME\\LFGIcon-"
 local SOCIAL_NETWORK_FOLDER_PATH = "Interface\\AddOns\\LCDW\\misc\\social-networks\\"
+local SPECS_ICONS_PATH = "Interface\\AddOns\\LCDW\\misc\\specs-icons\\"
 local NAME_COL = 1
 local ICON_COL = 2
 local DUNGEON_THUMBNAIL_COL = 3
@@ -118,108 +119,108 @@ local classes = {
         "Chaman",
         CLASSES_ICONS_PATH .. "Shaman",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Élémentaire" },
-            { ICONS_PATH .. "Paladin_Protection", "Amélioration" },
-            { ICONS_PATH .. "Paladin_Retribution", "Restauration" }
+            { SPECS_ICONS_PATH .. "shaman\\elemental", "Élémentaire" },
+            { SPECS_ICONS_PATH .. "shaman\\enhancement", "Amélioration" },
+            { SPECS_ICONS_PATH .. "shaman\\resto", "Restauration" }
         }
     },
     {
         "Chasseur",
         CLASSES_ICONS_PATH .. "Hunter",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Précision" },
-            { ICONS_PATH .. "Paladin_Protection", "Maîtrise des bêtes" },
-            { ICONS_PATH .. "Paladin_Retribution", "Survie" }
+            { SPECS_ICONS_PATH .. "hunter\\mm", "Précision" },
+            { SPECS_ICONS_PATH .. "hunter\\bm", "Maîtrise des bêtes" },
+            { SPECS_ICONS_PATH .. "hunter\\sv", "Survie" }
         }
     },
     {
         "Chasseur de Démon",
         CLASSES_ICONS_PATH .. "DemonHunter",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Vengeance" },
-            { ICONS_PATH .. "Paladin_Protection", "Dévastation" }
+            { SPECS_ICONS_PATH .. "demon-hunter\\vengeance", "Vengeance" },
+            { SPECS_ICONS_PATH .. "demon-hunter\\havoc", "Dévastation" }
         }
     },
     {
         "Chevalier de la Mort",
         CLASSES_ICONS_PATH .. "DeathKnight",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Impie" },
-            { ICONS_PATH .. "Paladin_Protection", "Givre" },
-            { ICONS_PATH .. "Paladin_Retribution", "Sang" }
+            { SPECS_ICONS_PATH .. "death-knight\\unholy", "Impie" },
+            { SPECS_ICONS_PATH .. "death-knight\\frost", "Givre" },
+            { SPECS_ICONS_PATH .. "death-knight\\blood", "Sang" }
         }
     },
     {
         "Démoniste",
         CLASSES_ICONS_PATH .. "Warlock",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Démonologie" },
-            { ICONS_PATH .. "Paladin_Protection", "Affliction" },
-            { ICONS_PATH .. "Paladin_Retribution", "Destruction" }
+            { SPECS_ICONS_PATH .. "warlock\\demonology", "Démonologie" },
+            { SPECS_ICONS_PATH .. "warlock\\affli", "Affliction" },
+            { SPECS_ICONS_PATH .. "warlock\\destru", "Destruction" }
         }
     },
     {
         "Druide",
         CLASSES_ICONS_PATH .. "Druid",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Farouche" },
-            { ICONS_PATH .. "Paladin_Protection", "Équilibre" },
-            { ICONS_PATH .. "Paladin_Retribution", "Gardien" },
-            { ICONS_PATH .. "Paladin_Retribution", "Restauration" }
+            { SPECS_ICONS_PATH .. "druid\\feral", "Farouche" },
+            { SPECS_ICONS_PATH .. "druid\\balance", "Équilibre" },
+            { SPECS_ICONS_PATH .. "druid\\guardian", "Gardien" },
+            { SPECS_ICONS_PATH .. "druid\\resto", "Restauration" }
         }
     },
     {
         "Guerrier",
         CLASSES_ICONS_PATH .. "Warrior",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Armes" },
-            { ICONS_PATH .. "Paladin_Protection", "Fureur" },
-            { ICONS_PATH .. "Paladin_Retribution", "Protection" }
+            { SPECS_ICONS_PATH .. "warrior\\arms", "Armes" },
+            { SPECS_ICONS_PATH .. "warrior\\fury", "Fureur" },
+            { SPECS_ICONS_PATH .. "warrior\\prot", "Protection" }
         }
     },
     {
         "Mage",
         CLASSES_ICONS_PATH .. "Mage",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Arcanes" },
-            { ICONS_PATH .. "Paladin_Protection", "Feu" },
-            { ICONS_PATH .. "Paladin_Retribution", "Givre" }
+            { SPECS_ICONS_PATH .. "mage\\arcane", "Arcanes" },
+            { SPECS_ICONS_PATH .. "mage\\fire", "Feu" },
+            { SPECS_ICONS_PATH .. "mage\\frost", "Givre" }
         }
     },
     {
         "Moine",
         CLASSES_ICONS_PATH .. "Monk",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Maître brasseur" },
-            { ICONS_PATH .. "Paladin_Protection", "Marche-vent" },
-            { ICONS_PATH .. "Paladin_Retribution", "Tisse-brume" }
+            { SPECS_ICONS_PATH .. "monk\\brewmaster", "Maître brasseur" },
+            { SPECS_ICONS_PATH .. "monk\\ww", "Marche-vent" },
+            { SPECS_ICONS_PATH .. "monk\\mw", "Tisse-brume" }
         }
     },
     {
         "Paladin",
         CLASSES_ICONS_PATH .. "Paladin",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Sacré" },
-            { ICONS_PATH .. "Paladin_Protection", "Protection" },
-            { ICONS_PATH .. "Paladin_Retribution", "Vindicte" }
+            { SPECS_ICONS_PATH .. "paladin\\holy", "Sacré" },
+            { SPECS_ICONS_PATH .. "paladin\\prot", "Protection" },
+            { SPECS_ICONS_PATH .. "paladin\\ret", "Vindicte" }
         }
     },
     {
         "Prêtre",
         CLASSES_ICONS_PATH .. "Priest",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Discipline" },
-            { ICONS_PATH .. "Paladin_Protection", "Ombre" },
-            { ICONS_PATH .. "Paladin_Retribution", "Sacré" }
+            { SPECS_ICONS_PATH .. "priest\\disc", "Discipline" },
+            { SPECS_ICONS_PATH .. "priest\\shadow", "Ombre" },
+            { SPECS_ICONS_PATH .. "priest\\holy", "Sacré" }
         }
     },
     {
         "Voleur",
         CLASSES_ICONS_PATH .. "Rogue",
         {
-            { ICONS_PATH .. "PALADIN_HOLY", "Assassinat" },
-            { ICONS_PATH .. "Paladin_Protection", "Hors-la-loi" },
-            { ICONS_PATH .. "Paladin_Retribution", "Finesse" }
+            { SPECS_ICONS_PATH .. "rogue\\assa", "Assassinat" },
+            { SPECS_ICONS_PATH .. "rogue\\outlaw", "Hors-la-loi" },
+            { SPECS_ICONS_PATH .. "rogue\\sub", "Finesse" }
         }
     }
 }
@@ -304,8 +305,8 @@ local foldersItemsNb = {
             c1 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = true,
-                spec2 = true,
+                spec1 = false,
+                spec2 = false,
                 spec3 = false
             }
         },
@@ -935,7 +936,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetScript("OnEnter", function ()
                 return
             end)
-            -- the digit 1 represents the path icon --
+            -- the digit 1 represents the specs icons path --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetNormalTexture(classes[id][3][k][1])
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetHighlightTexture(buttonTexture)
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:GetHighlightTexture():SetTexCoord(0.345, 0.68, 0.333, 0.425)
