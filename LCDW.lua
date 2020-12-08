@@ -929,7 +929,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             })
             -- ofsx : parent frame width minus the number of spec frame times the spec frame width divided by the number of spec frame plus one (because there will be 4 spaces for 3 spec frames --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
-            if not foldersItemsNb[guideType][k][1]["spec" .. k] then
+            if not foldersItemsNb[guideType][id][1]["spec" .. k] then
                 titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
             end
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(specFrameWidth, specFrameHeight)
