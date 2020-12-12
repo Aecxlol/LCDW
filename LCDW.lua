@@ -359,9 +359,9 @@ local foldersItemsNb = {
             c7 = 6,
             atleastOneGuideSpecAvailable = true,
             {
-                spec1 = true,
-                spec2 = false,
-                spec3 = false
+                {spec1 = true, pages = 6, "arms"},
+                {spec2 = true, pages = 3, "fury"},
+                {spec3 = true, pages = 1, "protection"}
             }
         },
         {
@@ -480,6 +480,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", onEvent)
+
 ----------------------------------------------------------
 ----/////////////// MAIN FRAME (Général) ///////////////--
 ----------------------------------------------------------
@@ -559,18 +560,27 @@ createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderFour, "BOTTOMLEFT
 LCDWFrame.backgroundContainerFrame = CreateFrame("Frame", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
 LCDWFrame.backgroundContainerFrame:SetAllPoints()
+LCDWFrame.backgroundContainerFrame:SetBackdrop({
+    bgFile = "Interface\\FrameGeneral\\UIFrameKyrianBackground", tile = true, tileSize = 128
+})
 -- background texture --
-LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
-LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
-LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
-LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
-LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
+--LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
+
 -- title container --
-LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
-LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, 0)
+--LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
+LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetPoint("CENTER", LCDWFrame, "TOP", 0, -23)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Header"
+})
 -- title --
-UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, MORPHEUS_FONT, 23, false, "Le codex de Willios", "CENTER", "CENTER", 0, 0, 255, 255, 255, true)
-LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 50, FRAME_TITLE_CONTAINER_HEIGHT)
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.titleContainerFrame.title, LCDWFrame.backgroundContainerFrame.titleContainerFrame, MORPHEUS_FONT, 21, false, "Le codex de Willios", "TOP", "TOP", 0, -30, 255, 255, 255, true)
+--LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(titleWidth + 50, FRAME_TITLE_CONTAINER_HEIGHT)
+LCDWFrame.backgroundContainerFrame.titleContainerFrame:SetSize(512, 128)
 -- scroll frame --
 LCDWFrame.backgroundContainerFrame.scrollFrame = CreateFrame("ScrollFrame", nil, LCDWFrame.backgroundContainerFrame, "UIPanelScrollFrameTemplate")
 -- scrollable zone size --
@@ -901,6 +911,7 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
     -- classes specs parent frame --
     if guideType == "pvp" then
         local buttonTexture = "Interface\\ENCOUNTERJOURNAL\\UI-EncounterJournalTextures"
+        local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
 
         titleAndGuideContainerFrame.specsParentFrame = CreateFrame("Frame", nil, titleAndGuideContainerFrame, BackdropTemplateMixin and "BackdropTemplate")
         titleAndGuideContainerFrame.specsParentFrame:SetSize(320, 70)
@@ -929,12 +940,26 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
             })
             -- ofsx : parent frame width minus the number of spec frame times the spec frame width divided by the number of spec frame plus one (because there will be 4 spaces for 3 spec frames --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
-            if not foldersItemsNb[guideType][id][1]["spec" .. k] then
+            if not foldersItemsNb[guideType][id][1][k]["spec" .. k] then
                 titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetPoint("LEFT", titleAndGuideContainerFrame.specsParentFrame, "LEFT", ((k - 1) * (((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)) + specFrameWidth)) + ((parentWidth - (#classes[id][3] * specFrameWidth)) / (#classes[id][3] + 1)), -6)
             end
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetSize(specFrameWidth, specFrameHeight)
             titleAndGuideContainerFrame.specsParentFrame.notAvailableFrame:SetScript("OnEnter", function ()
                 return
+            end)
+            local anchor
+            if k == 1 then
+                anchor = 0
+            elseif k == 2 then
+                anchor = foldersItemsNb[guideType][id][1][k - 1]["pages"] * (GUIDE_HEIGHT + 20)
+            elseif k == 3 then
+                anchor = (foldersItemsNb[guideType][id][1][k - 1]["pages"] * (GUIDE_HEIGHT + 20)) + (foldersItemsNb[guideType][id][1][k - 2]["pages"] * (GUIDE_HEIGHT + 20))
+            elseif k == 4 then
+                anchor = (foldersItemsNb[guideType][id][1][k - 1]["pages"] * (GUIDE_HEIGHT + 20)) + (foldersItemsNb[guideType][id][1][k - 2]["pages"] * (GUIDE_HEIGHT + 20)) + (foldersItemsNb[guideType][id][1][k - 3]["pages"] * (GUIDE_HEIGHT + 20))
+            end
+            -- set a vertical scroll when a spec icon got clicked on
+            titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetScript("OnClick", function ()
+                scrollFrame:SetVerticalScroll(anchor)
             end)
             -- the digit 1 represents the specs icons path --
             titleAndGuideContainerFrame.specsParentFrame.specsFrame:SetNormalTexture(classes[id][3][k][1])
@@ -986,17 +1011,56 @@ function LCDWFrame.backgroundContainerFrame:generateGuides(guideType, id, frame)
             pveRGuidesTextures["pvpTexture" .. i]:SetTexture(RAIDS_FOLDER_PATH .. "r" .. id .. "\\" .. i)
         end
     elseif guideType == "pvp" then
-        for i = 1, foldersItemsNb[guideType][id]["c" .. id] do
-            pvpGuidesTextures["pvpTexture" .. i] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
-            -- first texture at the top of the guide parent frame --
-            if i == 1 then
-                pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
-                -- and the rest under 20 px from one another --
+        local iterator
+        local lastIterator
+        local nbSpecs
+        -- from 1 to the number of specs
+        for k, v in ipairs(foldersItemsNb[guideType][id][1]) do
+            nbSpecs = foldersItemsNb[guideType][id][1]
+
+            if nbSpecs == 2 then
+                if k == 2 then
+                    iterator = foldersItemsNb[guideType][id][1][k - 1]["pages"]
+                else
+                    iterator = 0
+                end
+            elseif nbSpecs == 3 then
+                if k == 2 then
+                    iterator = foldersItemsNb[guideType][id][1][k - 1]["pages"]
+                    lastIterator = iterator
+                elseif k == 3 then
+                    iterator = foldersItemsNb[guideType][id][1][k - 1]["pages"] + lastIterator
+                else
+                    iterator = 0
+                end
             else
-                pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", pvpGuidesTextures["pvpTexture" .. i - 1], "BOTTOM", 0, -20)
+                if k == 2 then
+                    iterator = foldersItemsNb[guideType][id][1][k - 1]["pages"]
+                    lastIterator = iterator
+                elseif k == 3 then
+                    iterator = foldersItemsNb[guideType][id][1][k - 1]["pages"] + lastIterator
+                    lastIterator = iterator
+                elseif k == 4 then
+                    iterator = foldersItemsNb[guideType][id][1][k - 1]["pages"] + lastIterator
+                else
+                    iterator = 0
+                end
             end
-            pvpGuidesTextures["pvpTexture" .. i]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
-            pvpGuidesTextures["pvpTexture" .. i]:SetTexture(PVP_FOLDER_PATH .. "c" .. id .. "\\" .. i)
+            -- form 1 to the number of guide pages for each spec
+            for i = 1, foldersItemsNb[guideType][id][1][k]["pages"] do
+                pvpGuidesTextures["pvpTexture" .. i + iterator] = frame.guideParentFrame:CreateTexture(nil, "ARTWORK")
+                if k == 1 then
+                    if i == 1 then
+                        pvpGuidesTextures["pvpTexture" .. i]:SetPoint("TOP", frame.guideParentFrame, "TOP")
+                    else
+                        pvpGuidesTextures["pvpTexture" .. i ]:SetPoint("TOP", pvpGuidesTextures["pvpTexture" .. i - 1], "BOTTOM", 0, -20)
+                    end
+                else
+                    pvpGuidesTextures["pvpTexture" .. i + iterator]:SetPoint("TOP", pvpGuidesTextures["pvpTexture" .. i  + iterator - 1], "BOTTOM", 0, -20)
+                end
+                pvpGuidesTextures["pvpTexture" .. i + iterator]:SetSize(GUIDE_WIDTH, GUIDE_HEIGHT)
+                pvpGuidesTextures["pvpTexture" .. i + iterator]:SetTexture(PVP_FOLDER_PATH .. "c" .. id .. "\\".. foldersItemsNb["pvp"][id][1][k][1] .."\\" .. i)
+            end
         end
     else
         for i = 1, foldersItemsNb[guideType] do
