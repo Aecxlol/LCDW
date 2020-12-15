@@ -359,9 +359,36 @@ local foldersItemsNb = {
             c7 = 6,
             atleastOneGuideSpecAvailable = true,
             {
-                {spec1 = true, pages = 6, "arms"},
-                {spec2 = true, pages = 3, "fury"},
-                {spec3 = true, pages = 1, "protection"}
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
@@ -560,15 +587,15 @@ createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderFour, "BOTTOMLEFT
 LCDWFrame.backgroundContainerFrame = CreateFrame("Frame", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
 LCDWFrame.backgroundContainerFrame:SetAllPoints()
-LCDWFrame.backgroundContainerFrame:SetBackdrop({
-    bgFile = "Interface\\FrameGeneral\\UIFrameKyrianBackground", tile = true, tileSize = 128
-})
+--LCDWFrame.backgroundContainerFrame:SetBackdrop({
+--    bgFile = "Interface\\FrameGeneral\\UIFrameKyrianBackground", tile = true, tileSize = 128
+--})
 -- background texture --
---LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
---LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
---LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
---LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
---LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
+LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
+LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
+LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
+LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
+LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
 
 -- title container --
 --LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
@@ -748,13 +775,13 @@ UIElements:CreateFontString2(allElementsContainerFrame.glossaryFrame.title, allE
 --------------------------------
 --// third main frame prime //--
 --------------------------------
-local function openContextMenu(pageNumber, parentFrame)
+local function openContextMenu(pageNumber, parentFrame, hasNestedMenu, id)
     local openContextMenuButton = parentFrame.titleContainer.openContextMenuButton
     openContextMenuButton.dropDown = CreateFrame("Frame", "GlossaryMenu", openContextMenuButton, "UIDropDownMenuTemplate")
 
     UIDropDownMenu_Initialize(openContextMenuButton.dropDown, function(self, level, menuList)
         local info = UIDropDownMenu_CreateInfo()
-
+        local test
         -- first lvl menu --
         if (level or 1) == 1 then
             info.isTitle = 1
@@ -765,15 +792,22 @@ local function openContextMenu(pageNumber, parentFrame)
             info.disabled = nil
             info.isTitle = nil
 
-            for i = 1, pageNumber do
-                info.func = function()
-                    local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
-                    scrollFrame:SetVerticalScroll((i - 1) * (GUIDE_HEIGHT + 20))
-                    isContextMenuOpen = false
+            if not hasNestedMenu then
+                for i = 1, pageNumber do
+                    info.func = function()
+                        local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
+                        scrollFrame:SetVerticalScroll((i - 1) * (GUIDE_HEIGHT + 20))
+                        isContextMenuOpen = false
+                    end
+                    info.text, info.checked = "Page " .. i, false
+                    info.hasArrow = false
+                    info.notCheckable = 1
+                    UIDropDownMenu_AddButton(info, level)
                 end
-                info.text, info.checked = "Page " .. i, false
-                info.hasArrow = false
-                info.notCheckable = 1
+            else
+                info.text, info.hasArrow, info.menuList = "Pve", true, "pve"
+                UIDropDownMenu_AddButton(info, level)
+                info.text, info.hasArrow, info.menuList = "Pvp", true, "pvp"
                 UIDropDownMenu_AddButton(info, level)
             end
 
@@ -787,6 +821,101 @@ local function openContextMenu(pageNumber, parentFrame)
                 isContextMenuOpen = false
             end
             UIDropDownMenu_AddButton(info, level)
+        elseif menuList == "pve" or menuList == "pvp" then
+            local mode = menuList == "pve" and "pve" or "pvp"
+            -- loop through all the specs --
+            for k, v in ipairs(foldersItemsNb["pvp"][id][1]) do
+                -- get the specs names --
+                info.text, info.hasArrow = foldersItemsNb["pvp"][id][1][k][2], true
+                info.notCheckable, info.menuList = 1, foldersItemsNb["pvp"][id][1][k][1] .. mode
+                test = foldersItemsNb["pvp"][id][1][k][1]
+                UIDropDownMenu_AddButton(info, level)
+            end
+        -- @todo find a way to refactor this --
+        -- first spec --
+        elseif menuList == foldersItemsNb["pvp"][id][1][1][1] .. "pve" then
+            if foldersItemsNb["pvp"][id][1][1][3]["pvePages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][1][3]["pvePages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        elseif menuList == foldersItemsNb["pvp"][id][1][1][1] .. "pvp" then
+            if foldersItemsNb["pvp"][id][1][1][3]["pvpPages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][1][3]["pvpPages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        -- second spec --
+        elseif menuList == foldersItemsNb["pvp"][id][1][2][1] .. "pve" then
+            if foldersItemsNb["pvp"][id][1][2][3]["pvePages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][2][3]["pvePages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        elseif menuList == foldersItemsNb["pvp"][id][1][2][1] .. "pvp" then
+            if foldersItemsNb["pvp"][id][1][2][3]["pvpPages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][2][3]["pvpPages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        -- third spec --
+        elseif menuList == foldersItemsNb["pvp"][id][1][3][1] .. "pve" then
+            if foldersItemsNb["pvp"][id][1][3][3]["pvePages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][3][3]["pvePages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        elseif menuList == foldersItemsNb["pvp"][id][1][3][1] .. "pvp" then
+            if foldersItemsNb["pvp"][id][1][3][3]["pvpPages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][3][3]["pvpPages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        -- fourth spec --
+        elseif menuList == foldersItemsNb["pvp"][id][1][4][1] .. "pve" then
+            if foldersItemsNb["pvp"][id][1][4][3]["pvePages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][4][3]["pvePages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        elseif menuList == foldersItemsNb["pvp"][id][1][4][1] .. "pvp" then
+            if foldersItemsNb["pvp"][id][1][4][3]["pvpPages"] == 0 then
+                info.text, info.notCheckable, info.disabled = "Guide à venir", 1, true
+                UIDropDownMenu_AddButton(info, level)
+            else
+                for i = 1, foldersItemsNb["pvp"][id][1][4][3]["pvpPages"] do
+                    info.text = "Page " .. i
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
         end
     end, "MENU")
     ToggleDropDownMenu(1, nil, openContextMenuButton.dropDown, openContextMenuButton, 3, 5)
@@ -894,13 +1023,13 @@ function LCDWFrame.backgroundContainerFrame:showGuide(icon, name, id, thumbnailC
         else
             isContextMenuOpen = true
             if guideType == "pveD" then
-                openContextMenu(foldersItemsNb[guideType][id]["d" .. id], titleAndGuideContainerFrame)
+                openContextMenu(foldersItemsNb[guideType][id]["d" .. id], titleAndGuideContainerFrame, false, id)
             elseif guideType == "pveR" then
-                openContextMenu(foldersItemsNb[guideType][id]["r" .. id], titleAndGuideContainerFrame)
+                openContextMenu(foldersItemsNb[guideType][id]["r" .. id], titleAndGuideContainerFrame, false, id)
             elseif guideType == "pvp" then
-                openContextMenu(foldersItemsNb[guideType][id]["c" .. id], titleAndGuideContainerFrame)
+                openContextMenu(foldersItemsNb[guideType][id]["c" .. id], titleAndGuideContainerFrame, true, id)
             else
-                openContextMenu(foldersItemsNb[guideType], titleAndGuideContainerFrame)
+                openContextMenu(foldersItemsNb[guideType], titleAndGuideContainerFrame, false, id)
             end
         end
     end)
