@@ -25,6 +25,7 @@ local RAIDS_FOLDER_PATH = PVE_FOLDER_PATH .. "raids\\"
 local PVP_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\pvp\\"
 local GLOSSARY_FOLDER_PATH = "Interface\\AddOns\\LCDW\\guides\\glossary\\"
 local MINIMAP_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\minimap-icon"
+local COPY_ICON_PATH = "Interface\\AddOns\\LCDW\\misc\\copy-icon"
 local DUNGEONS_ICONS_PATH = "Interface\\ENCOUNTERJOURNAL\\UI-EJ-DUNGEONBUTTON-"
 local CLASSES_ICONS_PATH = ICONS_PATH .. "ClassIcon_"
 local ARROW_TITLE_SECTION = "Interface\\RAIDFRAME\\UI-RAIDFRAME-ARROW"
@@ -305,54 +306,216 @@ local foldersItemsNb = {
             c1 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c2 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c3 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                }
             }
         },
         {
             c4 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c5 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c6 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false,
-                spec4 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                },
+                {
+                    spec4 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
@@ -395,45 +558,180 @@ local foldersItemsNb = {
             c8 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c9 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c10 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c11 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
         {
             c12 = 3,
             atleastOneGuideSpecAvailable = false,
             {
-                spec1 = false,
-                spec2 = false,
-                spec3 = false
+                {
+                    spec1 = true,
+                    pages = 6,
+                    "arms",
+                    "Armes",
+                    {
+                        pvePages = 5,
+                        pvpPages = 1
+                    }
+                },
+                {
+                    spec2 = true,
+                    pages = 3,
+                    "fury",
+                    "Fureur",
+                    {
+                        pvePages = 1,
+                        pvpPages = 2
+                    }
+                },
+                {
+                    spec3 = true,
+                    pages = 1,
+                    "protection",
+                    "Protection",
+                    {
+                        pvePages = 1,
+                        pvpPages = 0
+                    }
+                }
             }
         },
     },
@@ -487,6 +785,24 @@ function UIElements:CreateTexture(textureName, frameToAttach, width, height, poi
         textureWidth = textureName:GetWidth()
     end
 end
+
+function  UIElements:CreateButton(textureName, frameToAttach, ofsx, link, getWidth)
+    textureName = CreateFrame("BUTTON", nil, frameToAttach, BackdropTemplateMixin and "BackdropTemplate")
+    textureName:SetSize(17, 17)
+    textureName:SetPoint("LEFT", frameToAttach, "LEFT", ofsx, 0)
+    textureName:SetBackdrop({
+        bgFile = COPY_ICON_PATH
+    })
+    textureName:SetScript("OnClick", function()
+        ChatFrame1EditBox:Show()
+        ChatFrame1EditBox:SetFocus()
+        ChatFrame1EditBox:SetText(link)
+        ChatFrame1EditBox:HighlightText()
+    end)
+    if getWidth then
+        textureWidth = textureName:GetWidth()
+    end
+end
 ----------------------------------------------------------
 ----///////////////////// END VARS /////////////////////--
 ----------------------------------------------------------
@@ -536,6 +852,7 @@ local function createBorder(frameToAttach, isACorner, borderSide, frameName, poi
         top = (isACorner) and 0.5 or 0.467,
         bottom = (isACorner) and 0.545 or 0.5
     }
+
     local borderSideTextureAngle = {
         top = Helpers:degreesToRadians(-180),
         left = Helpers:degreesToRadians(-90),
@@ -587,15 +904,15 @@ createBorder(LCDWFrame, false, "bottom", LCDWFrame.bottomBorderFour, "BOTTOMLEFT
 LCDWFrame.backgroundContainerFrame = CreateFrame("Frame", nil, LCDWFrame, BackdropTemplateMixin and "BackdropTemplate")
 LCDWFrame.backgroundContainerFrame:SetSize(LCDWFrame:GetWidth(), LCDWFrame:GetHeight())
 LCDWFrame.backgroundContainerFrame:SetAllPoints()
---LCDWFrame.backgroundContainerFrame:SetBackdrop({
---    bgFile = "Interface\\FrameGeneral\\UIFrameKyrianBackground", tile = true, tileSize = 128
---})
+LCDWFrame.backgroundContainerFrame:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", tile = true, tileSize = 128
+})
 -- background texture --
-LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
-LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
-LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
-LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
-LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
+--LCDWFrame.backgroundContainerFrame.mainBackground = LCDWFrame.backgroundContainerFrame:CreateTexture(nil, "BACKGROUND")
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetTexture("Interface\\ENCOUNTERJOURNAL\\DungeonJournalTierBackgrounds4")
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetAllPoints()
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetSize(MAIN_FRAME_WITH, MAIN_FRAME_HEIGHT)
+--LCDWFrame.backgroundContainerFrame.mainBackground:SetTexCoord(0.42, 0.73, 0, 0.4)
 
 -- title container --
 --LCDWFrame.backgroundContainerFrame.titleContainerFrame = CreateFrame("Frame", nil, LCDWFrame.backgroundContainerFrame, "GlowBoxTemplate")
@@ -632,23 +949,31 @@ LCDWFrame.backgroundContainerFrame.socialNetworks:SetBackdrop({
 local LEFT_SPACE = 7
 local BANDEAU_FONT_SIZE = 14
 
-UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, SOCIAL_NETWORK_TEXT, "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
-LEFT_SPACE = LEFT_SPACE + titleWidth + 3
+--UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text0, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, SOCIAL_NETWORK_TEXT, "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+--LEFT_SPACE = LEFT_SPACE + titleWidth + 3
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitch, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitch", true)
 LEFT_SPACE = LEFT_SPACE + textureWidth + 3
-UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "/williosz", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
-LEFT_SPACE = LEFT_SPACE + titleWidth + 10
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text1, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, ": /williosz", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 3
+UIElements:CreateButton(LCDWFrame.backgroundContainerFrame.socialNetworks.text1Btn, LCDWFrame.backgroundContainerFrame.socialNetworks, LEFT_SPACE, "https://www.twitch.tv/williosz", true)
+LEFT_SPACE = LEFT_SPACE + textureWidth + 20
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.twitter, LCDWFrame.backgroundContainerFrame.socialNetworks, 21, 21, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "twitter", true)
 LEFT_SPACE = LEFT_SPACE + textureWidth
-UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "@williosx", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
-LEFT_SPACE = LEFT_SPACE + titleWidth + 10
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text2, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, ": @williosx", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 3
+UIElements:CreateButton(LCDWFrame.backgroundContainerFrame.socialNetworks.text2Btn, LCDWFrame.backgroundContainerFrame.socialNetworks, LEFT_SPACE, "https://twitter.com/Williosx", true)
+LEFT_SPACE = LEFT_SPACE + textureWidth + 20
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.discord, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "discord", true)
 LEFT_SPACE = LEFT_SPACE + textureWidth + 5
-UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "/SmZfhAG", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
-LEFT_SPACE = LEFT_SPACE + titleWidth + 10
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text3, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, ": /SmZfhAG", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 3
+UIElements:CreateButton(LCDWFrame.backgroundContainerFrame.socialNetworks.text3Btn, LCDWFrame.backgroundContainerFrame.socialNetworks, LEFT_SPACE, "https://discord.gg/SmZfhAG", true)
+LEFT_SPACE = LEFT_SPACE + textureWidth + 20
 UIElements:CreateTexture(LCDWFrame.backgroundContainerFrame.socialNetworks.website, LCDWFrame.backgroundContainerFrame.socialNetworks, 18, 18, "LEFT", "LEFT", LEFT_SPACE, 0, SOCIAL_NETWORK_FOLDER_PATH .. "op", true)
 LEFT_SPACE = LEFT_SPACE + textureWidth + 5
-UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, "bazardewillios.fr", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text4, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, ": bazardewillios.fr", "LEFT", "LEFT", LEFT_SPACE, 0, nil, nil, nil, true)
+LEFT_SPACE = LEFT_SPACE + titleWidth + 3
+UIElements:CreateButton(LCDWFrame.backgroundContainerFrame.socialNetworks.text4Btn, LCDWFrame.backgroundContainerFrame.socialNetworks, LEFT_SPACE, "https://bazardewillios.fr/", true)
 UIElements:CreateFontString2(LCDWFrame.backgroundContainerFrame.socialNetworks.text5, LCDWFrame.backgroundContainerFrame.socialNetworks, nil, BANDEAU_FONT_SIZE, nil, CREDITS_TEXT, "RIGHT", "RIGHT", -7, 0)
 --------------------------------
 ------// third main frame //----
@@ -770,8 +1095,6 @@ allElementsContainerFrame.glossaryFrame.icon:SetSize(45, 45)
 allElementsContainerFrame.glossaryFrame.icon:SetPoint("TOPLEFT", allElementsContainerFrame.glossaryFrame, "TOPLEFT", 13, -8)
 allElementsContainerFrame.glossaryFrame.icon:SetTexture(QUESTIONMARK_PATH)
 UIElements:CreateFontString2(allElementsContainerFrame.glossaryFrame.title, allElementsContainerFrame.glossaryFrame, nil, 18, nil, "Glossaire", "TOPLEFT", "TOPLEFT", 80, -20)
-
-
 --------------------------------
 --// third main frame prime //--
 --------------------------------
@@ -781,6 +1104,7 @@ local function openContextMenu(pageNumber, parentFrame, hasNestedMenu, id)
 
     UIDropDownMenu_Initialize(openContextMenuButton.dropDown, function(self, level, menuList)
         local info = UIDropDownMenu_CreateInfo()
+        local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
         local test
         -- first lvl menu --
         if (level or 1) == 1 then
@@ -795,7 +1119,6 @@ local function openContextMenu(pageNumber, parentFrame, hasNestedMenu, id)
             if not hasNestedMenu then
                 for i = 1, pageNumber do
                     info.func = function()
-                        local scrollFrame = LCDWFrame.backgroundContainerFrame.scrollFrame
                         scrollFrame:SetVerticalScroll((i - 1) * (GUIDE_HEIGHT + 20))
                         isContextMenuOpen = false
                     end
@@ -840,6 +1163,10 @@ local function openContextMenu(pageNumber, parentFrame, hasNestedMenu, id)
             else
                 for i = 1, foldersItemsNb["pvp"][id][1][1][3]["pvePages"] do
                     info.text = "Page " .. i
+                    info.func = function()
+                        scrollFrame:SetVerticalScroll((i - 1) * (GUIDE_HEIGHT + 20))
+                        isContextMenuOpen = false
+                    end
                     UIDropDownMenu_AddButton(info, level)
                 end
             end
